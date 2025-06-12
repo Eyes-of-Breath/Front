@@ -9,10 +9,15 @@ function Home() {
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <h1>홈 페이지</h1>
-      <button onClick={goToLogin}>로그인</button>
+    <div>
+      <div className='toolbar'>
+        <h1>VITMED</h1>
+        <p className='title' onClick={goToLogin}>로그인</p>
+      </div>
+
+
     </div>
+
   );
 }
 
