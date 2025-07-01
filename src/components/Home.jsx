@@ -18,7 +18,6 @@ function Home() {
       const { deltaY } = e;
       const currentScroll = outerDivRef.current.scrollTop;
 
-      // 현재 페이지 인덱스 계산
       const currentIndex = sectionRefs.current.findIndex(
         (el) =>
           Math.abs(el.offsetTop - currentScroll) < window.innerHeight / 2

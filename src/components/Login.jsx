@@ -10,6 +10,10 @@ function Login() {
         navigate("/signup");
     }
 
+    const navigateToDashboard = () => {
+        navigate("/dashboard");
+    }
+
     useEffect(() => {
         document.body.style.backgroundColor = '#EEF2FF';
 
@@ -37,7 +41,7 @@ function Login() {
                     name='password'
                     placeholder='비밀번호를 입력하세요'
                 />
-                <button type='submit'>로그인</button>
+                <button type='button' onClick={navigateToDashboard}>로그인</button>
                 <p>계정이 없으신가요?
                     <b onClick={navigateToSignup} style={{ cursor: 'pointer' }}> 회원가입</b>
                 </p>
