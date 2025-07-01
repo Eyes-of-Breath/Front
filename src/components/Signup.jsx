@@ -26,7 +26,7 @@ function Signup() {
     }, []);
 
     return (
-        <div className='parent'>
+        <div className='signup'>
             <Helmet>
                 <title>회원가입</title>
             </Helmet>

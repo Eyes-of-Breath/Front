@@ -5,17 +5,17 @@ body {
     font-family: Arial, sans-serif;
 }
 
-.parent {
+.login {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
 }
 
-.login-form {
+.login .login-form {
     display: flex;
     flex-direction: column;
-    width: 300px;
+    width: 350px;
     margin: 50px auto;
     background-color: #fff;
     padding: 35px;

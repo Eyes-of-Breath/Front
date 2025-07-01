@@ -23,7 +23,7 @@ function Login() {
     }, []);
 
     return (
-        <div className='parent'>
+        <div className='login'>
             <Helmet>
                 <title>로그인</title>
             </Helmet>
