@@ -12,7 +12,7 @@
 .active {
     padding: 7px;
     padding-left: 15px;
-    margin-bottom: 7px;
+    margin-bottom: 10px;
     background-color: #007bff;
     color: white;
     border: none;
@@ -27,7 +27,7 @@
 .normal {
     padding: 7px;
     padding-left: 15px;
-    margin-bottom: 7px;
+    margin-bottom: 10px;
     background-color: #fff;
     color: black;
     border: none;

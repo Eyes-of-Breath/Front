@@ -6,6 +6,30 @@
     background-color: #fff;
     flex: 1;
     height: 100%;
-    padding-left: 3vh;
-    padding-top: 5vh;
+    padding: 5vh;
+}
+
+.Info {
+    display: flex;
+    margin-top: 5vh;
+    gap: 10px;
+    align-items: center;
+}
+
+.patientID {
+    font-size: 18px;
+}
+
+.inputID {
+    height: 3.5vh;
+}
+
+.button {
+    padding: 5px 15px;
+    background-color: #000;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
 }
