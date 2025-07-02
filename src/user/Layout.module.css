@@ -1,0 +1,14 @@
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 25vw;
+    background-color: #EEF2FF;
+}
+
+.content {
+    flex: 1;
+    background-color: #EEF2FF;
+}

@@ -4,7 +4,11 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/Login';
 import Home from './components/Home';
 import Signup from './components/Signup';
-import Dashboard from './components/Dashboard';
+import Layout from './user/Layout';
+import Dashboard from './user/Dashboard';
+import Patient from './user/Patient';
+import Profile from './user/Profile';
+import Analysis from './user/Analysis';
 
 function App() {
   return (
@@ -13,7 +17,12 @@ function App() {
         <Route path='/' element={<Home />} />
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<Signup />} />
-        <Route path='/dashboard' element={<Dashboard />} />
+        <Route element={<Layout />} >
+          <Route path='dashboard' element={<Dashboard />} />
+          <Route path='patient' element={<Patient />} />
+          <Route path='analysis' element={<Analysis />} />
+          <Route path='profile' element={<Profile />} />
+        </Route>
       </Routes>
     </Router>
   );
