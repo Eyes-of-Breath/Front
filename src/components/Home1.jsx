@@ -1,11 +1,10 @@
 import React, {  } from 'react';
-import './Section1.css';
+import styles from './Home1.module.css';
 
-
-function Section1() {
+function Home1() {
 
     return (
-        <div className='parent'>
+        <div className={styles.parent}>
             <h3>What is the goal of our project?</h3>
             <p>
                 It is to find a lung disease.<br/>
@@ -16,4 +15,4 @@ function Section1() {
     );
 }
 
-export default Section1;
+export default Home1;

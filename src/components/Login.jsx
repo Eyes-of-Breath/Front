@@ -1,7 +1,7 @@
 import React, { useEffect, } from 'react';
-import './Login.css';
 import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
+import styles from './Login.module.css';
 
 function Login() {
     const navigate = useNavigate();
@@ -23,12 +23,12 @@ function Login() {
     }, []);
 
     return (
-        <div className='login'>
+        <div className={styles.login}>
             <Helmet>
                 <title>로그인</title>
             </Helmet>
-            <form className='login-form'>
-                <h1 className='title'>로그인</h1>
+            <form className={styles.login_form}>
+                <h1 className={styles.title}>로그인</h1>
                 <label htmlFor='email'>이메일</label>
                 <input
                     type='email'

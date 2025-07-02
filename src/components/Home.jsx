@@ -1,7 +1,7 @@
-import './Home.css';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef } from "react";
-import Section1 from './Section1';
+import styles from './Home.module.css';
+import Home1 from './Home1';
 
 function Home() {
   const navigate = useNavigate();
@@ -48,17 +48,17 @@ function Home() {
 
   return (
     <div>
-      <div className="toolbar">
+      <div className={styles.toolbar}>
         <h1>VITMED</h1>
-        <p className="title" onClick={goToLogin}>로그인</p>
+        <p className={styles.title} onClick={goToLogin}>로그인</p>
       </div>
-      <div ref={outerDivRef} className="outer">
-        <div ref={(el) => sectionRefs.current[0] = el}><Section1 /></div>
-        <div ref={(el) => sectionRefs.current[1] = el} className="inner bg-gray">2</div>
-        <div ref={(el) => sectionRefs.current[2] = el} className="inner bg-light-gray">3</div>
-        <div ref={(el) => sectionRefs.current[3] = el} className="inner bg-gray">4</div>
-        <div ref={(el) => sectionRefs.current[4] = el} className="inner bg-light-gray">5</div>
-        <div ref={(el) => sectionRefs.current[5] = el} className="inner bg-gray">6</div>
+      <div ref={outerDivRef} className={styles.outer}>
+        <div ref={(el) => sectionRefs.current[0] = el}><Home1 /></div>
+        <div ref={(el) => sectionRefs.current[1] = el} className={styles.bg_gray}>2</div>
+        <div ref={(el) => sectionRefs.current[2] = el} className={styles.bg_light_gray}>3</div>
+        <div ref={(el) => sectionRefs.current[3] = el} className={styles.bg_gray}>4</div>
+        <div ref={(el) => sectionRefs.current[4] = el} className={styles.bg_light_gray}>5</div>
+        <div ref={(el) => sectionRefs.current[5] = el} className={styles.bg_gray}>6</div>
       </div>
     </div>
   );

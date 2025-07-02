@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import './Signup.css';
 import { Helmet } from 'react-helmet';
+import styles from './Signup.module.css';
 
 function Signup() {
     const [password, setPassword] = useState('');
@@ -26,12 +26,12 @@ function Signup() {
     }, []);
 
     return (
-        <div className='signup'>
+        <div className={styles.signup}>
             <Helmet>
                 <title>회원가입</title>
             </Helmet>
-            <form className='login-form' onSubmit={handleSubmit}>
-                <h1 className='title'>회원가입</h1>
+            <form className={styles.login_form} onSubmit={handleSubmit}>
+                <h1 className={styles.title}>회원가입</h1>
                 <label htmlFor='nickname'>닉네임</label>
                 <input
                     type='text'

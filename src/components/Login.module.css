@@ -5,14 +5,14 @@ body {
     font-family: Arial, sans-serif;
 }
 
-.signup {
+.login {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
 }
 
-.signup .login-form {
+.login_form {
     display: flex;
     flex-direction: column;
     width: 350px;
@@ -30,22 +30,22 @@ body {
     padding-bottom: 30px;
 }
 
-.login-form p {
+.login_form p {
     text-align: end;
 }
 
-.login-form label {
+.login_form label {
     margin-bottom: 10px;
 }
 
-.login-form input {
+.login_form input {
     margin-bottom: 10px;
     padding: 10px;
     border-radius: 5px;
     border-width: 1px;
 }
 
-.login-form button {
+.login_form button {
     margin-top: 5px;
     padding: 10px;
     background-color: #007bff;

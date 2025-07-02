@@ -7,9 +7,10 @@
     width: 100%;
     flex-direction: row;
     height: 100vh;
+    
 }
 
-.dashboard .leftside {
+.leftside {
     background-color: #EEF2FF;
     width: 25vh;
     height: 100%;
@@ -19,7 +20,7 @@
     align-items: 'center';
 }
 
-.dashboard .rightside {
+.rightside {
     background-color: #fff;
     flex: 1;
     height: 100%;

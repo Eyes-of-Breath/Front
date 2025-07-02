@@ -32,19 +32,21 @@ body {
   scroll-behavior: smooth;
 }
 
-.inner {
+.bg_light_gray {
   height: 100dvh;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 100px;
-}
-
-.bg-light-gray {
   background-color: #f2f2f2;
 }
 
-.bg-gray {
+.bg_gray {
+  height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 100px;
   background-color: #d9d9d9;
 }
 
