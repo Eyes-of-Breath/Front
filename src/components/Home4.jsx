@@ -1,13 +1,13 @@
 import React, { } from 'react';
 import styles from './Home2.module.css';
 
-function Home3() {
+function Home4() {
 
     return (
         <div className={styles.parent}>
             <div className={styles.column}>
-                <p className={styles.title}>비전</p>
-                <p className={styles.desc}>Vision</p>
+                <p className={styles.title}>신뢰</p>
+                <p className={styles.desc}>Trust</p>
             </div>
             <div className={styles.column}>
                 <p className={styles.text1}>우리의 제품</p>
@@ -15,14 +15,13 @@ function Home3() {
             </div>
             <div className={styles.column}>
                 <p className={styles.text2}>
-                    영상 인식의 의미뿐만 아니라, Vision Transformer 기반 AI 모델이
-                    핵심 기술로 들어가 있다는 점에서 의미를 지니고 있습니다.
-                    환자 상태를 '보는 눈', 즉 의료진의 시각을 보조하는
-                    역할이라는 이중 의미를 갖습니다.
+                    AI 결과를 Grad-CAM, Attention Map 등으로 시각화하여
+                    의료진이 결과를 이해하고 신뢰할 수 있도록 설계되었습니다.
+                    검증된 AI와 시각화는 의료진뿐만 아니라 환자들에게도 신뢰를 주는 요소입니다.
                 </p>
             </div>
         </div>
     );
 }
 
-export default Home3;
+export default Home4;
