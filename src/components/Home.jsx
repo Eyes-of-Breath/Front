@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import styles from './Home.module.css';
 import Home1 from './Home1';
 import Home2 from './Home2';
+import Home3 from './Home3';
 
 function Home() {
   const navigate = useNavigate();
@@ -56,7 +57,7 @@ function Home() {
       <div ref={outerDivRef} className={styles.outer}>
         <div ref={(el) => sectionRefs.current[0] = el}><Home1 /></div>
         <div ref={(el) => sectionRefs.current[1] = el}><Home2 /></div>
-        <div ref={(el) => sectionRefs.current[2] = el} className={styles.bg_light_gray}>3</div>
+        <div ref={(el) => sectionRefs.current[2] = el}><Home3 /></div>
         <div ref={(el) => sectionRefs.current[3] = el} className={styles.bg_gray}>4</div>
         <div ref={(el) => sectionRefs.current[4] = el} className={styles.bg_light_gray}>5</div>
         <div ref={(el) => sectionRefs.current[5] = el} className={styles.bg_gray}>6</div>
