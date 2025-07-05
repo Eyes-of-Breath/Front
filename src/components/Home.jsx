@@ -62,7 +62,7 @@ function Home() {
         <div ref={(el) => sectionRefs.current[2] = el}><Home3 /></div>
         <div ref={(el) => sectionRefs.current[3] = el}><Home4 /></div>
         <div ref={(el) => sectionRefs.current[4] = el}><Home5 /></div>
-        <div ref={(el) => sectionRefs.current[5] = el} className={styles.bg_gray}>6</div>
+        {/* <div ref={(el) => sectionRefs.current[5] = el} className={styles.bg_gray}>6</div> */}
       </div>
     </div>
   );

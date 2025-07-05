@@ -1,5 +1,6 @@
 import React, { } from 'react';
 import styles from './Home2.module.css';
+import trust from '../assets/trust.png';
 
 function Home4() {
 
@@ -10,8 +11,7 @@ function Home4() {
                 <p className={styles.desc}>Trust</p>
             </div>
             <div className={styles.column}>
-                <p className={styles.text1}>우리의 제품</p>
-                <p className={styles.text1}>Our Products</p>
+                <img src={trust} alt='신뢰' className={styles.image} />
             </div>
             <div className={styles.column}>
                 <p className={styles.text2}>
