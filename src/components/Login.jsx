@@ -21,7 +21,7 @@ function Login() {
             setError('');
             navigate("/dashboard");
         } catch (error) {
-            setError('로그인에 실패했습니다. 이메일과 비밀번호를 확인하세요.');
+            setError('로그인에 실패했습니다.\n이메일과 비밀번호를 확인하세요.');
         }
     }
 
@@ -57,10 +57,19 @@ function Login() {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
-                {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+                {error && (
+                    <p style={{ color: 'red', textAlign: 'center', margin: 0, marginBottom: '8px' }}>
+                        {error.split('\n').map((line, index) => (
+                            <span key={index}>
+                                {line}
+                                <br />
+                            </span>
+                        ))}
+                    </p>
+                )}
                 <button type='submit'>로그인</button>
                 <p>
-                    계정이 없으신가요? 
+                    계정이 없으신가요?
                     <b onClick={navigateToSignup} style={{ cursor: 'pointer' }}> 회원가입</b>
                 </p>
             </form>

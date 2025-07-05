@@ -1,12 +1,24 @@
-import React, { } from 'react';
+import React from 'react';
 import styles from './Sidebar.module.css';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { signOut } from 'firebase/auth';
+import { auth } from '../firebase';
+
 
 function Sidebar() {
     const navigate = useNavigate();
     const location = useLocation();
 
     const isActive = (path) => location.pathname === path;
+
+    const handleLogout = async () => {
+        try {
+            await signOut(auth);
+            window.location.replace('/');
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     return (
         <div className={styles.body}>
@@ -34,6 +46,12 @@ function Sidebar() {
             >
                 프로필
             </button>
+              <div className={styles.spacer} />
+            <div className={styles.logoutContainer}>
+                <p onClick={handleLogout} className={styles.logoutText}>
+                    로그아웃
+                </p>
+            </div>
 
         </div>
     );

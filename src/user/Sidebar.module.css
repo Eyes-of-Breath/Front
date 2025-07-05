@@ -3,16 +3,19 @@
 }
 
 .body {
-    margin-top: 18vh;
+    display: flex;
+    flex-direction: column;
+    padding-top: 18vh;
     margin-left: 1vw;
     margin-right: 1vw;
     width: 12vw;
+    height: 100vh;
+    gap: 10px;
 }
 
 .active {
     padding: 7px;
     padding-left: 15px;
-    margin-bottom: 10px;
     background-color: #007bff;
     color: white;
     border: none;
@@ -27,7 +30,6 @@
 .normal {
     padding: 7px;
     padding-left: 15px;
-    margin-bottom: 10px;
     background-color: #fff;
     color: black;
     border: none;
@@ -37,4 +39,18 @@
     border-radius: 5px;
     width: 100%;
     text-align: left;
+}
+
+.spacer {
+    flex-grow: 1;
+}
+
+.logoutText {
+    padding-left: 15px;
+    padding-bottom: 30px;
+    margin: 0;
+    color: red;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: 500;
 }
