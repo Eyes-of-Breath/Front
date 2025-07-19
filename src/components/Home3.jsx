@@ -1,5 +1,6 @@
 import React, { } from 'react';
 import styles from './Home2.module.css';
+import vision from '../assets/vision.png';
 
 function Home3() {
 
@@ -10,8 +11,7 @@ function Home3() {
                 <p className={styles.desc}>Vision</p>
             </div>
             <div className={styles.column}>
-                <p className={styles.text1}>우리의 제품</p>
-                <p className={styles.text1}>Our Products</p>
+                <img src={vision} alt='비전' className={styles.image} />
             </div>
             <div className={styles.column}>
                 <p className={styles.text2}>

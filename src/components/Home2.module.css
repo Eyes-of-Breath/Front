@@ -5,7 +5,7 @@ body {
 }
 
 .parent {
-    background-color: #EEF2FF;
+    background-color: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
