@@ -1,0 +1,786 @@
+/* Calendar.module.css - 수정된 버전 */
+
+* {
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+/* 기본 레이아웃 */
+.body {
+    background-image: url('../assets/blue_gradient_background.svg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    overflow: hidden;
+    padding: 1.5rem;
+    display: flex;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+.container {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    height: 100%;
+}
+
+.leftSidebar {
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.greeting {
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: #1a1a1a;
+    margin: 0 0 1.5rem 0;
+    line-height: 1.6;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+    padding-left: 0.25rem;
+}
+
+.sidebarContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 0;
+    padding-right: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 1) rgba(255, 255, 255, 0.3);
+}
+
+.sidebarContent::-webkit-scrollbar {
+    width: 10px;
+}
+
+.sidebarContent::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    margin: 2px;
+}
+
+.sidebarContent::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 1);
+    border-radius: 5px;
+    border: 1px solid rgba(200, 200, 200, 0.5);
+}
+
+.sidebarContent::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(240, 240, 240, 1);
+}
+
+.calendarSection {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    margin-top: 3.8rem;
+    height: calc(100% - 3.8rem);
+}
+
+/* 카드 공통 스타일 - dreamy_gradient.svg 배경 적용 */
+.card {
+    background-color: #ffffff;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 
+        0 4px 16px rgba(0, 0, 0, 0.08),
+        0 2px 8px rgba(59, 130, 246, 0.06);
+    backdrop-filter: blur(12px);
+    padding: 1.25rem;
+    margin-bottom: 0.25rem;
+    flex-shrink: 0;
+}
+
+.cardTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 1rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* 응급 알림 */
+.alertsList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.alert {
+    padding: 0.75rem;
+    border-radius: 8px;
+    border-left: 4px solid;
+    transition: all 0.2s ease;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.alert:hover {
+    transform: translateX(4px);
+}
+
+.alert.high {
+    background-color: rgba(249, 115, 22, 0.1);
+    border-left-color: #f97316;
+}
+
+.alert.critical {
+    background-color: rgba(239, 68, 68, 0.1);
+    border-left-color: #ef4444;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+.alertHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.25rem;
+}
+
+.alertTime {
+    font-weight: 600;
+    color: #dc2626;
+    font-size: 0.85rem;
+}
+
+.alertPatient {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 0.85rem;
+}
+
+.alertMessage {
+    font-size: 0.8rem;
+    color: #475569;
+    line-height: 1.4;
+}
+
+/* 통계 */
+.statsList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.statItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 8px;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    transition: all 0.2s ease;
+}
+
+.statItem:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    transform: translateY(-1px);
+}
+
+.statIcon {
+    font-size: 1.5rem;
+    width: 32px;
+    text-align: center;
+    transition: transform 0.2s ease;
+}
+
+.statItem:hover .statIcon {
+    transform: scale(1.1);
+}
+
+.statContent {
+    flex: 1;
+}
+
+.statLabel {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-bottom: 0.15rem;
+}
+
+.statValue {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+/* 병원 일정 */
+.scheduleList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.scheduleItem {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(226, 232, 240, 0.6);
+    transition: all 0.2s ease;
+}
+
+.scheduleItem:hover {
+    background-color: rgba(255, 255, 255, 0.7);
+    transform: translateX(4px);
+}
+
+.scheduleTime {
+    font-weight: 600;
+    color: #3b82f6;
+    font-size: 0.85rem;
+    min-width: 50px;
+}
+
+.scheduleContent {
+    flex: 1;
+}
+
+.scheduleTitle {
+    font-weight: 500;
+    color: #1e293b;
+    font-size: 0.85rem;
+    margin-bottom: 0.15rem;
+}
+
+.scheduleLocation {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+/* 캘린더 헤더 */
+.calendarHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(226, 232, 240, 0.3);
+}
+
+.navButton {
+    background: linear-gradient(135deg, #87ceeb, #6bb6ff);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(135, 206, 235, 0.4);
+}
+
+.navButton:hover {
+    background: linear-gradient(135deg, #6bb6ff, #5aa3e6);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(135, 206, 235, 0.5);
+}
+
+.navButton:active {
+    transform: translateY(0);
+}
+
+.navButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.weekTitle {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+/* 주단위 캘린더 - dreamy_gradient.svg 배경 적용 */
+.weekCalendar {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.10),
+        0 4px 16px rgba(59, 130, 246, 0.08);
+    backdrop-filter: blur(12px);
+    padding: 1.25rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.weekCalendar::-webkit-scrollbar {
+    display: none;
+}
+
+.calendarGrid {
+    display: grid;
+    grid-template-columns: 80px repeat(7, 1fr);
+    flex: 1;
+    gap: 0; /* gap을 0으로 변경하여 격자선이 끊어지지 않도록 */
+    background-color: transparent; /* 배경색 제거 */
+    border-radius: 12px;
+    overflow: visible;
+    min-height: 660px;
+    max-height: 660px;
+    margin-top: 1rem;
+    /* 외부 테두리 제거 */
+}
+
+.timeColumn {
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    flex-direction: column;
+    border-right: 0.5px solid #e5e7eb; /* 시간 컬럼 오른쪽 테두리 */
+}
+
+.timeHeader {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: #475569;
+    font-size: 0.9rem;
+    background-color: rgba(255, 255, 255, 0.9); /* 파란색 배경 제거 */
+    border-bottom: 0.5px solid #e5e7eb; /* 테두리 더 얇게 */
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.timeSlot {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: #64748b;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-bottom: 0.5px solid #e5e7eb; /* 테두리 더 얇게 */
+}
+
+.dayColumn {
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: visible;
+    border-right: 0.5px solid #e5e7eb; /* 각 요일 컬럼 오른쪽 테두리 */
+}
+
+.dayColumn:last-child {
+    border-right: none; /* 마지막 컬럼은 오른쪽 테두리 제거 */
+}
+
+.dayTimeSlots {
+    position: relative;
+    flex: 1;
+    overflow: visible;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.8) transparent;
+}
+
+.dayTimeSlots::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dayTimeSlots::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.dayTimeSlots::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.dayTimeSlots::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.dayHeader {
+    height: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.9); /* 파란색 배경 제거 */
+    border-bottom: 0.5px solid #e5e7eb; /* 테두리 더 얇게 */
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.dayHeader.today {
+    background: linear-gradient(135deg, #87ceeb, #b0d4f1);
+}
+
+.dayHeader.today .dayName {
+    color: white;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.dayHeader.today .dayDate {
+    color: white;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.dayName {
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.9rem;
+}
+
+.dayDate {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-top: 0.15rem;
+}
+
+.timeCell {
+    height: 60px;
+    padding: 0.25rem;
+    border-bottom: 0.5px solid #e5e7eb; /* 테두리 더 얇게 */
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.timeCell:hover {
+    background-color: rgba(135, 206, 235, 0.15);
+}
+
+.timeCell:focus {
+    outline: 2px solid rgba(59, 130, 246, 0.5);
+    outline-offset: -2px;
+}
+
+.appointment {
+    background: linear-gradient(135deg, #87ceeb, #6bb6ff);
+    color: white;
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(135, 206, 235, 0.4);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.appointment:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+}
+
+.appointmentPatient {
+    font-weight: 600;
+    font-size: 0.75rem;
+    margin-bottom: 0.1rem;
+}
+
+.appointmentType {
+    font-size: 0.65rem;
+    opacity: 0.9;
+}
+
+/* 현재 시간 표시선 */
+.currentTimeLine {
+    position: absolute;
+    left: calc(-81px - 50rem + 25rem - 2rem);
+    width: 56rem;
+    height: 3px;
+    background: linear-gradient(90deg, #87ceeb, #6bb6ff);
+    z-index: 100;
+    box-shadow: 0 1px 3px rgba(135, 206, 235, 0.5);
+    animation: glow 2s ease-in-out infinite alternate;
+    pointer-events: none;
+    transform: translateY(-60px);
+}
+
+@keyframes glow {
+    from {
+        box-shadow: 0 1px 3px rgba(135, 206, 235, 0.5);
+    }
+    to {
+        box-shadow: 0 1px 6px rgba(135, 206, 235, 0.8);
+    }
+}
+
+.currentTimeLine::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: -4px;
+    width: 12px;
+    height: 12px;
+    background: radial-gradient(circle, #87ceeb, #6bb6ff);
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px white, 0 1px 3px rgba(135, 206, 235, 0.5);
+}
+
+.timeIndicator {
+    position: absolute;
+    right: auto;
+    left: 20rem;
+    top: -8px;
+    background: linear-gradient(135deg, #87ceeb, #6bb6ff);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(135, 206, 235, 0.4);
+    z-index: 101;
+}
+
+.timeIndicator::before {
+    content: '';
+    position: absolute;
+    left: -4px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 4px solid transparent;
+    border-right-color: #1e40af;
+}
+
+/* 접근성 개선 */
+.srOnly {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* 키보드 네비게이션 */
+.appointment:focus,
+.timeCell:focus,
+.navButton:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1200px) {
+    .container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .leftSidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding-right: 0;
+        padding-bottom: 8px;
+    }
+    
+    .greeting {
+        writing-mode: vertical-lr;
+        text-orientation: mixed;
+        min-width: 40px;
+        margin: 0 0.5rem 0 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+    
+    .sidebarContent {
+        display: flex;
+        flex-direction: row;
+        gap: 2rem;
+        flex: 1;
+    }
+    
+    .sidebarContent::-webkit-scrollbar {
+        height: 8px;
+        width: auto;
+    }
+    
+    .sidebarContent::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 4px;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+    
+    .card {
+        min-width: 280px;
+        flex-shrink: 0;
+    }
+    
+    .calendarGrid {
+        grid-template-columns: 60px repeat(7, 1fr);
+        min-height: 550px;
+        max-height: 550px;
+    }
+}
+
+@media (max-width: 768px) {
+    .body {
+        padding: 0.75rem;
+    }
+    
+    .leftSidebar {
+        flex-direction: column;
+        height: auto;
+        overflow-x: hidden;
+        overflow-y: auto;
+        max-height: 300px;
+    }
+    
+    .greeting {
+        writing-mode: initial;
+        text-orientation: initial;
+        min-width: auto;
+        margin: 0 0 1rem 0;
+        font-size: 1.3rem;
+    }
+    
+    .sidebarContent {
+        flex-direction: column;
+    }
+    
+    .card {
+        min-width: auto;
+    }
+    
+    .calendarGrid {
+        grid-template-columns: 50px repeat(7, 1fr);
+        min-height: 450px;
+        max-height: 450px;
+    }
+    
+    .timeSlot,
+    .timeCell {
+        height: 50px;
+    }
+    
+    .dayHeader {
+        height: 50px;
+    }
+    
+    .timeHeader {
+        height: 50px;
+    }
+    
+    .calendarHeader {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    
+    .weekTitle {
+        text-align: center;
+        font-size: 1.2rem;
+    }
+    
+    .navButton {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .body {
+        padding: 0.5rem;
+    }
+    
+    .container {
+        gap: 0.5rem;
+    }
+    
+    .card {
+        padding: 1rem;
+    }
+    
+    .calendarGrid {
+        grid-template-columns: 40px repeat(7, 1fr);
+    }
+    
+    .timeSlot,
+    .timeCell {
+        height: 40px;
+    }
+    
+    .dayHeader {
+        height: 40px;
+    }
+    
+    .timeHeader {
+        height: 40px;
+    }
+    
+    .dayName {
+        font-size: 0.8rem;
+    }
+    
+    .dayDate {
+        font-size: 0.7rem;
+    }
+    
+    .appointment {
+        padding: 0.125rem 0.25rem;
+    }
+    
+    .appointmentPatient {
+        font-size: 0.65rem;
+    }
+    
+    .appointmentType {
+        font-size: 0.55rem;
+    }
+}

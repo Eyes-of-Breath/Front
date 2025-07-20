@@ -6,6 +6,7 @@ import Home from './components/Home';
 import Signup from './components/Signup';
 import Layout from './user/Layout';
 import Dashboard from './user/Dashboard';
+import Calendar from './user/Calendar';
 import Patient from './user/Patient';
 import Profile from './user/Profile';
 import Analysis from './user/Analysis';
@@ -19,6 +20,7 @@ function App() {
         <Route path='/signup' element={<Signup />} />
         <Route element={<Layout />} >
           <Route path='dashboard' element={<Dashboard />} />
+          <Route path='calendar' element={<Calendar />} />
           <Route path='patient' element={<Patient />} />
           <Route path='analysis' element={<Analysis />} />
           <Route path='profile' element={<Profile />} />
