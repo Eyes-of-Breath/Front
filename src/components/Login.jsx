@@ -10,18 +10,23 @@ function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
     const navigateToSignup = () => {
         navigate("/signup");
     }
 
     const handleLogin = async () => {
+        setIsLoading(true);
+        setError('');
+        
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            setError('');
             navigate("/dashboard");
         } catch (error) {
             setError('로그인에 실패했습니다.\n이메일과 비밀번호를 확인하세요.');
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -67,7 +72,9 @@ function Login() {
                         ))}
                     </p>
                 )}
-                <button type='submit'>로그인</button>
+                <button type='submit' disabled={isLoading}>
+                    {isLoading ? '로그인 중...' : '로그인'}
+                </button>
                 <p>
                     계정이 없으신가요?
                     <b onClick={navigateToSignup} style={{ cursor: 'pointer' }}> 회원가입</b>

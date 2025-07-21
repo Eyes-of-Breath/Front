@@ -1,10 +1,33 @@
-* {
-    box-sizing: border-box;
-}
+/* Dashboard.module.css */
 
 .body {
-    background-color: #fff;
-    flex: 1;
-    height: 100%;
-    padding: 5vh;
+    padding: 2rem;
+    background-image: url('../assets/blue_gradient_background.svg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.greeting {
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: #000000;
+    margin: 0;
+    line-height: 1.6;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .body {
+        padding: 1rem;
+    }
+    
+    .greeting {
+        font-size: 1.25rem;
+    }
 }
