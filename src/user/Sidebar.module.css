@@ -20,7 +20,6 @@
   --color-primary-hover: rgba(49, 58, 84, 0.1);
   --color-red-50: #fef2f2;
   --color-red-200: #fecaca;
-  --color-focus: #a2c6ff;
   --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
   --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
   --shadow-lg: 0 4px 12px rgba(49, 58, 84, 0.3);
@@ -89,6 +88,7 @@
   position: relative;
   overflow: hidden;
   color: var(--color-primary);
+  outline: none; /* 포커스 링 제거 */
 }
 
 /* 호버 효과 */
@@ -123,6 +123,14 @@
   flex-grow: 1;
 }
 
+/* 도움말 섹션 */
+.helpSection {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--spacing-md);
+  width: 100%;
+}
+
 /* 로그아웃 섹션 */
 .logoutSection {
   display: flex;
@@ -150,10 +158,11 @@
   color: white;
 }
 
-/* 접근성을 위한 포커스 스타일 */
-.iconButton:focus {
-  outline: 2px solid var(--color-focus);
-  outline-offset: 2px;
+/* 포커스 스타일 완전 제거 */
+.iconButton:focus,
+.iconButton:focus-visible {
+  outline: none;
+  box-shadow: none;
 }
 
 /* 버튼 클릭 효과 */
