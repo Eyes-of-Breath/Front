@@ -1,27 +1,5 @@
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css');
 
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes logoFadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.8);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
 body {
     margin: 0;
     padding: 0;
@@ -46,6 +24,15 @@ body {
     flex-direction: column;
     gap: 12px;
     padding: 0 20px;
+    /* GSAP이 모든 애니메이션을 제어하므로 CSS 애니메이션 없음 */
+}
+
+/* 가운데 컬럼은 절대 움직이지 않도록 강제 고정 */
+.centerFixed {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    position: relative;
+    z-index: 1;
 }
 
 .productLabel {
@@ -87,13 +74,7 @@ body {
 }
 
 .logoContainer {
-    transition: all 0.5s ease-out;
-    opacity: 0;
-}
-
-.logoContainer.visible {
-    opacity: 1;
-    animation: logoFadeIn 1s ease-out forwards;
+    /* 심플하게 유지 */
 }
 
 .logo {
@@ -122,20 +103,6 @@ body {
 .highlight {
     color: #3B4A5C;
     font-weight: 600;
-}
-
-.fadeIn {
-    animation: fadeInUp 0.8s ease-out forwards;
-}
-
-.delayedFadeIn {
-    animation: fadeInUp 0.8s ease-out 0.3s forwards;
-    opacity: 0;
-}
-
-.extraDelayedFadeIn {
-    animation: fadeInUp 0.8s ease-out 0.6s forwards;
-    opacity: 0;
 }
 
 /* 반응형 디자인 */

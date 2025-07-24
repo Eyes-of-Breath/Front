@@ -1,4 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import { 
+    AlertTriangle, 
+    Activity, 
+    CheckCircle, 
+    Clock, 
+    Users, 
+    Calendar as CalendarIcon,
+    MapPin,
+    Video,
+    UserCheck,
+    ChevronLeft,
+    ChevronRight,
+    Stethoscope,
+    Heart,
+    BarChart3
+} from 'lucide-react';
 import styles from './Calendar.module.css';
 
 function Calendar() {
@@ -58,18 +74,18 @@ function Calendar() {
 
     // 오늘의 통계
     const todayStats = [
-        { label: '예정 진료', value: '12명', icon: '📅' },
-        { label: '완료 진료', value: '8명', icon: '✅' },
-        { label: '대기 환자', value: '4명', icon: '⏳' },
-        { label: '응급 환자', value: '2명', icon: '🚨' }
+        { label: '예정 진료', value: '12명', icon: CalendarIcon },
+        { label: '완료 진료', value: '8명', icon: CheckCircle },
+        { label: '대기 환자', value: '4명', icon: Clock },
+        { label: '응급 환자', value: '2명', icon: AlertTriangle }
     ];
 
     // 병원 일정
     const hospitalSchedule = [
-        { id: 1, time: '08:00', title: '병동 라운딩', type: 'rounds', location: '3층 병동' },
-        { id: 2, time: '12:30', title: '의료진 회의', type: 'meeting', location: '회의실 A' },
-        { id: 3, time: '19:00', title: '케이스 컨퍼런스', type: 'conference', location: '강당' },
-        { id: 4, time: '20:00', title: '야간 당직', type: 'duty', location: '응급실' }
+        { id: 1, time: '08:00', title: '병동 라운딩', type: 'rounds', location: '3층 병동', icon: Stethoscope },
+        { id: 2, time: '12:30', title: '의료진 회의', type: 'meeting', location: '회의실 A', icon: Users },
+        { id: 3, time: '19:00', title: '케이스 컨퍼런스', type: 'conference', location: '강당', icon: Video },
+        { id: 4, time: '20:00', title: '야간 당직', type: 'duty', location: '응급실', icon: Heart }
     ];
 
     // 현재 시간이 표시 범위 내에 있는지 확인
@@ -139,16 +155,21 @@ function Calendar() {
     return (
         <div className={styles.body}>
             <div className={styles.container}>
-                {/* 왼쪽 사이드바 - CSS 클래스명에 맞게 수정 */}
+                {/* 왼쪽 사이드바 */}
                 <div className={styles.leftSidebar}>
                     {/* 인사말 */}
-                    <h1 className={styles.greeting}>{getTodayDateString()}의 일정입니다.</h1>
+                    <h1 className={styles.greeting}>
+                        {getTodayDateString()}의 진료 일정
+                    </h1>
                     
-                    {/* 스크롤 영역 - CSS에 정의된 sidebarContent 사용 */}
+                    {/* 스크롤 영역 */}
                     <div className={styles.sidebarContent}>
                         {/* 응급 알림 */}
                         <div className={styles.card}>
-                            <h3 className={styles.cardTitle}>🚨 응급 알림</h3>
+                            <h3 className={styles.cardTitle}>
+                                <AlertTriangle size={18} />
+                                응급 알림
+                            </h3>
                             <div className={styles.alertsList}>
                                 {emergencyAlerts.map(alert => (
                                     <div key={alert.id} className={`${styles.alert} ${styles[alert.priority]}`}>
@@ -164,43 +185,57 @@ function Calendar() {
 
                         {/* 오늘의 통계 */}
                         <div className={styles.card}>
-                            <h3 className={styles.cardTitle}>📊 오늘의 통계</h3>
+                            <h3 className={styles.cardTitle}>
+                                <BarChart3 size={18} />
+                                오늘의 통계
+                            </h3>
                             <div className={styles.statsList}>
-                                {todayStats.map((stat, index) => (
-                                    <div key={index} className={styles.statItem}>
-                                        <div className={styles.statIcon}>{stat.icon}</div>
-                                        <div className={styles.statContent}>
-                                            <div className={styles.statLabel}>{stat.label}</div>
-                                            <div className={styles.statValue}>{stat.value}</div>
+                                {todayStats.map((stat, index) => {
+                                    const IconComponent = stat.icon;
+                                    return (
+                                        <div key={index} className={styles.statItem}>
+                                            <div className={styles.statIcon}>
+                                                <IconComponent size={20} />
+                                            </div>
+                                            <div className={styles.statContent}>
+                                                <div className={styles.statLabel}>{stat.label}</div>
+                                                <div className={styles.statValue}>{stat.value}</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         </div>
 
                         {/* 병원 일정 */}
                         <div className={styles.card}>
-                            <h3 className={styles.cardTitle}>🏥 병원 일정</h3>
+                            <h3 className={styles.cardTitle}>
+                                <MapPin size={18} />
+                                병원 일정
+                            </h3>
                             <div className={styles.scheduleList}>
-                                {hospitalSchedule.map(item => (
-                                    <div key={item.id} className={styles.scheduleItem}>
-                                        <div className={styles.scheduleTime}>{item.time}</div>
-                                        <div className={styles.scheduleContent}>
-                                            <div className={styles.scheduleTitle}>{item.title}</div>
-                                            <div className={styles.scheduleLocation}>{item.location}</div>
+                                {hospitalSchedule.map(item => {
+                                    const IconComponent = item.icon;
+                                    return (
+                                        <div key={item.id} className={styles.scheduleItem}>
+                                            <div className={styles.scheduleTime}>{item.time}</div>
+                                            <div className={styles.scheduleContent}>
+                                                <div className={styles.scheduleTitle}>
+                                                    <IconComponent size={14} style={{ marginRight: '0.5rem', display: 'inline' }} />
+                                                    {item.title}
+                                                </div>
+                                                <div className={styles.scheduleLocation}>{item.location}</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         </div>
-
-
                     </div>
                 </div>
 
                 {/* 오른쪽 주단위 캘린더 */}
                 <div className={styles.calendarSection}>
-                    {/* weekCalendar 클래스 직접 사용 (calendarCard 제거) */}
                     <div className={styles.weekCalendar}>
                         {/* 캘린더 헤더 */}
                         <div className={styles.calendarHeader}>
@@ -208,7 +243,8 @@ function Calendar() {
                                 className={styles.navButton}
                                 onClick={() => changeWeek(-1)}
                             >
-                                ◀ 이전 주
+                                <ChevronLeft size={16} />
+                                이전 주
                             </button>
                             <h2 className={styles.weekTitle}>
                                 {weekDates[0].getMonth() + 1}월 {weekDates[0].getDate()}일 ~ {weekDates[6].getDate()}일
@@ -217,7 +253,8 @@ function Calendar() {
                                 className={styles.navButton}
                                 onClick={() => changeWeek(1)}
                             >
-                                다음 주 ▶
+                                다음 주
+                                <ChevronRight size={16} />
                             </button>
                         </div>
 
@@ -262,22 +299,18 @@ function Calendar() {
                                             );
                                         })}
                                         
-                                        {/* 현재 시간 표시선 - 오늘 요일에만 표시하되 CSS로 전체 가로지르기 */}
+                                        {/* 현재 시간 표시선 - 오늘 요일에만 표시 */}
                                         {dayIndex === currentDayIndex && currentTimePosition !== null && (
                                             <div 
                                                 className={styles.currentTimeLine}
                                                 style={{ 
-                                                    top: `${60 + currentTimePosition}px` // 헤더(60px) + 계산된 위치 (오프셋 제거)
+                                                    top: `${60 + currentTimePosition}px`
                                                 }}
-                                            >
-                                                {/* 시간 표시기 제거 */}
-                                            </div>
+                                            />
                                         )}
                                     </div>
                                 </div>
                             ))}
-
-                            {/* 캘린더 그리드 레벨에서 제거 */}
                         </div>
                     </div>
                 </div>
