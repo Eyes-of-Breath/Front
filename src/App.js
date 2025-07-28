@@ -7,6 +7,8 @@ import Signup from './components/Signup';
 import Layout from './user/Layout';
 import Dashboard from './user/Dashboard';
 import Calendar from './user/Calendar';
+import Loading from './user/Loading';
+import Result from './user/Result';
 import Patient from './user/Patient';
 import Profile from './user/Profile';
 import Analysis from './user/Analysis';
@@ -23,6 +25,8 @@ function App() {
           <Route path='calendar' element={<Calendar />} />
           <Route path='patient' element={<Patient />} />
           <Route path='analysis' element={<Analysis />} />
+          <Route path='loading' element={<Loading />} />  
+          <Route path='result' element={<Result />} />    
           <Route path='profile' element={<Profile />} />
         </Route>
       </Routes>

@@ -157,7 +157,7 @@
 
 .button {
     padding: 10px 20px;
-    background-color: #000;
+    background-color: #6bb6ff;
     color: white;
     border: none;
     cursor: pointer;
@@ -167,20 +167,20 @@
 }
 
 .button:hover {
-    background-color: #333;
+    box-shadow: 0 4px 12px rgba(107, 182, 255, 0.3);
     transform: translateY(-1px);
 }
 
 .button:disabled {
-    background-color: #666;
+    background-color: #9ca3af;
     cursor: not-allowed;
 }
 
 .resetButton {
     padding: 10px 20px;
-    background-color: #666;
-    color: white;
-    border: none;
+    background-color: #f3f4f6;
+    color: #374151;
+    border: 1px solid #d1d5db;
     cursor: pointer;
     font-size: 16px;
     border-radius: 5px;
@@ -188,7 +188,7 @@
 }
 
 .resetButton:hover {
-    background-color: #888;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transform: translateY(-1px);
 }
 
