@@ -10,7 +10,6 @@ const Home2 = ({ forceFirstSection = true }) => {
 
     const leftTextRef = useRef(null);
     const rightTextRef = useRef(null);
-    const lastWheelTime = useRef(0);
 
     const sections = [
         {
@@ -94,13 +93,10 @@ const Home2 = ({ forceFirstSection = true }) => {
 
     useEffect(() => {
         const wheelHandler = (e) => {
-            const now = Date.now();
-            if (isTransitioning || now - lastWheelTime.current < 700) {
-                // 0.7초 이내 추가 입력 무시
+            if (isTransitioning) {
                 return;
             }
-            lastWheelTime.current = now;
-
+            
             e.preventDefault();
             e.stopPropagation();
             
