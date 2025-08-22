@@ -7,17 +7,140 @@ import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 
 function Signup() {
-    const [nickname, setNickname] = useState('');
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
+    const [verificationCode, setVerificationCode] = useState('');
+    const [inputVerificationCode, setInputVerificationCode] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [showModal, setShowModal] = useState(false);
+    const [isEmailVerified, setIsEmailVerified] = useState(false);
+    const [isCodeSent, setIsCodeSent] = useState(false);
+    const [isCodeVerifying, setIsCodeVerifying] = useState(false);
+    const [isSendingCode, setIsSendingCode] = useState(false);
+    const [countdown, setCountdown] = useState(0);
     const navigate = useNavigate();
+
+    // 카운트다운 타이머
+    useEffect(() => {
+        if (countdown > 0) {
+            const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+            return () => clearTimeout(timer);
+        }
+    }, [countdown]);
+
+    // 6자리 랜덤 인증번호 생성 (개발용 - 추후 백엔드에서 처리)
+    const generateVerificationCode = () => {
+        return Math.floor(100000 + Math.random() * 900000).toString();
+    };
+
+    // 인증번호 전송
+    const handleSendVerificationCode = async () => {
+        if (!email) {
+            setError('이메일을 먼저 입력해주세요.');
+            return;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            setError('유효한 이메일 주소를 입력해주세요.');
+            return;
+        }
+
+        setIsSendingCode(true);
+        setError('');
+
+        try {
+            // TODO: Supabase API 호출로 대체 예정
+            // const response = await fetch('/api/send-verification-code', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify({ email }),
+            // });
+            // const data = await response.json();
+
+            // 임시 구현 (개발용)
+            const code = generateVerificationCode();
+            setVerificationCode(code);
+            
+            setIsCodeSent(true);
+            setCountdown(300); // 5분 타이머
+            setSuccess(`인증번호가 ${email}로 발송되었습니다.`);
+            
+            // 개발용: 실제 인증번호를 콘솔에 출력 (프로덕션에서는 제거)
+            console.log(`개발용 인증번호: ${code}`);
+            
+        } catch (err) {
+            setError('인증번호 발송 중 오류가 발생했습니다.');
+            console.error('Error sending verification code:', err);
+        } finally {
+            setIsSendingCode(false);
+        }
+    };
+
+    // 인증번호 확인
+    const handleVerifyCode = async () => {
+        if (!inputVerificationCode) {
+            setError('인증번호를 입력해주세요.');
+            return;
+        }
+
+        if (countdown <= 0) {
+            setError('인증번호가 만료되었습니다. 다시 발송해주세요.');
+            return;
+        }
+
+        setIsCodeVerifying(true);
+        setError('');
+
+        try {
+            // TODO: Supabase API 호출로 대체 예정
+            // const response = await fetch('/api/verify-code', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify({ 
+            //         email, 
+            //         code: inputVerificationCode 
+            //     }),
+            // });
+            // const data = await response.json();
+
+            // 임시 구현 (개발용)
+            if (inputVerificationCode === verificationCode) {
+                setIsEmailVerified(true);
+                setSuccess('이메일 인증이 완료되었습니다.');
+                setCountdown(0);
+            } else {
+                setError('인증번호가 일치하지 않습니다.');
+            }
+        } catch (err) {
+            setError('인증번호 확인 중 오류가 발생했습니다.');
+            console.error('Error verifying code:', err);
+        } finally {
+            setIsCodeVerifying(false);
+        }
+    };
+
+    // 인증번호 재전송
+    const handleResendCode = () => {
+        setInputVerificationCode('');
+        setIsEmailVerified(false);
+        handleSendVerificationCode();
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!isEmailVerified) {
+            setError('이메일 인증을 완료해주세요.');
+            return;
+        }
 
         if (password !== confirmPassword) {
             setError('비밀번호가 일치하지 않습니다.');
@@ -35,16 +158,20 @@ function Signup() {
 
             await setDoc(doc(db, 'users', user.uid), {
                 email: user.email,
-                nickname: nickname,
+                name: name,
                 createdAt: new Date(),
+                emailVerified: true, // 이메일 인증 완료 표시
             });
 
-            // setSuccess('회원가입이 완료되었습니다!');
             setError('');
-            setNickname('');
+            setName('');
             setEmail('');
             setPassword('');
             setConfirmPassword('');
+            setVerificationCode('');
+            setInputVerificationCode('');
+            setIsEmailVerified(false);
+            setIsCodeSent(false);
             setShowModal(true);
         } catch (err) {
             let message = '';
@@ -75,6 +202,12 @@ function Signup() {
         navigate('/login');
     };
 
+    const formatTime = (seconds) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
+
     useEffect(() => {
         document.body.style.backgroundColor = '#EEF2FF';
         return () => {
@@ -90,30 +223,105 @@ function Signup() {
             <form className={styles.login_form} onSubmit={handleSubmit}>
                 <h1 className={styles.title}>회원가입</h1>
 
-                <label htmlFor='nickname'>닉네임</label>
+                <label htmlFor='name'>이름</label>
                 <input
                     type='text'
-                    name='nickname'
-                    placeholder='닉네임을 입력하세요'
-                    value={nickname}
-                    onChange={(e) => setNickname(e.target.value)}
+                    name='name'
+                    id='name'
+                    placeholder='이름을 입력하세요'
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     required
                 />
 
                 <label htmlFor='email'>이메일</label>
-                <input
-                    type='email'
-                    name='email'
-                    placeholder='이메일을 입력하세요'
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
+                <div className={styles.emailContainer}>
+                    <input
+                        type='email'
+                        name='email'
+                        id='email'
+                        placeholder='이메일을 입력하세요'
+                        value={email}
+                        onChange={(e) => {
+                            setEmail(e.target.value);
+                            setIsEmailVerified(false);
+                            setIsCodeSent(false);
+                            setSuccess('');
+                        }}
+                        required
+                        disabled={isEmailVerified}
+                        className={isEmailVerified ? styles.verifiedInput : ''}
+                    />
+                    <button
+                        type="button"
+                        onClick={handleSendVerificationCode}
+                        disabled={isSendingCode || isEmailVerified}
+                        className={`${styles.verificationButton} ${
+                            isEmailVerified ? styles.verified : ''
+                        }`}
+                        style={{ transform: 'translateY(0px)' }}
+                    >
+                        {isEmailVerified ? '인증완료' : isSendingCode ? '발송중...' : '인증번호'}
+                    </button>
+                </div>
+
+                {isCodeSent && !isEmailVerified && (
+                    <>
+                        <label htmlFor='verificationCode'>
+                            인증번호
+                            {countdown > 0 && (
+                                <span className={styles.countdown}>
+                                    ({formatTime(countdown)})
+                                </span>
+                            )}
+                            {success && (
+                                <span className={styles.successMessage}>
+                                    - 인증번호가 발송되었습니다
+                                </span>
+                            )}
+                        </label>
+                        <div className={styles.verificationContainer}>
+                            <input
+                                type='text'
+                                name='verificationCode'
+                                id='verificationCode'
+                                placeholder='인증번호 6자리를 입력하세요'
+                                value={inputVerificationCode}
+                                onChange={(e) => setInputVerificationCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                                maxLength={6}
+                                required
+                            />
+                            <button
+                                type="button"
+                                onClick={handleVerifyCode}
+                                disabled={isCodeVerifying || countdown <= 0 || inputVerificationCode.length !== 6}
+                                className={styles.verifyButton}
+                                style={{ 
+                                    transform: 'translateY(0px) !important',
+                                    position: 'relative',
+                                    top: '0px'
+                                }}
+                            >
+                                {isCodeVerifying ? '확인중...' : '확인'}
+                            </button>
+                        </div>
+                        {countdown <= 0 && (
+                            <button
+                                type="button"
+                                onClick={handleResendCode}
+                                className={styles.resendButton}
+                            >
+                                인증번호 재전송
+                            </button>
+                        )}
+                    </>
+                )}
 
                 <label htmlFor='password'>비밀번호</label>
                 <input
                     type='password'
                     name='password'
+                    id='password'
                     placeholder='비밀번호를 입력하세요'
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -124,16 +332,18 @@ function Signup() {
                 <input
                     type='password'
                     name='confirmPassword'
+                    id='confirmPassword'
                     placeholder='비밀번호를 다시 입력하세요'
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
                 />
 
-                {error && <p style={{ color: 'red', textAlign: 'center', margin: 0, marginBottom: '8px' }}>{error}</p>}
-                {success && <p style={{ color: 'green', textAlign: 'center' }}>{success}</p>}
+                {error && !success && <p style={{ color: 'red', textAlign: 'center', margin: 0, marginBottom: '8px' }}>{error}</p>}
 
-                <button type='submit'>회원가입</button>
+                <button type='submit' disabled={!isEmailVerified}>
+                    가입하기
+                </button>
             </form>
 
             {showModal && (

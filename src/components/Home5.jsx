@@ -1,92 +1,87 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styles from './Home5.module.css';
-import article1 from '../assets/article1.png';
-import article2 from '../assets/article2.png';
 
-function Home5() {
-    const [isVisible, setIsVisible] = useState(false);
-
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    setIsVisible(true);
-                }
-            },
-            { threshold: 0.1 }
-        );
-
-        const element = document.querySelector(`.${styles.parent}`);
-        if (element) {
-            observer.observe(element);
-        }
-
-        return () => {
-            observer.disconnect();
-        };
-    }, []);
-
-    const handleReadMore = (articleNumber) => {
-        console.log(`기사 ${articleNumber} 더보기 클릭`);
-        // 여기에 기사 상세 페이지로 이동하는 로직 추가
-    };
-
-    return (
-        <div className={styles.parent}>
-            {/* 왼쪽 컬럼 - 제목 */}
-            <div className={styles.column1}>
-                <p className={`${styles.title} ${styles.fadeIn}`}>주요 기사</p>
-                <p className={`${styles.subtitle} ${styles.delayedFadeIn}`}>Latest News</p>
-            </div>
-            
-            {/* 오른쪽 컬럼 - 기사들 */}
-            <div className={styles.column2}>
-                <div className={`${styles.newsRow} ${isVisible ? styles.visible : ''} ${styles.newsRow1}`}>
-                    <div className={styles.imageWrapper}>
-                        <img src={article1} alt="기사 이미지1" className={styles.image} />
-                    </div>
-                    <div className={styles.newsText}>
-                        <p className={styles.date}>March 5, 2025</p>
-                        <h2 className={styles.newsTitle}>고려대의료원, HIMSS 2025에서 의료 IT 최신 트렌드 공유</h2>
-                        <p className={styles.newsContent}>
-                            고려대의료원은 3월 미국 라스베이거스에서 열린 세계 최대
-                            의료 IT 컨퍼런스 'HIMSS 2025'에 참가하여 <span className={styles.highlight}>클라우드 기반
-                            의료 시스템과 AI 솔루션</span>을 소개했습니다.
-                        </p>
-                        <button 
-                            className={styles.button}
-                            onClick={() => handleReadMore(1)}
-                        >
-                            더 보기
-                            <span className={styles.arrowIcon}>→</span>
-                        </button>
-                    </div>
-                </div>
-                
-                <div className={`${styles.newsRow} ${isVisible ? styles.visible : ''} ${styles.newsRow2}`}>
-                    <div className={styles.imageWrapper}>
-                        <img src={article2} alt="기사 이미지2" className={styles.image} />
-                    </div>
-                    <div className={styles.newsText}>
-                        <p className={styles.date}>March 20, 2025</p>
-                        <h2 className={styles.newsTitle}>AI와 디지털 기술, 의료의 일상이 되다</h2>
-                        <p className={styles.newsContent}>
-                            지난 3월 서울 코엑스에서 열린 '메디컬 코리아 2025'에서는
-                            <span className={styles.highlight}>인공지능(AI), 사물 인터넷(IoT), 클라우드 기술</span>을 기반으로 한
-                            미래 병원의 모습이 소개되었습니다.
-                        </p>
-                        <button 
-                            className={styles.button}
-                            onClick={() => handleReadMore(2)}
-                        >
-                            더 보기
-                            <span className={styles.arrowIcon}>→</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
+const Home5 = () => {
+  return (
+    <div className={styles.container}>
+      {/* 로고 섹션 */}
+      <div className={styles.logoSection}>
+        <div className={styles.logo}>
+          <div className={styles.logoIcon}>
+            <div className={styles.iconPart1}></div>
+            <div className={styles.iconPart2}></div>
+          </div>
         </div>
-    );
-}
+      </div>
+
+      {/* 메인 콘텐츠 */}
+      <div className={styles.mainContent}>
+        {/* EXPLORE 섹션 */}
+        <div className={styles.section}>
+          <h3 className={styles.sectionTitle}>EXPLORE</h3>
+          <div className={styles.linkList}>
+            <a href="#" className={styles.link}>Principles</a>
+            <a href="#" className={styles.link}>Perspectives</a>
+            <a href="#" className={styles.link}>Portfolio</a>
+            <a href="#" className={styles.link}>People</a>
+          </div>
+        </div>
+
+        {/* PRODUCT 섹션 */}
+        <div className={styles.section}>
+          <h3 className={styles.sectionTitle}>PRODUCT</h3>
+          <div className={styles.linkList}>
+            <a href="#" className={styles.link}>Blueprint</a>
+            <a href="#" className={styles.link}>Benchmarks</a>
+            <a href="#" className={styles.link}>Fragments</a>
+          </div>
+        </div>
+
+        {/* OTHERS 섹션 */}
+        <div className={styles.section}>
+          <h3 className={styles.sectionTitle}>OTHERS</h3>
+          <div className={styles.linkList}>
+            <a href="#" className={styles.link}>Privacy Policy</a>
+            <a href="#" className={styles.link}>Terms of Service</a>
+            <a href="#" className={styles.link}>Cookie Policy</a>
+            <a href="#" className={styles.link}>Disclaimers</a>
+          </div>
+        </div>
+      </div>
+
+      {/* 하단 연락처 정보 */}
+      <div className={styles.contactInfo}>
+        <div className={styles.locationGroup}>
+          <div className={styles.location}>
+            <h4 className={styles.cityName}>Seoul</h4>
+            <p className={styles.address}>
+              123 Gangnam-daero, Gangnam-gu, Seoul 06142,<br />
+              South Korea
+            </p>
+            <a href="mailto:seoul@eyeofbreath.com" className={styles.email}>
+              seoul@eyeofbreath.com
+            </a>
+          </div>
+
+          <div className={styles.location}>
+            <h4 className={styles.cityName}>Busan</h4>
+            <p className={styles.address}>
+              456 Haeundae-ro, Haeundae-gu, Busan 48094,<br />
+              South Korea
+            </p>
+            <a href="mailto:busan@eyeofbreath.com" className={styles.email}>
+              busan@eyeofbreath.com
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* 푸터 */}
+      <div className={styles.footer}>
+        <p className={styles.copyright}>©2025, EYE OF BREATH</p>
+      </div>
+    </div>
+  );
+};
 
 export default Home5;
