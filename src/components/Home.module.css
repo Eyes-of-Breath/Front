@@ -1,145 +1,232 @@
+/* 전역 스타일 리셋 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   background-color: #fff;
   margin: 0;
   padding: 0;
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
-  position: relative;
-  overflow: hidden; /* body 스크롤 방지 */
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: #333;
 }
 
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
+.container {
+  position: relative;
   width: 100%;
-  height: 100%;
+  height: 100vh;
+  overflow: hidden;
   background-image: url('../assets/blue_gray_gradient.svg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  opacity: 0.8;
-  z-index: -1;
+  background-attachment: fixed;
 }
 
+/* 상단 네비게이션 바 */
 .toolbar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   height: 70px;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  z-index: 10;
+  z-index: 1000;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 3rem 0 2.5rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 0 2rem;
+  border-bottom: 1px solid rgba(229, 231, 235, 0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.logoSection {
+.logo {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 0.75rem;
 }
 
-.logoImg {
-  height: 40px;
-  width: auto;
+.logoIcon {
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
 }
 
-.brandName {
-  font-size: 20px;
-  font-weight: 600;
-  color: #333;
-  letter-spacing: 0.5px;
-  font-family: 'Pretendard', sans-serif;
-}
-
-.navButtons {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.toolbar .title {
-  cursor: pointer;
-  font-size: 18px;
-  align-items: center;
-  padding: 0;
-  color: #333;
+.logoText {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #87ceeb, #6bb6ff, #b0d4f1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin: 0;
-  font-family: 'Pretendard', sans-serif;
 }
 
-.toolbar .title:hover {
-  color: #4A90E2;
-  transition: color 0.3s ease;
+.loginButton {
+  padding: 0.5rem 1.5rem;
+  background: linear-gradient(135deg, #87ceeb, #6bb6ff, #b0d4f1);
+  color: white;
+  border: none;
+  border-radius: 9999px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(135, 206, 235, 0.3);
 }
 
+.loginButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(135, 206, 235, 0.4);
+}
+
+.loginButton:active {
+  transform: translateY(0);
+}
+
+/* 커튼 효과를 위한 슬라이드 컨테이너 */
+.slideContainer {
+  position: absolute;
+  top: 70px; /* 툴바 높이만큼 */
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 70px); /* 툴바 높이 제외 */
+  overflow: hidden;
+}
+
+/* 현재 화면 스타일 */
+.currentSlide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  will-change: transform;
+  overflow: visible; /* Home2 애니메이션을 위해 visible로 변경 */
+}
+
+/* 다음 화면 스타일 (아래에 미리 준비) */
+.nextSlide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  overflow: visible; /* Home2 애니메이션을 위해 visible로 변경 */
+}
+
+/* 스캔라인 전환 효과 */
+.scanlineOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.scanline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #87ceeb 10%,
+    #6bb6ff 50%,
+    #b0d4f1 90%,
+    transparent 100%
+  );
+  box-shadow: 
+    0 0 10px #87ceeb,
+    0 0 20px #6bb6ff,
+    0 0 30px #b0d4f1;
+  animation: scanlineMove 0.8s ease-out forwards;
+}
+
+@keyframes scanlineMove {
+  0% {
+    bottom: 0;
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    bottom: 100vh;
+    opacity: 0;
+  }
+}
+
+/* 메인 콘텐츠 영역 */
 .outer {
   height: 100vh;
   overflow-y: auto;
   scroll-behavior: smooth;
-  scrollbar-width: none; /* Firefox 스크롤바 숨김 */
-  -ms-overflow-style: none; /* IE 스크롤바 숨김 */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
 }
 
 .outer::-webkit-scrollbar {
-  display: none; /* Chrome, Safari 스크롤바 숨김 */
+  display: none; /* Chrome, Safari */
 }
 
-.section {
-  height: 100dvh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.scrollHint {
-  position: fixed;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 20;
-  text-align: center;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 14px;
-}
-
-.scrollArrow {
-  font-size: 20px;
-  animation: bounce 2s infinite;
-  margin-top: 0.5rem;
-}
-
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
-    transform: translateY(0);
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .toolbar {
+    padding: 0 1rem;
+    height: 60px;
   }
-  40% {
-    transform: translateY(-10px);
+  
+  .slideContainer {
+    margin-top: 60px; /* 모바일 툴바 높이 */
   }
-  60% {
-    transform: translateY(-5px);
+  
+  .logoText {
+    font-size: 1.25rem;
+  }
+  
+  .logoIcon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  
+  .loginButton {
+    padding: 0.4rem 1rem;
+    font-size: 0.8rem;
   }
 }
 
-.bg_light_gray {
-  height: 100dvh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 100px;
-  background-color: rgba(242, 242, 242, 0.3);
+@media (max-width: 480px) {
+  .toolbar {
+    padding: 0 0.75rem;
+  }
+  
+  .logoText {
+    font-size: 1.1rem;
+  }
 }
 
-.bg_gray {
-  height: 100dvh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 100px;
-  background-color: rgba(217, 217, 217, 0.3);
+/* 부드러운 전환 효과 */
+.outer > div {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* 스크롤 스냅 효과 (선택사항) */
+.outer {
+  scroll-snap-type: y mandatory;
+}
+
+.outer > div {
+  scroll-snap-align: start;
 }

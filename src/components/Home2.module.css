@@ -1,5 +1,28 @@
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css');
 
+/* 전체 화면 슬라이드 애니메이션 */
+@keyframes slideOutUp {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-100vh); /* 화면 전체 높이만큼 위로 */
+    }
+}
+
+@keyframes slideInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(100vh); /* 화면 전체 높이만큼 아래에서 시작 */
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -13,6 +36,9 @@ body {
     align-items: center;
     height: 100vh;
     font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    width: 100%;
+    position: relative;
+    overflow: hidden; /* 애니메이션이 화면 밖으로 나가는 것을 숨김 */
 }
 
 .column {
@@ -24,15 +50,8 @@ body {
     flex-direction: column;
     gap: 12px;
     padding: 0 20px;
-    /* GSAP이 모든 애니메이션을 제어하므로 CSS 애니메이션 없음 */
-}
-
-/* 가운데 컬럼은 절대 움직이지 않도록 강제 고정 */
-.centerFixed {
-    opacity: 1 !important;
-    transform: translateY(0) !important;
     position: relative;
-    z-index: 1;
+    height: 100%;
 }
 
 .productLabel {
@@ -54,6 +73,51 @@ body {
     margin-bottom: 20px;
 }
 
+/* 텍스트 컨테이너 - 애니메이션을 위한 절대 위치 */
+.textContainer {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* 전체 화면 높이 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* 애니메이션 요소들이 밖으로 나가는 것을 숨김 */
+}
+
+/* 텍스트 슬라이드 - 절대 위치로 겹치게 배치 */
+.textSlide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+/* 현재 텍스트 */
+.currentText {
+    z-index: 10;
+}
+
+/* 다음 텍스트 */
+.nextText {
+    z-index: 5;
+}
+
+/* 애니메이션 클래스 */
+.slideOutUp {
+    animation: slideOutUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.slideInUp {
+    animation: slideInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation-delay: 0.1s; /* 약간 지연되어 자연스럽게 */
+}
+
 .title {
     margin: 0;
     font-size: 48px;
@@ -61,6 +125,7 @@ body {
     color: #1F2937;
     letter-spacing: -0.5px;
     line-height: 1.1;
+    position: relative;
 }
 
 .desc {
@@ -71,10 +136,25 @@ body {
     letter-spacing: 2px;
     text-transform: uppercase;
     opacity: 0.9;
+    position: relative;
+}
+
+.text2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 400;
+    color: #4B5563;
+    line-height: 1.7;
+    padding: 0 8vw;
+    letter-spacing: -0.2px;
+    text-align: center;
+    position: relative;
 }
 
 .logoContainer {
-    /* 심플하게 유지 */
+    opacity: 1;
+    z-index: 20; /* 로고는 항상 최상위에 */
+    position: relative;
 }
 
 .logo {
@@ -89,20 +169,58 @@ body {
     transform: scale(1.05);
 }
 
-.text2 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 400;
-    color: #4B5563;
-    line-height: 1.7;
-    padding: 0 8vw;
-    letter-spacing: -0.2px;
-    text-align: center;
+/* 진행바 스타일 */
+.progressContainer {
+    width: 200px;
+    height: 4px;
+    background-color: rgba(148, 163, 184, 0.2);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 20px;
+    z-index: 20;
+    position: relative;
 }
 
+.progressBar {
+    height: 100%;
+    background: linear-gradient(90deg, #87ceeb, #6bb6ff, #b0d4f1);
+    border-radius: 2px;
+    transition: width 0.8s ease-out;
+    box-shadow: 0 0 8px rgba(135, 206, 235, 0.4);
+}
+
+/* 섹션 인디케이터 스타일 */
+.sectionIndicator {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #6B7280;
+    font-weight: 500;
+    z-index: 20;
+    position: relative;
+}
+
+/* 부드러운 전환을 위한 하이라이트 효과 */
 .highlight {
     color: #3B4A5C;
     font-weight: 600;
+    position: relative;
+}
+
+.highlight::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #87ceeb, #6bb6ff);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+}
+
+.textSlide:not(.slideOutUp) .highlight::after {
+    transform: scaleX(1);
 }
 
 /* 반응형 디자인 */
@@ -129,6 +247,37 @@ body {
     .text2 {
         padding: 0 5vw;
     }
+    
+    .progressContainer {
+        width: 150px;
+    }
+    
+    .textContainer {
+        height: auto;
+        min-height: 200px;
+    }
+    
+    @keyframes slideOutUp {
+        0% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        100% {
+            opacity: 0;
+            transform: translateY(-50vh); /* 모바일에서는 절반 높이 */
+        }
+    }
+    
+    @keyframes slideInUp {
+        0% {
+            opacity: 0;
+            transform: translateY(50vh); /* 모바일에서는 절반 높이 */
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 }
 
 @media (max-width: 768px) {
@@ -153,5 +302,36 @@ body {
     .column {
         padding: 0 15px;
         margin-bottom: 30px;
+    }
+    
+    .progressContainer {
+        width: 120px;
+    }
+    
+    .textContainer {
+        min-height: 150px;
+    }
+}
+
+/* 더 부드러운 애니메이션을 위한 추가 스타일 */
+.textSlide * {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* 로딩 상태 표시 */
+.textSlide.slideInUp * {
+    opacity: 0;
+    animation: fadeInContent 0.5s ease forwards;
+    animation-delay: 0.3s;
+}
+
+@keyframes fadeInContent {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
