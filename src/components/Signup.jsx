@@ -6,10 +6,11 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+
 function Signup() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [verificationCode, setVerificationCode] = useState('');
     const [inputVerificationCode, setInputVerificationCode] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -31,11 +32,6 @@ function Signup() {
         }
     }, [countdown]);
 
-    // 6자리 랜덤 인증번호 생성 (개발용 - 추후 백엔드에서 처리)
-    const generateVerificationCode = () => {
-        return Math.floor(100000 + Math.random() * 900000).toString();
-    };
-
     // 인증번호 전송
     const handleSendVerificationCode = async () => {
         if (!email) {
@@ -52,28 +48,25 @@ function Signup() {
         setIsSendingCode(true);
         setError('');
 
-        try {
-            // TODO: Supabase API 호출로 대체 예정
-            // const response = await fetch('/api/send-verification-code', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify({ email }),
-            // });
-            // const data = await response.json();
+        console.log(SERVER_URL);
 
-            // 임시 구현 (개발용)
-            const code = generateVerificationCode();
-            setVerificationCode(code);
-            
+        try {
+            const response = await fetch(`${SERVER_URL}/send-certification-email`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email })
+            });
+
+            const data = await response.json();
+
+
             setIsCodeSent(true);
             setCountdown(300); // 5분 타이머
             setSuccess(`인증번호가 ${email}로 발송되었습니다.`);
-            
-            // 개발용: 실제 인증번호를 콘솔에 출력 (프로덕션에서는 제거)
-            console.log(`개발용 인증번호: ${code}`);
-            
+
+
         } catch (err) {
             setError('인증번호 발송 중 오류가 발생했습니다.');
             console.error('Error sending verification code:', err);
@@ -98,26 +91,24 @@ function Signup() {
         setError('');
 
         try {
-            // TODO: Supabase API 호출로 대체 예정
-            // const response = await fetch('/api/verify-code', {
-            //     method: 'POST',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify({ 
-            //         email, 
-            //         code: inputVerificationCode 
-            //     }),
-            // });
-            // const data = await response.json();
+            // body 수정해야 함. 임의로 넣어둔 값.
+            const response = await fetch(`${SERVER_URL}/check-certification-number`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, verificationCode: inputVerificationCode }),
+            });
 
-            // 임시 구현 (개발용)
-            if (inputVerificationCode === verificationCode) {
+            const data = await response.json();
+
+            // 서버 응답 구조에 맞게 조건 처리
+            if (response.ok && data.success) {
                 setIsEmailVerified(true);
                 setSuccess('이메일 인증이 완료되었습니다.');
                 setCountdown(0);
             } else {
-                setError('인증번호가 일치하지 않습니다.');
+                setError(data.message || '인증번호가 일치하지 않습니다.');
             }
         } catch (err) {
             setError('인증번호 확인 중 오류가 발생했습니다.');
@@ -125,6 +116,7 @@ function Signup() {
         } finally {
             setIsCodeVerifying(false);
         }
+
     };
 
     // 인증번호 재전송
@@ -168,7 +160,6 @@ function Signup() {
             setEmail('');
             setPassword('');
             setConfirmPassword('');
-            setVerificationCode('');
             setInputVerificationCode('');
             setIsEmailVerified(false);
             setIsCodeSent(false);
@@ -256,9 +247,8 @@ function Signup() {
                         type="button"
                         onClick={handleSendVerificationCode}
                         disabled={isSendingCode || isEmailVerified}
-                        className={`${styles.verificationButton} ${
-                            isEmailVerified ? styles.verified : ''
-                        }`}
+                        className={`${styles.verificationButton} ${isEmailVerified ? styles.verified : ''
+                            }`}
                         style={{ transform: 'translateY(0px)' }}
                     >
                         {isEmailVerified ? '인증완료' : isSendingCode ? '발송중...' : '인증번호'}
@@ -296,7 +286,7 @@ function Signup() {
                                 onClick={handleVerifyCode}
                                 disabled={isCodeVerifying || countdown <= 0 || inputVerificationCode.length !== 6}
                                 className={styles.verifyButton}
-                                style={{ 
+                                style={{
                                     transform: 'translateY(0px) !important',
                                     position: 'relative',
                                     top: '0px'
