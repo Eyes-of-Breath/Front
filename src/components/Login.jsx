@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
 import styles from './Login.module.css';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase';  // firebase.js 위치에 맞게 경로 조정
+
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 function Login() {
     const navigate = useNavigate();
@@ -19,16 +19,42 @@ function Login() {
     const handleLogin = async () => {
         setIsLoading(true);
         setError('');
-        
+
         try {
-            await signInWithEmailAndPassword(auth, email, password);
+            const response = await fetch(`${SERVER_URL}/sign-in`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                // 서버에서 내려준 message 대신 프론트에서 직접 한국어 메시지 지정
+                let message = '로그인에 실패했습니다.\n이메일과 비밀번호를 확인하세요.';
+                if (response.status === 401) {
+                    message = '이메일 또는 비밀번호가 올바르지 않습니다.';
+                } else if (response.status === 404) {
+                    message = '해당 이메일로 가입된 계정이 없습니다.';
+                }
+                setError(message);
+                return;
+            }
+
+            // 🔑 서버에서 토큰이 온다고 가정
+            if (data.accessToken) {
+                localStorage.setItem('accessToken', data.accessToken);
+            }
+
             navigate("/dashboard");
-        } catch (error) {
-            setError('로그인에 실패했습니다.\n이메일과 비밀번호를 확인하세요.');
+
+        } catch (err) {
+            console.error('Login error:', err);
+            setError('서버와 통신 중 오류가 발생했습니다.');
         } finally {
             setIsLoading(false);
         }
-    }
+    };
 
     useEffect(() => {
         document.body.style.backgroundColor = '#EEF2FF';

@@ -45,27 +45,40 @@ function Signup() {
             return;
         }
 
-        setIsSendingCode(true);
         setError('');
 
-        console.log(SERVER_URL);
-
         try {
+            const checkResponse = await fetch(`${SERVER_URL}/check-email`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email }),
+            });
+
+            const checkData = await checkResponse.json();
+
+            if (!checkResponse.ok || checkData.exists) {
+                setError('이미 가입된 이메일입니다.');
+                return;
+            }
+
+            setIsSendingCode(true);
+
             const response = await fetch(`${SERVER_URL}/send-certification-email`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email }),
             });
 
             const data = await response.json();
 
+            if (!response.ok) {
+                setError(data.message || '이메일 발송 실패');
+                return;
+            }
 
             setIsCodeSent(true);
-            setCountdown(300); // 5분 타이머
+            setCountdown(300);
             setSuccess(`인증번호가 ${email}로 발송되었습니다.`);
-
 
         } catch (err) {
             setError('인증번호 발송 중 오류가 발생했습니다.');
@@ -74,6 +87,7 @@ function Signup() {
             setIsSendingCode(false);
         }
     };
+
 
     // 인증번호 확인
     const handleVerifyCode = async () => {
@@ -145,6 +159,18 @@ function Signup() {
         }
 
         try {
+            const checkResponse = await fetch(`${SERVER_URL}/auth/check-email`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email }),
+            });
+
+            const checkData = await checkResponse.json();
+            if (!checkResponse.ok || checkData.exists) {
+                setError('이미 사용 중인 이메일입니다.');
+                return;
+            }
+
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
@@ -152,7 +178,7 @@ function Signup() {
                 email: user.email,
                 name: name,
                 createdAt: new Date(),
-                emailVerified: true, // 이메일 인증 완료 표시
+                emailVerified: true,
             });
 
             setError('');
@@ -164,6 +190,7 @@ function Signup() {
             setIsEmailVerified(false);
             setIsCodeSent(false);
             setShowModal(true);
+
         } catch (err) {
             let message = '';
             switch (err.code) {
@@ -182,11 +209,11 @@ function Signup() {
                 default:
                     message = '회원가입 중 오류가 발생했습니다.';
             }
-
             setError(message);
             setSuccess('');
         }
     };
+
 
     const handleCloseModal = () => {
         setShowModal(false);
@@ -329,7 +356,7 @@ function Signup() {
                     required
                 />
 
-                {error && !success && <p style={{ color: 'red', textAlign: 'center', margin: 0, marginBottom: '8px' }}>{error}</p>}
+                {error && !success && <p style={{ color: 'red', textAlign: 'center', margin: 0, marginBottom: '15px' }}>{error}</p>}
 
                 <button type='submit' disabled={!isEmailVerified}>
                     가입하기

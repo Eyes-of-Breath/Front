@@ -96,7 +96,6 @@ body {
 }
 
 .login_form button {
-    margin-top: 8px;
     padding: 16px;
     background: linear-gradient(135deg, #87ceeb 0%, #6bb6ff 50%, #4a90e2 100%);
     color: white;
