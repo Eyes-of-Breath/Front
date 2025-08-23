@@ -48,7 +48,7 @@ function Signup() {
         setError('');
 
         try {
-            const checkResponse = await fetch(`${SERVER_URL}/check-email`, {
+            const checkResponse = await fetch(`${SERVER_URL}/auth/check-email`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email }),
@@ -63,7 +63,7 @@ function Signup() {
 
             setIsSendingCode(true);
 
-            const response = await fetch(`${SERVER_URL}/send-certification-email`, {
+            const response = await fetch(`${SERVER_URL}/auth/send-certification-email`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email }),
@@ -106,7 +106,7 @@ function Signup() {
 
         try {
             // body 수정해야 함. 임의로 넣어둔 값.
-            const response = await fetch(`${SERVER_URL}/check-certification-number`, {
+            const response = await fetch(`${SERVER_URL}/auth/check-certification-number`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

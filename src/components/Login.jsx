@@ -21,7 +21,7 @@ function Login() {
         setError('');
 
         try {
-            const response = await fetch(`${SERVER_URL}/sign-in`, {
+            const response = await fetch(`${SERVER_URL}/auth/sign-in`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
@@ -30,7 +30,6 @@ function Login() {
             const data = await response.json();
 
             if (!response.ok) {
-                // 서버에서 내려준 message 대신 프론트에서 직접 한국어 메시지 지정
                 let message = '로그인에 실패했습니다.\n이메일과 비밀번호를 확인하세요.';
                 if (response.status === 401) {
                     message = '이메일 또는 비밀번호가 올바르지 않습니다.';
@@ -41,10 +40,11 @@ function Login() {
                 return;
             }
 
-            // 🔑 서버에서 토큰이 온다고 가정
             if (data.accessToken) {
                 localStorage.setItem('accessToken', data.accessToken);
             }
+
+            console.log(data);
 
             navigate("/dashboard");
 
