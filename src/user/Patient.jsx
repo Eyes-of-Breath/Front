@@ -32,7 +32,7 @@ const Patient = () => {
       );
 
       const data = await response.json();
-      console.log('서버 응답:', data);
+      console.log(data);
 
       if (!response.ok || !data || data.length === 0) {
         alert('해당 조건에 맞는 환자를 찾을 수 없습니다.');
@@ -40,8 +40,12 @@ const Patient = () => {
         return;
       }
 
-      // 배열의 첫 번째 환자를 선택
-      setSelectedPatient(data[0]);
+      const exactMatch = data.find(
+        patient => patient.name === searchCriteria.name
+      );
+
+      setSelectedPatient(exactMatch || null);
+
     } catch (err) {
       console.error('환자 검색 중 오류:', err);
       alert('환자 검색 중 오류가 발생했습니다.');
