@@ -274,17 +274,20 @@ const Patient = () => {
                                 </div>
                               </div>
 
-                              <div className={styles.imagePreview}>
-                                <div className={styles.previewContainer}>
-                                  <img
-                                    src={xray.imageUrl}
-                                    alt={diagnosis.predictedDisease}
-                                    className={styles.previewImage}
-                                  />
-                                  <button className={styles.saveButton} title="이미지 저장">
-                                    <Download size={12} />
-                                  </button>
-                                </div>
+                              <div key={xray.imageId} className={styles.recordCard}>
+                                {/* AI 진단 이미지 */}
+                                <img
+                                  src={xray.diagnosisResult.imageUrl} // diagnosisResult의 imageUrl 사용
+                                  alt={xray.fileName}
+                                  className={styles.previewImage}
+                                />
+
+                                {/* Grad-CAM 이미지 */}
+                                <img
+                                  src={xray.diagnosisResult.gradcamImagePath} // Grad-CAM 이미지
+                                  alt="Grad-CAM"
+                                  className={styles.previewImage}
+                                />
                               </div>
                             </div>
                           </div>
