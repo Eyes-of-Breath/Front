@@ -11,7 +11,7 @@ function PatientAll() {
     useEffect(() => {
         const fetchPatients = async () => {
             try {
-                const response = await fetch(`${SERVER_URL}/patients`, {
+                const response = await fetch(`${SERVER_URL}/patients/with-xrays`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",

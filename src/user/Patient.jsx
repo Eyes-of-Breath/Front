@@ -7,16 +7,13 @@ const accessToken = localStorage.getItem('accessToken');
 
 const Patient = () => {
   const [searchCriteria, setSearchCriteria] = useState({ name: '', birthDate: '', gender: '' });
+  const [searchID, setSerachID] = useState({ patientID: '' })
   const [selectedPatient, setSelectedPatient] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSearchLoading, setIsSearchLoading] = useState(false);
+  const [isSearchIDLoading, setIsSearchIDLoading] = useState(false);
 
   const handleSearch = async () => {
-    if (!searchCriteria.name && !searchCriteria.birthDate && !searchCriteria.gender) {
-      alert('최소 하나의 검색 조건을 입력해주세요.');
-      return;
-    }
-
-    setIsLoading(true);
+    setIsSearchLoading(true);
     setSelectedPatient(null);
 
     try {
@@ -50,7 +47,42 @@ const Patient = () => {
       console.error('환자 검색 중 오류:', err);
       alert('모든 정보를 입력해주세요.');
     } finally {
-      setIsLoading(false);
+      setIsSearchLoading(false);
+    }
+  };
+
+  const handleSearchID = async () => {
+    setIsSearchIDLoading(true);
+    setSelectedPatient(null);
+
+    try {
+      const response = await fetch(
+        `${SERVER_URL}/patients/${encodeURIComponent(searchID.patientID)}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+      console.log(data);
+
+      if (!response.ok || !data || data.length === 0) {
+        alert('해당 조건에 맞는 환자를 찾을 수 없습니다.');
+        setSelectedPatient(null);
+        return;
+      }
+
+      setSelectedPatient(data);
+
+    } catch (err) {
+      console.error('환자 검색 중 오류:', err);
+      alert('환자가 존재하지 않습니다.');
+    } finally {
+      setIsSearchIDLoading(false);
     }
   };
 
@@ -59,21 +91,27 @@ const Patient = () => {
     setSelectedPatient(null);
   };
 
-  const getPriorityClass = (priority) => {
-    switch (priority) {
-      case 'high': return 'priorityHigh';
-      case 'moderate': return 'priorityModerate';
-      default: return 'priorityNormal';
-    }
+  const handleResetID = () => {
+    setSerachID({ patientID: '' });
+    setSelectedPatient(null);
+  };
+
+
+  const getPriority = (probability) => {
+    if (probability >= 0.9) return 'high';
+    if (probability >= 0.8) return 'moderate';
+    return 'low';
   };
 
   const getPriorityIcon = (priority) => {
     switch (priority) {
       case 'high': return '⚠️';
       case 'moderate': return '📊';
-      default: return '✅';
+      case 'low': return '✅';
+      default: return '❔';
     }
   };
+
 
   return (
     <div className={styles.patientContainer}>
@@ -150,10 +188,37 @@ const Patient = () => {
                 </div>
 
                 <div className={styles.buttonGroup}>
-                  <button onClick={handleSearch} disabled={isLoading} className={styles.button}>
-                    {isLoading ? '검색 중...' : '검색'}
+                  <button onClick={handleSearch} disabled={isSearchLoading} className={styles.button}>
+                    {isSearchLoading ? '검색 중...' : '검색'}
                   </button>
                   <button onClick={handleReset} className={styles.resetButton}>
+                    초기화
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className={styles.searchSection}>
+              <h2 className={styles.searchTitle}>
+                <Search size={16} style={{ marginRight: '8px' }} />
+                환자 ID로 검색
+              </h2>
+
+              <div className={styles.searchForm}>
+                <div className={styles.formGroup}>
+                  <label className={styles.patientID}>환자 ID:</label>
+                  <input
+                    type="text"
+                    value={searchID.patientID}
+                    onChange={(e) => setSerachID({ ...searchID, patientID: e.target.value })}
+                    placeholder="Patient ID를 입력하세요"
+                    className={styles.inputID}
+                  />
+                </div>
+                <div className={styles.buttonGroup}>
+                  <button onClick={handleSearchID} disabled={isSearchIDLoading} className={styles.button}>
+                    {isSearchIDLoading ? '검색 중...' : '검색'}
+                  </button>
+                  <button onClick={handleResetID} className={styles.resetButton}>
                     초기화
                   </button>
                 </div>
@@ -187,40 +252,54 @@ const Patient = () => {
 
                   <div className={styles.recordsContainer}>
                     {selectedPatient.xrayImages && selectedPatient.xrayImages.length > 0 ? (
-                      selectedPatient.xrayImages.map((xray) => (
-                        <div key={xray.id} className={styles.recordCard}>
-                          <div className={styles.recordLayout}>
-                            <div className={styles.recordInfo}>
-                              <div className={styles.recordHeader}>
-                                <span className={`${styles.badge} ${styles[getPriorityClass(xray.priority)]}`}>
-                                  {getPriorityIcon(xray.priority)} {xray.aiDiagnosis}
-                                </span>
-                                <span className={styles.recordDate}>{xray.date}</span>
-                                <span className={styles.recordConfidence}>예측 정확도: {xray.confidence}%</span>
-                              </div>
-                            </div>
+                      selectedPatient.xrayImages.map((xray) => {
+                        const diagnosis = xray.diagnosisResult;
+                        if (!diagnosis) return null;
 
-                            <div className={styles.imagePreview}>
-                              <div className={styles.previewContainer}>
-                                <div className={styles.previewPlaceholder}>
-                                  <div>엑스레이 이미지</div>
-                                  <div className={styles.imageId}>({xray.id})</div>
+                        const probability = diagnosis.probability; // 0~1
+                        const priority = getPriority(probability); // high / moderate / low
+
+                        return (
+                          <div key={xray.imageId} className={styles.recordCard}>
+                            <div className={styles.recordLayout}>
+                              <div className={styles.recordInfo}>
+                                <div className={styles.recordHeader}>
+                                  <span className={styles.badge}>
+                                    {getPriorityIcon(priority)} {diagnosis.predictedDisease}
+                                  </span>
+                                  <p className={styles.recordDate}>촬영일: {xray.uploadedAt.split('T')[0]}</p>
+                                  <span className={styles.recordConfidence}>
+                                    예측 정확도: {(probability * 100).toFixed(1)}%
+                                  </span>
                                 </div>
-                                <button className={styles.saveButton} title="이미지 저장">
-                                  <Download size={12} />
-                                </button>
+                              </div>
+
+                              <div className={styles.imagePreview}>
+                                <div className={styles.previewContainer}>
+                                  <img
+                                    src={xray.imageUrl}
+                                    alt={diagnosis.predictedDisease}
+                                    className={styles.previewImage}
+                                  />
+                                  <button className={styles.saveButton} title="이미지 저장">
+                                    <Download size={12} />
+                                  </button>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      ))
+                        );
+                      })
                     ) : (
                       <p>엑스레이 기록이 없습니다.</p>
                     )}
+
+
                   </div>
+
                 </div>
               </div>
-            ) : !isLoading ? (
+            ) : !isSearchIDLoading ? (
               <div className={styles.emptyState}>
                 <p>환자를 검색하면 엑스레이 기록이 여기에 표시됩니다.</p>
               </div>
