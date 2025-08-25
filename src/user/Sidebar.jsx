@@ -4,14 +4,15 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import logo from '../assets/logo.png';
-import { 
-    LayoutDashboard, 
-    Calendar, 
-    Users, 
-    BarChart3, 
-    User, 
-    LogOut, 
-    HelpCircle 
+import {
+    LayoutDashboard,
+    Calendar,
+    Users,
+    Search,
+    BarChart3,
+    User,
+    LogOut,
+    HelpCircle
 } from 'lucide-react';
 
 function Sidebar() {
@@ -38,28 +39,33 @@ function Sidebar() {
     };
 
     const menuItems = [
-        { 
-            path: '/dashboard', 
+        {
+            path: '/dashboard',
             label: '대시보드',
             icon: LayoutDashboard
         },
-        { 
-            path: '/calendar', 
+        {
+            path: '/calendar',
             label: '캘린더',
             icon: Calendar
         },
-        { 
-            path: '/patient', 
-            label: '환자 관리',
+        {
+            path: '/patientAll',
+            label: '모든 환자 조회',
+            icon: Search
+        },
+        {
+            path: '/patient',
+            label: '환자 조회',
             icon: Users
         },
-        { 
-            path: '/analysis', 
+        {
+            path: '/analysis',
             label: '분석',
             icon: BarChart3
         },
-        { 
-            path: '/profile', 
+        {
+            path: '/profile',
             label: '프로필',
             icon: User
         }
@@ -71,7 +77,7 @@ function Sidebar() {
             <div className={styles.logoContainer}>
                 <img src={logo} alt="로고" className={styles.logo} />
             </div>
-            
+
             {/* 메뉴 아이콘들 */}
             <div className={styles.menuSection}>
                 {menuItems.map(({ path, label, icon: IconComponent }) => (
@@ -86,13 +92,13 @@ function Sidebar() {
                     </button>
                 ))}
             </div>
-            
+
             <div className={styles.spacer} />
-            
+
             {/* 도움말 버튼 */}
             <div className={styles.helpSection}>
-                <button 
-                    onClick={handleHelp} 
+                <button
+                    onClick={handleHelp}
                     className={styles.iconButton}
                     aria-label="도움말"
                     data-tooltip="도움말"
@@ -100,11 +106,11 @@ function Sidebar() {
                     <HelpCircle size={28} className={styles.icon} />
                 </button>
             </div>
-            
+
             {/* 로그아웃 버튼 */}
             <div className={styles.logoutSection}>
-                <button 
-                    onClick={handleLogout} 
+                <button
+                    onClick={handleLogout}
                     className={styles.iconButton}
                     aria-label="로그아웃"
                     data-tooltip="로그아웃"

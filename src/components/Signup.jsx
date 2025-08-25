@@ -89,49 +89,49 @@ function Signup() {
     };
 
 
-    // 인증번호 확인
-    const handleVerifyCode = async () => {
-        if (!inputVerificationCode) {
-            setError('인증번호를 입력해주세요.');
-            return;
-        }
+    // // 인증번호 확인
+    // const handleVerifyCode = async () => {
+    //     if (!inputVerificationCode) {
+    //         setError('인증번호를 입력해주세요.');
+    //         return;
+    //     }
 
-        if (countdown <= 0) {
-            setError('인증번호가 만료되었습니다. 다시 발송해주세요.');
-            return;
-        }
+    //     if (countdown <= 0) {
+    //         setError('인증번호가 만료되었습니다. 다시 발송해주세요.');
+    //         return;
+    //     }
 
-        setIsCodeVerifying(true);
-        setError('');
+    //     setIsCodeVerifying(true);
+    //     setError('');
 
-        try {
-            // body 수정해야 함. 임의로 넣어둔 값.
-            const response = await fetch(`${SERVER_URL}/auth/check-certification-number`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, verificationCode: inputVerificationCode }),
-            });
+    //     try {
+    //         // body 수정해야 함. 임의로 넣어둔 값.
+    //         const response = await fetch(`${SERVER_URL}/auth/check-certification-number`, {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({ email, verificationCode: inputVerificationCode }),
+    //         });
 
-            const data = await response.json();
+    //         const data = await response.json();
 
-            // 서버 응답 구조에 맞게 조건 처리
-            if (response.ok && data.success) {
-                setIsEmailVerified(true);
-                setSuccess('이메일 인증이 완료되었습니다.');
-                setCountdown(0);
-            } else {
-                setError(data.message || '인증번호가 일치하지 않습니다.');
-            }
-        } catch (err) {
-            setError('인증번호 확인 중 오류가 발생했습니다.');
-            console.error('Error verifying code:', err);
-        } finally {
-            setIsCodeVerifying(false);
-        }
+    //         // 서버 응답 구조에 맞게 조건 처리
+    //         if (response.ok && data.success) {
+    //             setIsEmailVerified(true);
+    //             setSuccess('이메일 인증이 완료되었습니다.');
+    //             setCountdown(0);
+    //         } else {
+    //             setError(data.message || '인증번호가 일치하지 않습니다.');
+    //         }
+    //     } catch (err) {
+    //         setError('인증번호 확인 중 오류가 발생했습니다.');
+    //         console.error('Error verifying code:', err);
+    //     } finally {
+    //         setIsCodeVerifying(false);
+    //     }
 
-    };
+    // };
 
     // 인증번호 재전송
     const handleResendCode = () => {
@@ -143,10 +143,10 @@ function Signup() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!isEmailVerified) {
-            setError('이메일 인증을 완료해주세요.');
-            return;
-        }
+        // if (!isEmailVerified) {
+        //     setError('이메일 인증을 완료해주세요.');
+        //     return;
+        // }
 
         if (password !== confirmPassword) {
             setError('비밀번호가 일치하지 않습니다.');
@@ -159,27 +159,35 @@ function Signup() {
         }
 
         try {
-            const checkResponse = await fetch(`${SERVER_URL}/auth/check-email`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email }),
+            const response = await fetch(`${SERVER_URL}/auth/sign-up`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email,
+                    password,
+                    nickname: name,
+                    certificationNumber: inputVerificationCode, // 사용자가 입력한 인증번호
+                }),
             });
 
-            const checkData = await checkResponse.json();
-            if (!checkResponse.ok || checkData.exists) {
-                setError('이미 사용 중인 이메일입니다.');
-                return;
+            console.log(response);
+
+            if (!response.ok) {
+                throw new Error("회원가입 요청 실패");
             }
 
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
+            const data = await response.json();
+            console.log("회원가입 결과:", data);
 
-            await setDoc(doc(db, 'users', user.uid), {
-                email: user.email,
-                name: name,
-                createdAt: new Date(),
-                emailVerified: true,
-            });
+            // 서버에서 "이메일 인증 안됨" 같은 응답이 올 수도 있음
+            if (data.success) {
+                alert("회원가입이 완료되었습니다!");
+                // 페이지 이동 등 처리
+            } else {
+                alert(data.message || "회원가입에 실패했습니다.");
+            }
 
             setError('');
             setName('');
@@ -308,7 +316,7 @@ function Signup() {
                                 maxLength={6}
                                 required
                             />
-                            <button
+                            {/* <button
                                 type="button"
                                 onClick={handleVerifyCode}
                                 disabled={isCodeVerifying || countdown <= 0 || inputVerificationCode.length !== 6}
@@ -320,7 +328,7 @@ function Signup() {
                                 }}
                             >
                                 {isCodeVerifying ? '확인중...' : '확인'}
-                            </button>
+                            </button> */}
                         </div>
                         {countdown <= 0 && (
                             <button
@@ -358,7 +366,7 @@ function Signup() {
 
                 {error && !success && <p style={{ color: 'red', textAlign: 'center', margin: 0, marginBottom: '15px' }}>{error}</p>}
 
-                <button type='submit' disabled={!isEmailVerified}>
+                <button type="submit">
                     가입하기
                 </button>
             </form>

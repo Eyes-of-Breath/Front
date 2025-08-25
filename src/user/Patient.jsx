@@ -21,7 +21,7 @@ const Patient = () => {
 
     try {
       const response = await fetch(
-        `${SERVER_URL}/patients/search?name=${encodeURIComponent(searchCriteria.name)}`,
+        `${SERVER_URL}/patients/search?name=${encodeURIComponent(searchCriteria.name)}&birthDate=${encodeURIComponent(searchCriteria.birthDate)}&gender=${encodeURIComponent(searchCriteria.gender)}`,
         {
           method: 'GET',
           headers: {
@@ -48,7 +48,7 @@ const Patient = () => {
 
     } catch (err) {
       console.error('환자 검색 중 오류:', err);
-      alert('환자 검색 중 오류가 발생했습니다.');
+      alert('모든 정보를 입력해주세요.');
     } finally {
       setIsLoading(false);
     }

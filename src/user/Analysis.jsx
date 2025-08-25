@@ -130,7 +130,7 @@ function PatientUploadInterface() {
         <div className={styles.container}>
             <div className={styles.wrapper}>
                 <h1 className={styles.greeting}>
-                    환자의 흉부 X-ray 파일을 업로드하고 vit을 이용해 판독 결과를 확인하세요.
+                    환자의 흉부 X-ray 파일을 업로드하고 AI를 이용해 판독 결과를 확인하세요.
                 </h1>
                 
                 <div className={styles.cardGrid}>

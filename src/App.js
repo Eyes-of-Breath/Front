@@ -12,6 +12,7 @@ import Result from './user/Result';
 import Patient from './user/Patient';
 import Profile from './user/Profile';
 import Analysis from './user/Analysis';
+import PatientAll from './user/PatientAll';
 
 function App() {
   return (
@@ -23,10 +24,11 @@ function App() {
         <Route element={<Layout />} >
           <Route path='dashboard' element={<Dashboard />} />
           <Route path='calendar' element={<Calendar />} />
+          <Route path='patientAll' element={<PatientAll />} />
           <Route path='patient' element={<Patient />} />
           <Route path='analysis' element={<Analysis />} />
-          <Route path='loading' element={<Loading />} />  
-          <Route path='result' element={<Result />} />    
+          <Route path='loading' element={<Loading />} />
+          <Route path='result' element={<Result />} />
           <Route path='profile' element={<Profile />} />
         </Route>
       </Routes>
