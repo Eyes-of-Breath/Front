@@ -40,11 +40,15 @@ function Login() {
                 return;
             }
 
-            if (data.accessToken) {
-                localStorage.setItem('accessToken', data.accessToken);
-            }
+            // if (data.accessToken) {
+            //     localStorage.setItem('accessToken', data.accessToken);
+            // }
+            localStorage.setItem('accessToken', data.accessToken);
+            localStorage.setItem('memberId', data.memberId);
+            localStorage.setItem('nickname', data.nickname);
 
             console.log(data);
+            console.log(data.nickname);
 
             navigate("/dashboard");
 

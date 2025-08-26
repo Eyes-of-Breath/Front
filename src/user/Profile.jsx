@@ -3,6 +3,8 @@ import styles from './Profile.module.css'; // CSS Module import
 import { User, Lock, Trash2, Stethoscope, Building, Mail, BarChart3, Calendar, TrendingUp, Settings, Shield, Award, ChevronRight } from 'lucide-react';
 import profile from '../assets/profile.jpg';
 
+const nickname = localStorage.getItem('nickname');
+
 const Profile = () => {
     const [userStats] = useState({
         totalDiagnoses: 147,
@@ -12,7 +14,7 @@ const Profile = () => {
     });
 
     const [doctorInfo] = useState({
-        name: '강지은',
+        name: nickname,
         email: 'abc1234@gmail.com',
         licenseNumber: '의사 제241234호',
         hospital: '서울대학교병원',

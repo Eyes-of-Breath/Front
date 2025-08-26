@@ -7,12 +7,12 @@ import logo from '../assets/logo.png';
 import {
     LayoutDashboard,
     Calendar,
-    Users,
     Search,
     BarChart3,
     User,
     LogOut,
-    HelpCircle
+    HelpCircle,
+    Stethoscope
 } from 'lucide-react';
 
 function Sidebar() {
@@ -57,7 +57,7 @@ function Sidebar() {
         {
             path: '/patient',
             label: '환자 조회',
-            icon: Users
+            icon: Stethoscope
         },
         {
             path: '/analysis',

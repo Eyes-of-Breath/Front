@@ -1,33 +1,918 @@
 /* Dashboard.module.css */
 
+.container {
+    min-height: 100vh;
+    width: 100%;
+}
+
 .body {
-    padding: 2rem;
     background-image: url('../assets/blue_gradient_background.svg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    min-height: 100vh;
+    height: 100vh;
+    padding: 1.5rem;
+    padding-top: 0.5rem;
     display: flex;
-    align-items: flex-start;
+    flex-direction: column;
+    align-items: center;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    overflow: hidden;
+}
+
+/* 헤더 스타일 */
+.header {
+    display: flex;
+    align-items: center;
     justify-content: flex-start;
+    margin-bottom: 1rem;
+    color: white;
+    width: 100%;
+    max-width: 1400px;
+}
+
+.greetingSection {
+    display: flex;
+    align-items: center;
+}
+
+.greetingContent {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
 .greeting {
     font-size: 1.5rem;
     font-weight: 300;
-    color: #000000;
-    margin: 0;
+    color: #1a1a1a;
+    margin: 0.5rem 0 0.5rem 0;
     line-height: 1.6;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+    padding-left: 0.25rem;
+}
+
+/* 카드 그리드 */
+.cardGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 1rem;
+    width: 100%;
+    max-width: 1400px;
+    height: calc(100vh - 100px);
+    overflow: hidden;
+}
+
+/* 기본 카드 스타일 */
+.card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    padding: 1.2rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.cardWide {
+    grid-column: span 2;
+}
+
+/* 통계 섹션 - 2층 구조 */
+.statsSection {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    height: 100%;
+}
+
+.statCard {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 1rem;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+}
+
+.statCard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.statHeader {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+}
+
+.statTitle {
+    margin: 0;
+    color: #374151;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+/* 카드 헤더 */
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.cardHeaderRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+.cardHeaderWithIcon {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cardHeaderWithIcon svg {
+    transform: translateY(-4px);
+}
+
+.cardTitle {
+    margin: 0 0 0.5rem 0;
+    color: #374151;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+/* 통계 스타일 */
+.statContainer {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 0.8rem;
+    margin: 0.5rem 0;
+}
+
+.statNumber {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #1F2937;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+.statNumberWithGauge {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #1F2937;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    line-height: 1;
+    margin-bottom: 0.8rem;
+}
+
+.statBadge {
+    padding: 0.3rem 0.6rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    align-self: flex-start;
+    margin-top: 2px;
+}
+
+.statBadgeBlue {
+    background: #cdecff;
+    color: #3B82F6;
+}
+
+.statBadgeGreen {
+    background: #e7f5d5;
+    color: #22c55e;
+}
+
+.statDescription {
+    color: #6B7280;
+    margin: 0.5rem 0 0 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    text-align: left;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+/* 진행률 바 */
+.progressBar {
+    width: 100%;
+    height: 16px;
+    background: #E5E7EB;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 0.5rem 0;
+}
+
+.progressFill {
+    height: 100%;
+    background: linear-gradient(90deg, #87ceeb, #6bb6ff, #5aa3e6);
+    border-radius: 8px;
+    transition: width 1s ease-in-out;
+    position: relative;
+}
+
+.progressFill::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: repeating-linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.1) 2px,
+        rgba(255, 255, 255, 0.3) 2px,
+        rgba(255, 255, 255, 0.3) 4px
+    );
+    border-radius: 8px;
+}
+
+/* 기능 리스트 */
+.featureList {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.featureItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.featureText {
+    font-size: 0.8rem;
+    color: #6B7280;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+/* 긴급 카드 */
+.urgentCard {
+    background: linear-gradient(135deg, #5aa3e6 0%, #88c5ff 50%, #c7e4ff 100%);
+    border-radius: 16px;
+    padding: 1.2rem;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: left;
+}
+
+.urgentCard:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 50px rgba(90, 163, 230, 0.4);
+}
+
+.urgentBackground {
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 150px;
+    height: 150px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+}
+
+.urgentMegaphone {
+    position: absolute;
+    top: calc(50% + 40px);
+    right: 0;
+    transform: translateY(-50%);
+    z-index: 2;
+}
+
+.megaphoneImage {
+    width: 60px;
+    height: 60px;
+    opacity: 0.95;
+    filter: brightness(1.05);
+}
+
+.urgentContent {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    flex: 1;
+}
+
+.urgentTop {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.urgentTitle {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+.urgentDescription {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+    line-height: 1.4;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+.urgentAlert {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: bold;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    margin-top: auto;
+    margin-bottom: 1rem;
+}
+
+.urgentButton {
+    padding: 0.8rem 1.3rem;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1.5px solid rgba(255, 255, 255);
+    border-radius: 30px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    font-weight: 500;
+    width: 100%;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+.urgentButton:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+}
+
+/* 차트 컨테이너 */
+.chartContainer {
+    height: 200px;
+    width: 100%;
+    margin-top: 0.5rem;
+    flex: 1;
+}
+
+/* 파이차트 전용 스타일 */
+.pieChartContainer {
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0.5rem 0;
+    flex: 1;
+    position: relative;
+    overflow: visible;
+}
+
+.piePieceHover {
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+}
+
+.piePieceHover:hover {
+    transform: scale(1.1);
+}
+
+.pieLeaderLine {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 999;
+}
+
+.pieLeaderLine path {
+    stroke-width: 2;
+    fill: none;
+    opacity: 0;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    stroke-dasharray: 4 2;
+}
+
+.pieLeaderLine.show path {
+    opacity: 1;
+}
+
+.pieTooltip {
+    position: absolute;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(20, 20, 20, 0.95));
+    color: white;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-weight: 500;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(10px) scale(0.9);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+    white-space: nowrap;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.pieTooltip.show {
+    opacity: 1 !important;
+    transform: translateY(0) scale(1) !important;
+}
+
+.pieTooltip::before {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid rgba(0, 0, 0, 0.9);
+}
+
+/* 범례 */
+.legendGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.legendItem {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.legendColor {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.legendText {
+    font-size: 0.8rem;
+    color: #6B7280;
+}
+
+/* 기록 리스트 */
+.recordsList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.recordItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem;
+    background: #ffffff;
+    border-radius: 0.4rem;
+    border: 1px solid #E5E7EB;
+    transition: all 0.3s ease;
+}
+
+.recordItem:hover {
+    background: #F3F4F6;
+}
+
+.recordLeft {
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+}
+
+.severityDot {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    position: relative;
+    filter: blur(1px);
+    transform: translateX(7px);
+
+}
+
+.recordPatient {
+    font-weight: 600;
+    color: #1F2937;
+    font-size: 0.9rem;
+}
+
+.recordDetails {
+    color: #6B7280;
+    font-size: 0.8rem;
+    margin-top: 0.2rem;
+}
+
+.recordRight {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.2rem;
+}
+
+.recordTime {
+    color: #6B7280;
+    font-size: 0.8rem;
+}
+
+/* 일정 리스트 */
+.scheduleList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+    overflow: hidden;
+    padding: 0.2rem 0;
+}
+
+.scheduleItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #E5E7EB;
+}
+
+.scheduleItem:last-child {
+    border-bottom: none;
+}
+
+.scheduleTime {
+    color: #5aa3e6;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    min-width: 50px;
+    flex-shrink: 0;
+}
+
+.scheduleContent {
+    flex: 1;
+}
+
+.scheduleTitle {
+    color: #1F2937;
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    margin-bottom: 0.2rem;
+}
+
+.scheduleSubtitle {
+    color: #6B7280;
+    font-size: 0.8rem;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+/* 일정 체크박스 스타일 */
+.scheduleCheckbox {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: white;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    flex-shrink: 0;
+    transform: translateX(-2px); /* 왼쪽으로 2px 이동 */
+}
+
+.scheduleCheckbox::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+    background: linear-gradient(135deg, #5aa3e6, #6bb6ff, #87ceeb);
+    border-radius: 50%;
+    z-index: 0;
+}
+
+.scheduleCheckbox::after {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    right: 1px;
+    bottom: 1px;
+    background: white;
+    border-radius: 50%;
+    z-index: 1;
+    transition: background-color 0.3s ease;
+}
+
+.scheduleCheckbox svg {
+    position: relative;
+    z-index: 2;
+    stroke-width: 3;
+}
+
+.scheduleCheckbox:hover::after {
+    background: #f0f0f0;
+}
+
+.scheduleCheckbox.checked::after {
+    background: white;
+}
+
+/* 버튼 스타일 */
+.buttonGroup {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.buttonActive {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #87ceeb, #6bb6ff);
+    color: white;
+    border: none;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+.buttonActive:hover {
+    background: linear-gradient(135deg, #6bb6ff, #5aa3e6);
+    transform: translateY(-1px);
+}
+
+.buttonSecondary {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    background: white;
+    color: #6B7280;
+    border: 1px solid #E5E7EB;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+.buttonSecondary:hover {
+    background: #F9FAFB;
+    color: #374151;
+    border-color: #D1D5DB;
+}
+
+.buttonPrimary {
+    width: 100%;
+    padding: 0.8rem;
+    background: #1F2937;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.buttonPrimary:hover {
+    background: #111827;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 아바타 이미지 스타일 */
+.avatarCircle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: visible; /* 프레임이 원 밖으로 나가도 보이게 */
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    position: relative; /* 자식 absolute 기준 */
+}
+
+.avatarImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+    position: relative;
+    z-index: 1;
+    transform: translate(0px,0px);
+}
+
+.avatarFrame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 270px;
+    height: 270px;
+    pointer-events: none; /* 클릭 방지 */
+    z-index: 2;
+    transform: translate(-79px, -79px); /* 프레임이 원 밖으로 나가도록 위치 조정 */
+    opacity: 0.8;
+}
+
+/* 프로필 카드 스타일 */
+.profileCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: rgba(255,255,255,0.95);
+    border-radius: 16px;
+    padding: 2rem 1.2rem 1.2rem 1.2rem;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+}
+
+.profileName {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #22223b;
+    margin-top: 1.2rem;
+    margin-bottom: 0.3rem;
+    letter-spacing: -0.5px;
+}
+
+.profileRole {
+    font-size: 1rem;
+    color: #5aa3e6;
+    font-weight: 500;
+    margin-bottom: 0.7rem;
+}
+
+.profileDesc {
+    font-size: 0.95rem;
+    color: #6B7280;
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
 }
 
 /* 반응형 디자인 */
+@media (max-width: 1200px) {
+    .cardGrid {
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+    }
+    
+    .cardGrid > :nth-child(3) {
+        grid-column: 3;
+        grid-row: 1;
+    }
+    
+    .cardGrid > :nth-child(6) {
+        grid-column: 2 / span 2;
+        grid-row: 3;
+    }
+    
+    .cardGrid > :nth-child(7) {
+        grid-column: 1;
+        grid-row: 3;
+    }
+}
+
 @media (max-width: 768px) {
     .body {
         padding: 1rem;
     }
     
     .greeting {
+        font-size: 1.5rem;
+    }
+    
+    .cardGrid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: repeat(4, 1fr);
+        gap: 0.8rem;
+        height: calc(100vh - 100px);
+    }
+    
+    .card {
+        padding: 1rem;
+    }
+    
+    .statNumber {
+        font-size: 1.6rem;
+    }
+    
+    .header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    
+    .greetingContent {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .cardGrid > :nth-child(3) {
+        grid-column: 1 / span 2;
+        grid-row: 2;
+    }
+    
+    .cardGrid > :nth-child(6) {
+        grid-column: 1 / span 2;
+        grid-row: 4;
+    }
+    
+    .cardGrid > :nth-child(7) {
+        grid-column: 2;
+        grid-row: 3;
+    }
+}
+
+@media (max-width: 480px) {
+    .body {
+        padding: 0.5rem;
+    }
+    
+    .greeting {
         font-size: 1.25rem;
+    }
+    
+    .card {
+        padding: 0.8rem;
+    }
+    
+    .statNumber {
+        font-size: 1.4rem;
+    }
+    
+    .chartContainer {
+        height: 150px;
+    }
+    
+    .pieChartContainer {
+        height: 120px;
+    }
+    
+    .cardGrid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(7, 1fr);
+        height: calc(100vh - 80px);
+    }
+    
+    .cardGrid > :nth-child(3),
+    .cardGrid > :nth-child(6) {
+        grid-column: 1;
     }
 }
