@@ -1,32 +1,76 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
-    AlertTriangle, 
-    Activity, 
-    CheckCircle, 
-    Clock, 
-    Users, 
-    Calendar as CalendarIcon,
-    MapPin,
-    Video,
-    UserCheck,
+    Plus, 
+    Trash2, 
+    Check,
+    X,
     ChevronLeft,
     ChevronRight,
-    Stethoscope,
-    Heart,
-    BarChart3
+    Calendar as CalendarIcon,
+    Clock,
+    CheckCircle2,
+    Circle,
+    Edit
 } from 'lucide-react';
 import styles from './Calendar.module.css';
 
 function Calendar() {
     const [currentWeek, setCurrentWeek] = useState(new Date());
     const [currentTime, setCurrentTime] = useState(new Date());
+    const [showModal, setShowModal] = useState(false);
+    const [selectedSlot, setSelectedSlot] = useState(null);
+    const [editingEvent, setEditingEvent] = useState(null);
+    const [newTodo, setNewTodo] = useState('');
+    
+    // 할일 목록 데이터
+    const [todos, setTodos] = useState([
+        { id: 1, text: 'CT 판독 보고서 작성', completed: false },
+        { id: 2, text: 'MRI 스캔 결과 검토', completed: true },
+        { id: 3, text: '환자 상담 준비', completed: false },
+        { id: 4, text: '의료진 회의 자료 준비', completed: false },
+        { id: 5, text: '장비 점검 스케줄 확인', completed: true }
+    ]);
+    
+    // 캘린더 일정 데이터
+    const [appointments, setAppointments] = useState([
+        {
+            id: 1,
+            day: 0,
+            time: '09:00',
+            duration: 2,
+            title: 'CT 판독',
+            description: '흉부 CT 판독 업무'
+        },
+        {
+            id: 2,
+            day: 0,
+            time: '11:00',
+            duration: 1,
+            title: '초음파 검사',
+            description: '복부 초음파 검사'
+        },
+        {
+            id: 3,
+            day: 1,
+            time: '14:00',
+            duration: 2,
+            title: '응급 검사',
+            description: '응급실 의뢰 검사'
+        }
+    ]);
+
+    const [formData, setFormData] = useState({
+        title: '',
+        time: '09:00',
+        duration: 1,
+        description: ''
+    });
 
     // 현재 시간 업데이트
     useEffect(() => {
         const timer = setInterval(() => {
             setCurrentTime(new Date());
-        }, 60000); // 1분마다 업데이트
-
+        }, 60000);
         return () => clearInterval(timer);
     }, []);
 
@@ -39,104 +83,73 @@ function Calendar() {
     // 요일 이름
     const dayNames = ['월', '화', '수', '목', '금', '토', '일'];
 
-    // 현재 주의 날짜들을 계산
-    const getWeekDates = (date) => {
-        const startOfWeek = new Date(date);
+    // useMemo를 사용해서 계산된 값들을 안전하게 처리
+    const weekDates = useMemo(() => {
+        const startOfWeek = new Date(currentWeek);
         const day = startOfWeek.getDay();
         const diff = startOfWeek.getDate() - day + (day === 0 ? -6 : 1);
         startOfWeek.setDate(diff);
 
-        const weekDates = [];
+        const dates = [];
         for (let i = 0; i < 7; i++) {
             const weekDate = new Date(startOfWeek);
             weekDate.setDate(startOfWeek.getDate() + i);
-            weekDates.push(weekDate);
+            dates.push(weekDate);
         }
-        return weekDates;
-    };
+        return dates;
+    }, [currentWeek]);
 
-    const weekDates = getWeekDates(currentWeek);
-
-    // 샘플 일정 데이터
-    const appointments = [
-        { id: 1, day: 0, time: '09:00', duration: 1, patient: '김○○', type: '초진' },
-        { id: 2, day: 0, time: '10:30', duration: 1, patient: '이○○', type: '재진' },
-        { id: 3, day: 1, time: '14:00', duration: 2, patient: '박○○', type: '검진' },
-        { id: 4, day: 2, time: '09:30', duration: 1, patient: '최○○', type: '상담' },
-        { id: 5, day: 4, time: '15:00', duration: 1, patient: '정○○', type: '초진' },
-    ];
-
-    // 응급 알림
-    const emergencyAlerts = [
-        { id: 1, time: '13:45', patient: '응급환자', message: '흉통 호소, 즉시 진료 필요', priority: 'high' },
-        { id: 2, time: '14:20', patient: '응급환자', message: '호흡곤란, 응급실 이송 중', priority: 'critical' }
-    ];
-
-    // 오늘의 통계
-    const todayStats = [
-        { label: '예정 진료', value: '12명', icon: CalendarIcon },
-        { label: '완료 진료', value: '8명', icon: CheckCircle },
-        { label: '대기 환자', value: '4명', icon: Clock },
-        { label: '응급 환자', value: '2명', icon: AlertTriangle }
-    ];
-
-    // 병원 일정
-    const hospitalSchedule = [
-        { id: 1, time: '08:00', title: '병동 라운딩', type: 'rounds', location: '3층 병동', icon: Stethoscope },
-        { id: 2, time: '12:30', title: '의료진 회의', type: 'meeting', location: '회의실 A', icon: Users },
-        { id: 3, time: '19:00', title: '케이스 컨퍼런스', type: 'conference', location: '강당', icon: Video },
-        { id: 4, time: '20:00', title: '야간 당직', type: 'duty', location: '응급실', icon: Heart }
-    ];
-
-    // 현재 시간이 표시 범위 내에 있는지 확인
-    const getCurrentTimePosition = () => {
+    const currentTimePosition = useMemo(() => {
         const now = currentTime;
         const currentHour = now.getHours();
         const currentMinute = now.getMinutes();
         
-        // 9시~19시 범위 내에서만 표시 (18:00까지 포함하려면 19시 미만)
         if (currentHour < 9 || currentHour >= 19) {
             return null;
         }
         
-        // 해당 시간 슬롯 찾기 (예: 10:30은 10:00 슬롯)
         const slotHour = Math.floor(currentHour);
-        const relativeSlot = slotHour - 9; // 9시를 0번째 슬롯으로
-        
-        // 해당 슬롯 내에서의 분 비율 (0~1)
+        const relativeSlot = slotHour - 9;
         const minutePercent = currentMinute / 60;
-        
-        // 슬롯 시작점 + 슬롯 내 위치
         const position = relativeSlot * 60 + (minutePercent * 60);
         
         return position;
-    };
+    }, [currentTime]);
 
-    // 현재 요일 확인 (월요일=0, 일요일=6)
-    const getCurrentDayIndex = () => {
+    const currentDayIndex = useMemo(() => {
         const today = new Date();
-        const currentWeekDates = getWeekDates(currentWeek);
         
-        // 오늘이 현재 표시된 주에 속하는지 확인
-        for (let i = 0; i < currentWeekDates.length; i++) {
-            if (today.toDateString() === currentWeekDates[i].toDateString()) {
+        for (let i = 0; i < weekDates.length; i++) {
+            if (today.toDateString() === weekDates[i].toDateString()) {
                 return i;
             }
         }
         return null;
+    }, [weekDates]);
+
+    // 할일 관련 함수들
+    const addTodo = () => {
+        if (newTodo.trim()) {
+            setTodos(prev => [...prev, {
+                id: Date.now(),
+                text: newTodo.trim(),
+                completed: false
+            }]);
+            setNewTodo('');
+        }
     };
 
-    const currentTimePosition = getCurrentTimePosition();
-    const currentDayIndex = getCurrentDayIndex();
-
-    // 주 변경
-    const changeWeek = (direction) => {
-        const newWeek = new Date(currentWeek);
-        newWeek.setDate(newWeek.getDate() + (direction * 7));
-        setCurrentWeek(newWeek);
+    const toggleTodo = (id) => {
+        setTodos(prev => prev.map(todo => 
+            todo.id === id ? { ...todo, completed: !todo.completed } : todo
+        ));
     };
 
-    // 특정 시간과 요일에 일정이 있는지 확인
+    const deleteTodo = (id) => {
+        setTodos(prev => prev.filter(todo => todo.id !== id));
+    };
+
+    // 캘린더 관련 함수들
     const getAppointmentAt = (dayIndex, timeSlot) => {
         return appointments.find(apt => 
             apt.day === dayIndex && 
@@ -144,97 +157,187 @@ function Calendar() {
         );
     };
 
-    // 오늘 날짜 포맷팅
-    const getTodayDateString = () => {
-        const today = new Date();
-        const month = today.getMonth() + 1;
-        const date = today.getDate();
-        return `${month}월 ${date}일`;
+    const changeWeek = (direction) => {
+        const newWeek = new Date(currentWeek);
+        newWeek.setDate(newWeek.getDate() + (direction * 7));
+        setCurrentWeek(newWeek);
     };
+
+    const handleTimeSlotClick = (dayIndex, timeSlot) => {
+        setSelectedSlot({ day: dayIndex, time: timeSlot });
+        setFormData({
+            title: '',
+            time: timeSlot,
+            duration: 1,
+            description: ''
+        });
+        setEditingEvent(null);
+        setShowModal(true);
+    };
+
+    const handleAppointmentClick = (appointment, e) => {
+        e.stopPropagation();
+        setEditingEvent(appointment);
+        setSelectedSlot({ day: appointment.day, time: appointment.time });
+        setFormData({
+            title: appointment.title,
+            time: appointment.time,
+            duration: appointment.duration,
+            description: appointment.description
+        });
+        setShowModal(true);
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        
+        if (editingEvent) {
+            setAppointments(prev => prev.map(apt => 
+                apt.id === editingEvent.id 
+                    ? { 
+                        ...apt, 
+                        title: formData.title,
+                        time: formData.time,
+                        duration: formData.duration,
+                        description: formData.description
+                    }
+                    : apt
+            ));
+            setEditingEvent(null);
+        } else {
+            const newAppointment = {
+                id: Date.now(),
+                day: selectedSlot?.day || currentDayIndex || 0,
+                time: formData.time,
+                duration: formData.duration,
+                title: formData.title,
+                description: formData.description
+            };
+            setAppointments(prev => [...prev, newAppointment]);
+        }
+        
+        setFormData({
+            title: '',
+            time: '09:00',
+            duration: 1,
+            description: ''
+        });
+        setSelectedSlot(null);
+        setShowModal(false);
+    };
+
+    const handleDelete = (appointmentId) => {
+        setAppointments(prev => prev.filter(apt => apt.id !== appointmentId));
+        setShowModal(false);
+        setEditingEvent(null);
+    };
+
+    const completedTodos = todos.filter(todo => todo.completed).length;
+    const totalTodos = todos.length;
 
     return (
         <div className={styles.body}>
             <div className={styles.container}>
-                {/* 왼쪽 사이드바 */}
+                {/* 왼쪽 할일 체크리스트 */}
                 <div className={styles.leftSidebar}>
-                    {/* 인사말 */}
                     <h1 className={styles.greeting}>
-                        {getTodayDateString()}의 진료 일정
+                        오늘의 할일
                     </h1>
                     
-                    {/* 스크롤 영역 */}
-                    <div className={styles.sidebarContent}>
-                        {/* 응급 알림 */}
-                        <div className={styles.card}>
-                            <h3 className={styles.cardTitle}>
-                                <AlertTriangle size={18} />
-                                응급 알림
-                            </h3>
-                            <div className={styles.alertsList}>
-                                {emergencyAlerts.map(alert => (
-                                    <div key={alert.id} className={`${styles.alert} ${styles[alert.priority]}`}>
-                                        <div className={styles.alertHeader}>
-                                            <span className={styles.alertTime}>{alert.time}</span>
-                                            <span className={styles.alertPatient}>{alert.patient}</span>
-                                        </div>
-                                        <div className={styles.alertMessage}>{alert.message}</div>
+                    {/* 진행률 표시 */}
+                    <div className={styles.progressCard}>
+                        <div className={styles.progressHeader}>
+                            <span className={styles.progressText}>진행률</span>
+                            <span className={styles.progressNumbers}>{completedTodos}/{totalTodos}</span>
+                        </div>
+                        <div className={styles.progressBar}>
+                            <div 
+                                className={styles.progressFill}
+                                style={{ width: `${totalTodos > 0 ? (completedTodos / totalTodos) * 100 : 0}%` }}
+                            ></div>
+                        </div>
+                        <div className={styles.progressPercentage}>
+                            {totalTodos > 0 ? Math.round((completedTodos / totalTodos) * 100) : 0}% 완료
+                        </div>
+                    </div>
+
+                    {/* 새 할일 추가 */}
+                    <div className={styles.addTodoSection}>
+                        <div className={styles.addTodoInput}>
+                            <input
+                                type="text"
+                                value={newTodo}
+                                onChange={(e) => setNewTodo(e.target.value)}
+                                placeholder="새 할일을 입력하세요..."
+                                onKeyPress={(e) => {
+                                    if (e.key === 'Enter') {
+                                        addTodo();
+                                    }
+                                }}
+                                style={{
+                                    flex: 1,
+                                    padding: '0.75rem',
+                                    border: '1px solid #d1d5db',
+                                    borderRadius: '8px 0 0 8px',
+                                    fontSize: '0.9rem',
+                                    outline: 'none'
+                                }}
+                            />
+                            <button
+                                onClick={addTodo}
+                                style={{
+                                    background: 'linear-gradient(135deg, #87ceeb, #6bb6ff)',
+                                    color: 'white',
+                                    border: 'none',
+                                    padding: '0.75rem 1rem',
+                                    borderRadius: '0 8px 8px 0',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
+                                <Plus size={18} />
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* 할일 목록 */}
+                    <div className={styles.todoList}>
+                        {todos.map(todo => (
+                            <div 
+                                key={todo.id} 
+                                className={`${styles.todoItem} ${todo.completed ? styles.completed : ''}`}
+                            >
+                                <button
+                                    className={`${styles.todoCheckbox} ${todo.completed ? styles.checked : ''}`}
+                                    onClick={() => toggleTodo(todo.id)}
+                                    style={{
+                                        color: todo.completed ? '#6b7280' : '#6b7280'
+                                    }}
+                                >
+                                    <Check size={12} style={{ opacity: todo.completed ? 1 : 0 }} />
+                                </button>
+                                
+                                <div className={styles.todoContent}>
+                                    <span className={todo.completed ? styles.todoTextCompleted : styles.todoText}>
+                                        {todo.text}
+                                    </span>
+                                    <div className={styles.todoActions}>
+                                        <button
+                                            onClick={() => deleteTodo(todo.id)}
+                                            className={styles.todoDeleteBtn}
+                                        >
+                                            <Trash2 size={14} />
+                                        </button>
                                     </div>
-                                ))}
+                                </div>
                             </div>
-                        </div>
-
-                        {/* 오늘의 통계 */}
-                        <div className={styles.card}>
-                            <h3 className={styles.cardTitle}>
-                                <BarChart3 size={18} />
-                                오늘의 통계
-                            </h3>
-                            <div className={styles.statsList}>
-                                {todayStats.map((stat, index) => {
-                                    const IconComponent = stat.icon;
-                                    return (
-                                        <div key={index} className={styles.statItem}>
-                                            <div className={styles.statIcon}>
-                                                <IconComponent size={20} />
-                                            </div>
-                                            <div className={styles.statContent}>
-                                                <div className={styles.statLabel}>{stat.label}</div>
-                                                <div className={styles.statValue}>{stat.value}</div>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
-
-                        {/* 병원 일정 */}
-                        <div className={styles.card}>
-                            <h3 className={styles.cardTitle}>
-                                <MapPin size={18} />
-                                병원 일정
-                            </h3>
-                            <div className={styles.scheduleList}>
-                                {hospitalSchedule.map(item => {
-                                    const IconComponent = item.icon;
-                                    return (
-                                        <div key={item.id} className={styles.scheduleItem}>
-                                            <div className={styles.scheduleTime}>{item.time}</div>
-                                            <div className={styles.scheduleContent}>
-                                                <div className={styles.scheduleTitle}>
-                                                    <IconComponent size={14} style={{ marginRight: '0.5rem', display: 'inline' }} />
-                                                    {item.title}
-                                                </div>
-                                                <div className={styles.scheduleLocation}>{item.location}</div>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
+                        ))}
                     </div>
                 </div>
 
-                {/* 오른쪽 주단위 캘린더 */}
+                {/* 오른쪽 캘린더 */}
                 <div className={styles.calendarSection}>
                     <div className={styles.weekCalendar}>
                         {/* 캘린더 헤더 */}
@@ -284,14 +387,21 @@ function Calendar() {
                                         {timeSlots.map(timeSlot => {
                                             const appointment = getAppointmentAt(dayIndex, timeSlot);
                                             return (
-                                                <div key={timeSlot} className={styles.timeCell}>
+                                                <div 
+                                                    key={timeSlot} 
+                                                    className={styles.timeCell}
+                                                    onClick={() => !appointment && handleTimeSlotClick(dayIndex, timeSlot)}
+                                                >
                                                     {appointment && (
-                                                        <div className={styles.appointment}>
-                                                            <div className={styles.appointmentPatient}>
-                                                                {appointment.patient}
+                                                        <div 
+                                                            className={styles.appointment}
+                                                            onClick={(e) => handleAppointmentClick(appointment, e)}
+                                                        >
+                                                            <div className={styles.appointmentTitle}>
+                                                                {appointment.title}
                                                             </div>
-                                                            <div className={styles.appointmentType}>
-                                                                {appointment.type}
+                                                            <div className={styles.appointmentTime}>
+                                                                {appointment.time}
                                                             </div>
                                                         </div>
                                                     )}
@@ -299,7 +409,7 @@ function Calendar() {
                                             );
                                         })}
                                         
-                                        {/* 현재 시간 표시선 - 오늘 요일에만 표시 */}
+                                        {/* 현재 시간 표시선 */}
                                         {dayIndex === currentDayIndex && currentTimePosition !== null && (
                                             <div 
                                                 className={styles.currentTimeLine}
@@ -315,6 +425,166 @@ function Calendar() {
                     </div>
                 </div>
             </div>
+
+            {/* 캘린더 일정 추가/수정 모달 */}
+            {showModal && (
+                <div className={styles.modal} onClick={() => setShowModal(false)}>
+                    <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+                        <div className={styles.modalHeader}>
+                            <h3 className={styles.modalTitle}>
+                                {editingEvent ? '일정 수정' : '새 일정 추가'}
+                            </h3>
+                            <button className={styles.closeButton} onClick={() => setShowModal(false)}>
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '1.5rem'}}>
+                            <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
+                                <label style={{fontSize: '0.9rem', fontWeight: '500', color: '#374151'}}>제목 *</label>
+                                <input
+                                    type="text"
+                                    style={{
+                                        padding: '0.75rem',
+                                        border: '1px solid #d1d5db',
+                                        borderRadius: '8px',
+                                        fontSize: '0.9rem',
+                                        fontFamily: 'inherit'
+                                    }}
+                                    value={formData.title}
+                                    onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                                    placeholder="일정 제목을 입력하세요"
+                                    required
+                                />
+                            </div>
+
+                            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
+                                <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
+                                    <label style={{fontSize: '0.9rem', fontWeight: '500', color: '#374151'}}>시작 시간 *</label>
+                                    <select
+                                        style={{
+                                            padding: '0.75rem',
+                                            border: '1px solid #d1d5db',
+                                            borderRadius: '8px',
+                                            fontSize: '0.9rem',
+                                            backgroundColor: 'white',
+                                            fontFamily: 'inherit'
+                                        }}
+                                        value={formData.time}
+                                        onChange={(e) => setFormData(prev => ({ ...prev, time: e.target.value }))}
+                                        required
+                                    >
+                                        {timeSlots.map(time => (
+                                            <option key={time} value={time}>{time}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
+                                    <label style={{fontSize: '0.9rem', fontWeight: '500', color: '#374151'}}>소요 시간</label>
+                                    <select
+                                        style={{
+                                            padding: '0.75rem',
+                                            border: '1px solid #d1d5db',
+                                            borderRadius: '8px',
+                                            fontSize: '0.9rem',
+                                            backgroundColor: 'white',
+                                            fontFamily: 'inherit'
+                                        }}
+                                        value={formData.duration}
+                                        onChange={(e) => setFormData(prev => ({ ...prev, duration: parseInt(e.target.value) }))}
+                                    >
+                                        <option value={1}>1시간</option>
+                                        <option value={2}>2시간</option>
+                                        <option value={3}>3시간</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
+                                <label style={{fontSize: '0.9rem', fontWeight: '500', color: '#374151'}}>메모</label>
+                                <textarea
+                                    style={{
+                                        padding: '0.75rem',
+                                        border: '1px solid #d1d5db',
+                                        borderRadius: '8px',
+                                        fontSize: '0.9rem',
+                                        minHeight: '100px',
+                                        resize: 'vertical',
+                                        fontFamily: 'inherit'
+                                    }}
+                                    value={formData.description}
+                                    onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                                    placeholder="추가 메모사항을 입력하세요"
+                                />
+                            </div>
+
+                            <div style={{display: 'flex', gap: '0.75rem', marginTop: '1rem', justifyContent: 'flex-end'}}>
+                                {editingEvent && (
+                                    <button
+                                        type="button"
+                                        style={{
+                                            background: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                                            color: 'white',
+                                            border: 'none',
+                                            padding: '0.75rem 1.5rem',
+                                            borderRadius: '8px',
+                                            cursor: 'pointer',
+                                            fontWeight: '500',
+                                            fontSize: '0.9rem',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.5rem'
+                                        }}
+                                        onClick={() => {
+                                            if (window.confirm('이 일정을 삭제하시겠습니까?')) {
+                                                handleDelete(editingEvent.id);
+                                            }
+                                        }}
+                                    >
+                                        <Trash2 size={16} />
+                                        삭제
+                                    </button>
+                                )}
+                                <button
+                                    type="button"
+                                    style={{
+                                        background: 'white',
+                                        color: '#374151',
+                                        border: '1px solid #d1d5db',
+                                        padding: '0.75rem 1.5rem',
+                                        borderRadius: '8px',
+                                        cursor: 'pointer',
+                                        fontWeight: '500',
+                                        fontSize: '0.9rem'
+                                    }}
+                                    onClick={() => setShowModal(false)}
+                                >
+                                    취소
+                                </button>
+                                <button 
+                                    type="submit"
+                                    style={{
+                                        background: 'linear-gradient(135deg, #87ceeb, #6bb6ff)',
+                                        color: 'white',
+                                        border: 'none',
+                                        padding: '0.75rem 1.5rem',
+                                        borderRadius: '8px',
+                                        cursor: 'pointer',
+                                        fontWeight: '500',
+                                        fontSize: '0.9rem',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '0.5rem'
+                                    }}
+                                >
+                                    <Check size={16} />
+                                    {editingEvent ? '수정' : '추가'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

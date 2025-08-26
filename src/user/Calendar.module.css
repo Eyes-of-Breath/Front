@@ -1,4 +1,231 @@
-/* Calendar.module.css - 수정된 버전 */
+/* 할일 체크리스트 스타일 */
+.progressCard {
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(12px);
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.progressHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.progressText {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+.progressNumbers {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #87ceeb;
+}
+
+.progressBar {
+    width: 100%;
+    height: 8px;
+    background-color: rgba(135, 206, 235, 0.2);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progressFill {
+    height: 100%;
+    background: linear-gradient(135deg, #87ceeb, #6bb6ff);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progressPercentage {
+    font-size: 0.8rem;
+    color: #6b7280;
+    text-align: center;
+}
+
+.addTodoSection {
+    margin-bottom: 1rem;
+}
+
+.addTodoInput {
+    display: flex;
+    box-shadow: 0 2px 8px rgba(135, 206, 235, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.todoList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: calc(100vh - 400px);
+    overflow-y: auto;
+    padding-right: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 1) rgba(255, 255, 255, 0.3);
+}
+
+.todoList::-webkit-scrollbar {
+    width: 8px;
+}
+
+.todoList::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+.todoList::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 1);
+    border-radius: 4px;
+    border: 1px solid rgba(200, 200, 200, 0.5);
+}
+
+.todoItem {
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    border-radius: 8px;
+    padding: 0.75rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.todoItem:hover {
+    background-color: rgba(255, 255, 255, 1);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(135, 206, 235, 0.2);
+}
+
+.todoItem.completed {
+    opacity: 0.7;
+    background-color: rgba(107, 114, 128, 0.1);
+    border-color: rgba(107, 114, 128, 0.3);
+}
+
+/* 할일 체크박스 스타일 */
+.todoCheckbox {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: white;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    transform: translateX(-2px); /* 왼쪽으로 2px 이동 */
+    border: none;
+    padding: 0;
+}
+
+.todoCheckbox::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+    background: linear-gradient(135deg, #5aa3e6, #6bb6ff, #87ceeb);
+    border-radius: 50%;
+    z-index: 0;
+    transition: all 0.3s ease;
+}
+
+.todoCheckbox.checked::before {
+    background: linear-gradient(135deg, #6b7280, #9ca3af, #d1d5db);
+}
+
+.todoCheckbox::after {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    right: 1px;
+    bottom: 1px;
+    background: white;
+    border-radius: 50%;
+    z-index: 1;
+    transition: background-color 0.3s ease;
+}
+
+.todoCheckbox svg {
+    position: relative;
+    z-index: 2;
+    stroke-width: 3;
+}
+
+.todoCheckbox:hover::after {
+    background: #f0f0f0;
+}
+
+.todoCheckbox.checked::after {
+    background: white;
+}
+
+.todoContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.todoText {
+    font-size: 0.9rem;
+    color: #374151;
+    line-height: 1.4;
+    font-weight: 500;
+}
+
+.todoTextCompleted {
+    font-size: 0.9rem;
+    color: #6b7280;
+    line-height: 1.4;
+    text-decoration: line-through;
+}
+
+.todoActions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.todoItem:hover .todoActions {
+    opacity: 1;
+}
+
+.todoDeleteBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    color: #ef4444;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.todoDeleteBtn:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+    transform: scale(1.1);
+}
+
+/* 캘린더 일정 스타일 간소화 */
+.appointment/* Calendar.module.css - 업데이트된 버전 */
 
 * {
     font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
@@ -43,6 +270,43 @@
     padding-left: 0.25rem;
 }
 
+/* 캘린더 일정 스타일 간소화 */
+.appointment {
+    background: linear-gradient(135deg, #87ceeb, #6bb6ff);
+    color: white;
+    border-radius: 6px;
+    padding: 0.5rem;
+    height: calc(100% - 0.5rem);
+    margin: 0.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(135, 206, 235, 0.3);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.appointment:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(135, 206, 235, 0.4);
+}
+
+.appointmentTitle {
+    font-weight: 600;
+    font-size: 0.75rem;
+    margin-bottom: 0.2rem;
+    line-height: 1.2;
+}
+
+.appointmentTime {
+    font-size: 0.65rem;
+    opacity: 0.9;
+    line-height: 1.1;
+}
+
+/* 사이드바 폼 스타일 제거 (더 이상 필요없음) */
+
 .sidebarContent {
     flex: 1;
     display: flex;
@@ -85,7 +349,7 @@
     height: calc(100% - 3.8rem);
 }
 
-/* 카드 공통 스타일 - dreamy_gradient.svg 배경 적용 */
+/* 카드 공통 스타일 */
 .card {
     background-color: #ffffff;
     background-size: cover;
@@ -328,7 +592,7 @@
     margin: 0;
 }
 
-/* 주단위 캘린더 - dreamy_gradient.svg 배경 적용 */
+/* 주단위 캘린더 */
 .weekCalendar {
     flex: 1;
     overflow: hidden;
@@ -357,21 +621,20 @@
     display: grid;
     grid-template-columns: 80px repeat(7, 1fr);
     flex: 1;
-    gap: 0; /* gap을 0으로 변경하여 격자선이 끊어지지 않도록 */
-    background-color: transparent; /* 배경색 제거 */
+    gap: 0;
+    background-color: transparent;
     border-radius: 12px;
     overflow: visible;
     min-height: 660px;
     max-height: 660px;
     margin-top: 1rem;
-    /* 외부 테두리 제거 */
 }
 
 .timeColumn {
     background-color: rgba(255, 255, 255, 0.9);
     display: flex;
     flex-direction: column;
-    border-right: 0.5px solid #e5e7eb; /* 시간 컬럼 오른쪽 테두리 */
+    border-right: 0.5px solid #e5e7eb;
 }
 
 .timeHeader {
@@ -382,8 +645,8 @@
     font-weight: 600;
     color: #475569;
     font-size: 0.9rem;
-    background-color: rgba(255, 255, 255, 0.9); /* 파란색 배경 제거 */
-    border-bottom: 0.5px solid #e5e7eb; /* 테두리 더 얇게 */
+    background-color: rgba(255, 255, 255, 0.9);
+    border-bottom: 0.5px solid #e5e7eb;
     position: sticky;
     top: 0;
     z-index: 2;
@@ -397,7 +660,7 @@
     font-size: 0.8rem;
     color: #64748b;
     background-color: rgba(255, 255, 255, 0.9);
-    border-bottom: 0.5px solid #e5e7eb; /* 테두리 더 얇게 */
+    border-bottom: 0.5px solid #e5e7eb;
 }
 
 .dayColumn {
@@ -406,11 +669,11 @@
     flex-direction: column;
     position: relative;
     overflow: visible;
-    border-right: 0.5px solid #e5e7eb; /* 각 요일 컬럼 오른쪽 테두리 */
+    border-right: 0.5px solid #e5e7eb;
 }
 
 .dayColumn:last-child {
-    border-right: none; /* 마지막 컬럼은 오른쪽 테두리 제거 */
+    border-right: none;
 }
 
 .dayTimeSlots {
@@ -445,8 +708,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: rgba(255, 255, 255, 0.9); /* 파란색 배경 제거 */
-    border-bottom: 0.5px solid #e5e7eb; /* 테두리 더 얇게 */
+    background-color: rgba(255, 255, 255, 0.9);
+    border-bottom: 0.5px solid #e5e7eb;
     position: sticky;
     top: 0;
     z-index: 2;
@@ -483,7 +746,7 @@
 .timeCell {
     height: 60px;
     padding: 0.25rem;
-    border-bottom: 0.5px solid #e5e7eb; /* 테두리 더 얇게 */
+    border-bottom: 0.5px solid #e5e7eb;
     position: relative;
     cursor: pointer;
     transition: background-color 0.2s ease;
@@ -498,23 +761,49 @@
     outline-offset: -2px;
 }
 
+/* 일정 스타일 - 업무 유형별 색상 */
 .appointment {
-    background: linear-gradient(135deg, #87ceeb, #6bb6ff);
-    color: white;
     border-radius: 4px;
     padding: 0.25rem 0.5rem;
-    height: 100%;
+    height: calc(100% - 0.5rem);
     display: flex;
     flex-direction: column;
     justify-content: center;
-    box-shadow: 0 2px 4px rgba(135, 206, 235, 0.4);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: all 0.2s ease;
     cursor: pointer;
+    color: white;
+    position: relative;
+    margin: 0.25rem;
+    overflow: hidden;
 }
 
 .appointment:hover {
     transform: scale(1.02);
-    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 업무 유형별 색상 */
+.reading {
+    background: linear-gradient(135deg, #87ceeb, #6bb6ff) !important;
+}
+
+.procedure {
+    background: linear-gradient(135deg, #f7e99c, #f0d985) !important;
+    color: #444 !important;
+}
+
+.emergency {
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+}
+
+.conference {
+    background: linear-gradient(135deg, #bbc9f7, #9bb5f5) !important;
+}
+
+.appointment:not(.reading):not(.procedure):not(.emergency):not(.conference) {
+    background: linear-gradient(135deg, #c3e1ad, #a8d690) !important;
+    color: #444 !important;
 }
 
 .appointmentPatient {
@@ -526,6 +815,23 @@
 .appointmentType {
     font-size: 0.65rem;
     opacity: 0.9;
+}
+
+/* 우선순위 표시 */
+.priorityIndicator {
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    width: 12px;
+    height: 12px;
+    background: #ef4444;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: white;
 }
 
 /* 현재 시간 표시선 */
@@ -563,30 +869,190 @@
     box-shadow: 0 0 0 2px white, 0 1px 3px rgba(135, 206, 235, 0.5);
 }
 
-.timeIndicator {
-    position: absolute;
-    right: auto;
-    left: 20rem;
-    top: -8px;
-    background: linear-gradient(135deg, #87ceeb, #6bb6ff);
-    color: white;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.7rem;
-    font-weight: 600;
-    white-space: nowrap;
-    box-shadow: 0 2px 4px rgba(135, 206, 235, 0.4);
-    z-index: 101;
+/* 모달 스타일 */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(4px);
 }
 
-.timeIndicator::before {
-    content: '';
-    position: absolute;
-    left: -4px;
-    top: 50%;
-    transform: translateY(-50%);
-    border: 4px solid transparent;
-    border-right-color: #1e40af;
+.modalContent {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.modalTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+.closeButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+    color: #64748b;
+}
+
+.closeButton:hover {
+    background-color: #f3f4f6;
+    color: #374151;
+}
+
+/* 폼 스타일 */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.formRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+.input, .select, .textarea {
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.input:focus, .select:focus, .textarea:focus {
+    outline: none;
+    border-color: #87ceeb;
+    box-shadow: 0 0 0 3px rgba(135, 206, 235, 0.1);
+}
+
+.textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.select {
+    background-color: white;
+    cursor: pointer;
+}
+
+/* 버튼 그룹 */
+.buttonGroup {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    justify-content: flex-end;
+}
+
+.saveButton {
+    background: linear-gradient(135deg, #87ceeb, #6bb6ff);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(135, 206, 235, 0.3);
+}
+
+.saveButton:hover {
+    background: linear-gradient(135deg, #6bb6ff, #5aa3e6);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(135, 206, 235, 0.4);
+}
+
+.cancelButton {
+    background: white;
+    color: #374151;
+    border: 1px solid #d1d5db;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.cancelButton:hover {
+    background-color: #f9fafb;
+    border-color: #9ca3af;
+}
+
+.deleteButton {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.deleteButton:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    transform: translateY(-1px);
 }
 
 /* 접근성 개선 */
@@ -605,7 +1071,8 @@
 /* 키보드 네비게이션 */
 .appointment:focus,
 .timeCell:focus,
-.navButton:focus {
+.navButton:focus,
+.addButton:focus {
     outline: 2px solid #3b82f6;
     outline-offset: 2px;
 }
@@ -639,6 +1106,12 @@
         font-size: 1.2rem;
     }
     
+    .addButton {
+        min-width: 200px;
+        margin-bottom: 0;
+        margin-right: 1rem;
+    }
+    
     .sidebarContent {
         display: flex;
         flex-direction: row;
@@ -667,6 +1140,17 @@
         min-height: 550px;
         max-height: 550px;
     }
+    
+    .modalContent {
+        width: 95%;
+        max-width: 500px;
+        padding: 1.5rem;
+    }
+    
+    .formRow {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
 }
 
 @media (max-width: 768px) {
@@ -688,6 +1172,12 @@
         min-width: auto;
         margin: 0 0 1rem 0;
         font-size: 1.3rem;
+    }
+    
+    .addButton {
+        min-width: auto;
+        margin-right: 0;
+        margin-bottom: 1rem;
     }
     
     .sidebarContent {
@@ -731,6 +1221,27 @@
     .navButton {
         padding: 0.5rem 1rem;
         font-size: 0.85rem;
+    }
+    
+    .modalContent {
+        width: 95%;
+        padding: 1.25rem;
+    }
+    
+    .modalTitle {
+        font-size: 1.3rem;
+    }
+    
+    .buttonGroup {
+        flex-direction: column-reverse;
+        gap: 0.5rem;
+    }
+    
+    .saveButton,
+    .cancelButton,
+    .deleteButton {
+        width: 100%;
+        justify-content: center;
     }
 }
 
@@ -782,5 +1293,14 @@
     
     .appointmentType {
         font-size: 0.55rem;
+    }
+    
+    .modalContent {
+        padding: 1rem;
+        max-height: 95vh;
+    }
+    
+    .form {
+        gap: 1rem;
     }
 }

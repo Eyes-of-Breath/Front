@@ -5,12 +5,12 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import logo from '../assets/logo.png';
 import { 
-    LayoutDashboard, 
-    Calendar, 
-    Users, 
-    BarChart3, 
-    User, 
-    LogOut, 
+    LayoutDashboard,
+    Calendar,
+    Stethoscope,
+    BarChart3,
+    User,
+    LogOut,
     HelpCircle 
 } from 'lucide-react';
 
@@ -39,27 +39,27 @@ function Sidebar() {
 
     const menuItems = [
         { 
-            path: '/dashboard', 
+            path: '/dashboard',
             label: '대시보드',
             icon: LayoutDashboard
         },
         { 
-            path: '/calendar', 
+            path: '/calendar',
             label: '캘린더',
             icon: Calendar
         },
         { 
-            path: '/patient', 
+            path: '/patient',
             label: '환자 관리',
-            icon: Users
+            icon: Stethoscope
         },
         { 
-            path: '/analysis', 
+            path: '/analysis',
             label: '분석',
             icon: BarChart3
         },
         { 
-            path: '/profile', 
+            path: '/profile',
             label: '프로필',
             icon: User
         }
@@ -82,7 +82,7 @@ function Sidebar() {
                         aria-label={label}
                         data-tooltip={label}
                     >
-                        <IconComponent size={28} className={styles.icon} />
+                        <IconComponent size={20} className={styles.icon} />
                     </button>
                 ))}
             </div>
@@ -92,24 +92,24 @@ function Sidebar() {
             {/* 도움말 버튼 */}
             <div className={styles.helpSection}>
                 <button 
-                    onClick={handleHelp} 
+                    onClick={handleHelp}
                     className={styles.iconButton}
                     aria-label="도움말"
                     data-tooltip="도움말"
                 >
-                    <HelpCircle size={28} className={styles.icon} />
+                    <HelpCircle size={20} className={styles.icon} />
                 </button>
             </div>
             
             {/* 로그아웃 버튼 */}
             <div className={styles.logoutSection}>
                 <button 
-                    onClick={handleLogout} 
+                    onClick={handleLogout}
                     className={styles.iconButton}
                     aria-label="로그아웃"
                     data-tooltip="로그아웃"
                 >
-                    <LogOut size={28} className={styles.icon} />
+                    <LogOut size={20} className={styles.icon} />
                 </button>
             </div>
         </nav>

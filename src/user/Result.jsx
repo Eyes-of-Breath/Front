@@ -4,13 +4,13 @@ import {
     User, 
     FileText, 
     Save,
-    Send,
     Calendar,
     Activity,
     Eye,
     Brain,
-    Mail,
-    Layers
+    Layers,
+    Image as ImageIcon,
+    PenTool
 } from 'lucide-react';
 import styles from './Result.module.css';
 
@@ -18,9 +18,7 @@ function Result() {
     const navigate = useNavigate();
     const location = useLocation();
     const [findings, setFindings] = useState('');
-    const [impression, setImpression] = useState('');
-    const [email, setEmail] = useState('');
-    const [heatmapOpacity, setHeatmapOpacity] = useState(0.5);
+    const [gradcamImage, setGradcamImage] = useState(null); // GradCAM 이미지 상태
     
     // 이전 페이지에서 전달받은 데이터
     const { patientInfo, uploadedFile, imagePreview, analysisResult } = location.state || {};
@@ -32,13 +30,24 @@ function Result() {
             return;
         }
 
-        // 초기 소견 텍스트 설정
-        setFindings(`양측 폐야에서 폐렴 의심 소견이 관찰됩니다. 우측 폐하엽에서 침윤성 병변이 확인되며, 좌측 폐에서도 경미한 염증 반응이 보입니다.`);
-
-        setImpression(`1. 폐렴 의심 (높은 확률: ${analysisResult.probability.pneumonia}%)
-2. 추가 임상 평가 및 혈액 검사 권장
-3. 항생제 치료 고려 필요`);
+        // TODO: 백엔드에서 GradCAM 이미지 가져오기
+        // fetchGradcamImage();
     }, [navigate, patientInfo, uploadedFile, analysisResult]);
+
+    // GradCAM 이미지를 가져오는 함수 (백엔드 연동용)
+    const fetchGradcamImage = async () => {
+        try {
+            // TODO: 실제 API 호출
+            // const response = await fetch(`/api/v1/diagnosis/gradcam/${analysisResult.id}`);
+            // const blob = await response.blob();
+            // const imageUrl = URL.createObjectURL(blob);
+            // setGradcamImage(imageUrl);
+            
+            console.log('GradCAM 이미지 가져오기 (백엔드 연동 필요)');
+        } catch (error) {
+            console.error('GradCAM 이미지 로드 실패:', error);
+        }
+    };
 
     if (!patientInfo || !uploadedFile || !analysisResult) {
         return null; // 리다이렉트 중
@@ -50,21 +59,12 @@ function Result() {
     };
 
     const handleSubmitReport = () => {
-        if (!findings.trim() || !impression.trim()) {
-            alert('소견과 판독 의견을 모두 입력해주세요.');
+        if (!findings.trim()) {
+            alert('소견을 입력해주세요.');
             return;
         }
         console.log('Report submitted');
         alert('보고서가 제출되었습니다.');
-    };
-
-    const handleSendEmail = () => {
-        if (!email.trim()) {
-            alert('이메일 주소를 입력해주세요.');
-            return;
-        }
-        console.log('Email sent to:', email);
-        alert(`${email}로 결과가 전송되었습니다.`);
     };
 
     const currentDate = new Date().toLocaleDateString('ko-KR', {
@@ -125,58 +125,54 @@ function Result() {
                         </div>
                     </div>
 
-                    {/* 카드2: 흉부 X-ray 사진과 AI 리포트 */}
+                    {/* 카드2: 흉부 X-ray 사진 */}
                     <div className={styles.card}>
                         <div className={styles.cardHeader}>
                             <h2 className={styles.cardTitle}>
                                 <Eye size={18} />
-                                흉부 X-ray 및 AI 분석
+                                흉부 X-ray 이미지
                             </h2>
-                            <div className={styles.heatmapControls}>
-                                <Layers size={16} />
-                                <input
-                                    type="range"
-                                    min="0"
-                                    max="1"
-                                    step="0.1"
-                                    value={heatmapOpacity}
-                                    onChange={(e) => setHeatmapOpacity(parseFloat(e.target.value))}
-                                    className={styles.opacitySlider}
-                                />
-                                <span className={styles.opacityValue}>{Math.round(heatmapOpacity * 100)}%</span>
-                            </div>
                         </div>
                         <div className={styles.cardContent}>
-                            <div className={styles.imageSection}>
-                                {imagePreview ? (
+                            <div className={styles.imageComparisonSection}>
+                                {/* 원본 이미지 */}
+                                <div className={styles.imageContainer}>
                                     <div className={styles.imageWrapper}>
-                                        <img 
-                                            src={imagePreview} 
-                                            alt="흉부 X-ray"
-                                            className={styles.xrayImage}
-                                        />
-                                        <div 
-                                            className={styles.heatmapOverlay}
-                                            style={{ opacity: heatmapOpacity }}
-                                        >
-                                            <div className={styles.heatmapFilter}></div>
-                                        </div>
+                                        {imagePreview ? (
+                                            <img 
+                                                src={imagePreview} 
+                                                alt="흉부 X-ray 원본"
+                                                className={styles.xrayImage}
+                                            />
+                                        ) : (
+                                            <div className={styles.noImagePlaceholder}>
+                                                <FileText size={32} color="#9ca3af" />
+                                                <p>원본 이미지를 표시할 수 없습니다</p>
+                                            </div>
+                                        )}
                                     </div>
-                                ) : (
-                                    <div className={styles.noImagePlaceholder}>
-                                        <FileText size={48} color="#9ca3af" />
-                                        <p>이미지를 표시할 수 없습니다</p>
+                                </div>
+
+                                {/* GradCAM 분석 이미지 */}
+                                <div className={styles.imageContainer}>
+                                    <div className={styles.imageWrapper}>
+                                        {gradcamImage ? (
+                                            <img 
+                                                src={gradcamImage} 
+                                                alt="흉부 X-ray GradCAM"
+                                                className={styles.xrayImage}
+                                            />
+                                        ) : (
+                                            <div className={styles.gradcamPlaceholder}>
+                                                <Brain size={32} color="#6bb6ff" />
+                                                <p>AI가 주목한 부분을 나타냅니다</p>
+                                                <span className={styles.placeholderSubtext}>
+                                                    분석 중...
+                                                </span>
+                                            </div>
+                                        )}
                                     </div>
-                                )}
-                            </div>
-                            <div className={styles.aiReportSection}>
-                                <h3 className={styles.aiReportTitle}>
-                                    <Brain size={14} />
-                                    AI 분석 요약
-                                </h3>
-                                <p className={styles.aiReportText}>
-                                    AI 분석 결과, 폐렴의 가능성이 높으며 우측 폐하엽에서 침윤성 병변이 확인되었습니다.
-                                </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -254,7 +250,33 @@ function Result() {
                         </div>
                     </div>
 
-                    {/* 카드4: 의사 소견 입력 */}
+                    {/* 카드4: AI 분석 리포트 */}
+                    <div className={styles.card}>
+                        <div className={styles.cardHeader}>
+                            <h2 className={styles.cardTitle}>
+                                <PenTool size={18} />
+                                AI 분석 리포트
+                            </h2>
+                        </div>
+                        <div className={styles.cardContent}>
+                            <div className={styles.aiReportSection}>
+                                <div className={styles.aiAnalysisContent}>
+                                    <p className={styles.analysisText}>
+                                        우측 폐하엽에서 침윤성 병변이 확인되었으며, 폐렴의 가능성이 높습니다. 
+                                        좌측 폐에서도 경미한 염증 반응이 관찰됩니다. 추가 임상 평가 및 혈액 검사를 권장하며, 
+                                        항생제 치료 고려가 필요합니다. 또한 경과 관찰을 위한 추적 검사도 필요할 것으로 판단됩니다.
+                                    </p>
+                                    
+                                    <div className={styles.confidenceScore}>
+                                        <span className={styles.confidenceLabel}>AI 정확도:</span>
+                                        <span className={styles.confidenceValue}>94.2%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 카드5: 의사 소견 입력 */}
                     <div className={styles.card}>
                         <div className={styles.cardHeader}>
                             <h2 className={styles.cardTitle}>
@@ -264,29 +286,21 @@ function Result() {
                         </div>
                         <div className={styles.cardContent}>
                             <div className={styles.inputSection}>
-                                <label className={styles.inputLabel}>소견</label>
+                                <label className={styles.inputLabel} htmlFor="findings-textarea">소견</label>
                                 <textarea
+                                    id="findings-textarea"
                                     className={styles.textarea}
                                     value={findings}
                                     onChange={(e) => setFindings(e.target.value)}
                                     placeholder="소견을 입력하세요..."
-                                    rows={3}
-                                />
-                            </div>
-                            <div className={styles.inputSection}>
-                                <label className={styles.inputLabel}>판독 의견</label>
-                                <textarea
-                                    className={styles.textarea}
-                                    value={impression}
-                                    onChange={(e) => setImpression(e.target.value)}
-                                    placeholder="판독 의견을 입력하세요..."
-                                    rows={3}
+                                    rows={4}
                                 />
                             </div>
                             <div className={styles.buttonGroup}>
                                 <button 
                                     onClick={handleSaveDraft}
                                     className={`${styles.button} ${styles.saveButton}`}
+                                    type="button"
                                 >
                                     <Save size={16} />
                                     임시 저장
@@ -294,39 +308,11 @@ function Result() {
                                 <button 
                                     onClick={handleSubmitReport}
                                     className={`${styles.button} ${styles.submitButton}`}
+                                    type="button"
                                 >
                                     <FileText size={16} />
                                     보고서 제출
                                 </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* 카드5: 이메일 발송 */}
-                    <div className={styles.card}>
-                        <div className={styles.cardHeader}>
-                            <h2 className={styles.cardTitle}>
-                                <Mail size={18} />
-                                검사 결과 발송
-                            </h2>
-                            <button 
-                                onClick={handleSendEmail}
-                                className={styles.sendButton}
-                            >
-                                <Send size={16} />
-                                발송
-                            </button>
-                        </div>
-                        <div className={styles.cardContent}>
-                            <div className={styles.inputSection}>
-                                <label className={styles.inputLabel}>환자 이메일 주소</label>
-                                <input
-                                    type="email"
-                                    className={styles.emailInput}
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="patient@example.com"
-                                />
                             </div>
                         </div>
                     </div>
