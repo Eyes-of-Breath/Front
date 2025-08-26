@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import styles from './Patient.module.css';
-import { Search, FileText, Download } from 'lucide-react';
+import { Search, FileText } from 'lucide-react';
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const accessToken = localStorage.getItem('accessToken');
 
 const Patient = () => {
   const [searchCriteria, setSearchCriteria] = useState({ name: '', birthDate: '', gender: '' });
-  const [searchID, setSerachID] = useState({ patientID: '' })
+  const [searchID, setSearchID] = useState({ patientID: '' });
+  const [searchCode, setSearchCode] = useState({ patientCode: '' });
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [isSearchIDLoading, setIsSearchIDLoading] = useState(false);
+  const [isSearchCodeLoading, setIsSearchCodeLoading] = useState(false);
 
   const handleSearch = async () => {
     setIsSearchLoading(true);
@@ -86,16 +88,55 @@ const Patient = () => {
     }
   };
 
+  const handleSearchCode = async () => {
+    setIsSearchCodeLoading(true);
+    setSelectedPatient(null);
+
+    try {
+      const response = await fetch(
+        `${SERVER_URL}/patients/code/${encodeURIComponent(searchCode.patientCode)}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+      console.log(data);
+
+      if (!response.ok || !data || data.length === 0) {
+        alert('해당 조건에 맞는 환자를 찾을 수 없습니다.');
+        setSelectedPatient(null);
+        return;
+      }
+
+      setSelectedPatient(data);
+
+    } catch (err) {
+      console.error('환자 검색 중 오류:', err);
+      alert('환자가 존재하지 않습니다.');
+    } finally {
+      setIsSearchCodeLoading(false);
+    }
+  };
+
   const handleReset = () => {
     setSearchCriteria({ name: '', birthDate: '', gender: '' });
     setSelectedPatient(null);
   };
 
   const handleResetID = () => {
-    setSerachID({ patientID: '' });
+    setSearchID({ patientID: '' });
     setSelectedPatient(null);
   };
 
+  const handleResetCode = () => {
+    setSearchID({ patientID: '' });
+    setSelectedPatient(null);
+  };
 
   const getPriority = (probability) => {
     if (probability >= 0.9) return 'high';
@@ -197,7 +238,7 @@ const Patient = () => {
                 </div>
               </div>
             </div>
-            <div className={styles.searchSection}>
+            {/* <div className={styles.searchSection}>
               <h2 className={styles.searchTitle}>
                 <Search size={16} style={{ marginRight: '8px' }} />
                 환자 ID로 검색
@@ -209,7 +250,7 @@ const Patient = () => {
                   <input
                     type="text"
                     value={searchID.patientID}
-                    onChange={(e) => setSerachID({ ...searchID, patientID: e.target.value })}
+                    onChange={(e) => setSearchID({ ...searchID, patientID: e.target.value })}
                     placeholder="Patient ID를 입력하세요"
                     className={styles.inputID}
                   />
@@ -219,6 +260,32 @@ const Patient = () => {
                     {isSearchIDLoading ? '검색 중...' : '검색'}
                   </button>
                   <button onClick={handleResetID} className={styles.resetButton}>
+                    초기화
+                  </button>
+                </div>
+              </div>
+            </div> */}
+            <div className={styles.searchSection}>
+              <h2 className={styles.searchTitle}>
+                <Search size={16} style={{ marginRight: '8px' }} />
+                환자 Code로 검색
+              </h2>
+              <div className={styles.searchForm}>
+                <div className={styles.formGroup}>
+                  <label className={styles.patientID}>환자 Code:</label>
+                  <input
+                    type="text"
+                    value={searchCode.patientCode}
+                    onChange={(e) => setSearchCode({ ...searchCode, patientCode: e.target.value })}
+                    placeholder="Patient Code를 입력하세요"
+                    className={styles.inputID}
+                  />
+                </div>
+                <div className={styles.buttonGroup}>
+                  <button onClick={handleSearchCode} disabled={isSearchIDLoading} className={styles.button}>
+                    {isSearchLoading ? '검색 중...' : '검색'}
+                  </button>
+                  <button onClick={handleResetCode} className={styles.resetButton}>
                     초기화
                   </button>
                 </div>
@@ -264,40 +331,50 @@ const Patient = () => {
                             <div className={styles.recordLayout}>
                               <div className={styles.recordInfo}>
                                 <div className={styles.recordHeader}>
-                                  <span className={styles.badge}>
-                                    {getPriorityIcon(priority)} {diagnosis.predictedDisease}
-                                  </span>
-                                  <p className={styles.recordDate}>촬영일: {xray.uploadedAt.split('T')[0]}</p>
-                                  <span className={styles.recordConfidence}>
-                                    예측 정확도: {(probability * 100).toFixed(1)}%
-                                  </span>
+                                  <p className={styles.recordDate}>
+                                    촬영일: {xray.uploadedAt.split('T')[0]}
+                                  </p>
+                                </div>
+                                <div className={styles.diagnosisSection}>
+                                  <h5 className={styles.sectionSubtitle}>AI Top-3 예측 결과</h5>
+                                  <ul className={styles.diagnosisList}>
+                                    <li>
+                                      1️⃣ {diagnosis.top1Disease} — {(diagnosis.top1Probability * 100).toFixed(1)}%
+                                    </li>
+                                    <li>
+                                      2️⃣ {diagnosis.top2Disease} — {(diagnosis.top2Probability * 100).toFixed(1)}%
+                                    </li>
+                                    <li>
+                                      3️⃣ {diagnosis.top3Disease} — {(diagnosis.top3Probability * 100).toFixed(1)}%
+                                    </li>
+                                  </ul>
                                 </div>
                               </div>
 
-                              <div key={xray.imageId} className={styles.recordCard}>
+                              {/* 이미지 영역 */}
+                              <div className={styles.imageGroup}>
                                 {/* AI 진단 이미지 */}
                                 <img
-                                  src={xray.diagnosisResult.imageUrl} // diagnosisResult의 imageUrl 사용
+                                  src={xray.diagnosisResult.imageUrl}
                                   alt={xray.fileName}
                                   className={styles.previewImage}
                                 />
 
                                 {/* Grad-CAM 이미지 */}
                                 <img
-                                  src={xray.diagnosisResult.gradcamImagePath} // Grad-CAM 이미지
+                                  src={xray.diagnosisResult.gradcamImagePath}
                                   alt="Grad-CAM"
                                   className={styles.previewImage}
                                 />
                               </div>
                             </div>
                           </div>
+
                         );
                       })
                     ) : (
                       <p>엑스레이 기록이 없습니다.</p>
                     )}
-
-
                   </div>
 
                 </div>

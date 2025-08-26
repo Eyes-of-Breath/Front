@@ -4,6 +4,7 @@ import { User, Lock, Trash2, Stethoscope, Building, Mail, BarChart3, Calendar, T
 import profile from '../assets/profile.jpg';
 
 const nickname = localStorage.getItem('nickname');
+const email = localStorage.getItem('email');
 
 const Profile = () => {
     const [userStats] = useState({
@@ -15,7 +16,7 @@ const Profile = () => {
 
     const [doctorInfo] = useState({
         name: nickname,
-        email: 'abc1234@gmail.com',
+        email: email,
         licenseNumber: '의사 제241234호',
         hospital: '서울대학교병원',
         department: '내과',

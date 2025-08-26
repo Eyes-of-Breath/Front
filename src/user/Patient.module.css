@@ -288,8 +288,8 @@
 
 .recordLayout {
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 1.5rem;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
 }
 
 .recordInfo {
@@ -330,7 +330,7 @@
 }
 
 .recordDate, .recordConfidence {
-    font-size: 14px;
+    font-size: 18px;
     color: #6b7280;
 }
 
@@ -381,8 +381,8 @@
 }
 
 .previewImage {
-  width: 100%;
-  height: 100%;
+  width: 50%;
+  /* height: 50%; */
   object-fit: cover;
 }
 
@@ -441,6 +441,40 @@
     height: 8rem; /* 투명한 여백 */
     display: block;
 }
+
+.diagnosisSection {
+  padding: 0.6rem;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  background: #fafafa;
+}
+
+.sectionSubtitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  color: #333;
+}
+
+.diagnosisList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.diagnosisList li {
+  font-size: 0.85rem;
+  margin-bottom: 0.3rem;
+  color: #444;
+}
+
+.imageGroup {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-right: 1rem;
+}
+
 
 /* 반응형 */
 @media (max-width: 768px) {

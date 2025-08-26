@@ -40,15 +40,12 @@ function Login() {
                 return;
             }
 
-            // if (data.accessToken) {
-            //     localStorage.setItem('accessToken', data.accessToken);
-            // }
             localStorage.setItem('accessToken', data.accessToken);
             localStorage.setItem('memberId', data.memberId);
             localStorage.setItem('nickname', data.nickname);
+            localStorage.setItem('email', email);
 
             console.log(data);
-            console.log(data.nickname);
 
             navigate("/dashboard");
 

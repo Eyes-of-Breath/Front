@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { Trash } from "lucide-react";
+import styles from './PatientAll.module.css';
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const accessToken = localStorage.getItem('accessToken');
+const memberId = Number(localStorage.getItem('memberId'));
 
 function PatientAll() {
     const [patients, setPatients] = useState([]);
@@ -36,48 +39,102 @@ function PatientAll() {
         fetchPatients();
     }, []);
 
-    if (loading) return <p>불러오는 중...</p>;
-    if (error) return <p style={{ color: "red" }}>{error}</p>;
+    console.log(memberId);
+
+    const handleDelete = async (patientId) => {
+        if (!window.confirm("정말 삭제하시겠습니까?")) return;
+
+        try {
+            await fetch(`${SERVER_URL}/patients/${patientId}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${accessToken}`,
+                },
+            });
+
+            setPatients((prev) => prev.filter((p) => p.patientId !== patientId));
+            alert("삭제 완료!");
+        } catch (err) {
+            console.error("삭제 오류:", err);
+            alert("삭제에 실패했습니다.");
+        }
+    };
+
+    // if (loading) return (
+    //     <div className={styles.loadingContainer}>
+    //         <div className={styles.spinner}></div>
+    //         <p>환자 목록을 불러오고 있습니다.</p>
+    //     </div>
+    // );
+
+    // if (error) return (
+    //     <div className={styles.loadingContainer}>
+    //         <p style={{ color: "red" }}>{error}</p>
+    //     </div>
+    // );
 
     return (
-        <div>
-            <div
-                style={{
-                    fontSize: '1.5rem',
-                    fontWeight: '300',
-                    color: '#1a1a1a',
-                    margin: '0 0 1rem 0',
-                    paddingTop: '2rem',
-                    lineHeight: '1.6',
-                    textShadow: '0 1px 3px rgba(0, 0, 0, 0.2)',
-                    paddingLeft: '0.5rem',
-                    textAlign: 'left'
-                }}
-            >
+        <div className={styles.pageContainer}>
+            <div className={styles.header}>
                 전체 환자 목록
             </div>
-            <table border="1" cellPadding="8" style={{ borderCollapse: "collapse", width: "100%" }}>
-                <thead>
-                    <tr>
-                        <th>Patient ID</th>
-                        <th>Name</th>
-                        <th>Birth Date</th>
-                        <th>Gender</th>
-                        <th>Patient Code</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {patients.map((p) => (
-                        <tr key={p.patientId}>
-                            <td>{p.patientId}</td>
-                            <td>{p.name}</td>
-                            <td>{p.birthDate}</td>
-                            <td>{p.gender}</td>
-                            <td>{p.patientCode}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+
+            {loading ? (
+                <div className={styles.loadingContainer}>
+                    <div className={styles.spinner}></div>
+                    <p>환자 목록을 불러오고 있습니다.</p>
+                </div>
+            ) : error ? (
+                <div className={styles.loadingContainer}>
+                    <p style={{ color: 'red' }}>{error}</p>
+                </div>
+            ) : (
+                <div className={styles.tableWrapper}>
+                    <div className={styles.leftSection}>
+                        <div className={styles.searchSection}>
+                            <div className={styles.tableWrapper}>
+                                <table className={styles.patientTable}>
+                                    <thead>
+                                        <tr>
+                                            <th>Patient ID</th>
+                                            <th>Name</th>
+                                            <th>Birth Date</th>
+                                            <th>Gender</th>
+                                            <th>Patient Code</th>
+                                            <th>Height</th>
+                                            <th>Weight</th>
+                                            <th>MemberID</th>
+                                            <th>환자 삭제</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {patients.map((p) => (
+                                            <tr key={p.patientId}>
+                                                <td>{p.patientId}</td>
+                                                <td>{p.name}</td>
+                                                <td>{p.birthDate}</td>
+                                                <td>{p.gender}</td>
+                                                <td>{p.patientCode}</td>
+                                                <td>{p.height}</td>
+                                                <td>{p.weight}</td>
+                                                <td>{p.memberId}</td>
+                                                <td>
+                                                    {p.memberId === memberId && (
+                                                        <button onClick={() => handleDelete(p.patientId)}>
+                                                            <Trash size={18} />
+                                                        </button>
+                                                    )}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
