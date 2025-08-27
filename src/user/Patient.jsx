@@ -29,6 +29,8 @@ const Patient = () => {
         alert('해당 조건에 맞는 환자를 찾을 수 없습니다.');
         return;
       }
+      console.log(data);
+
       const exactMatch = data.find(patient => patient.name === searchCriteria.name);
       setSelectedPatient(exactMatch || null);
     } catch (err) {
@@ -47,7 +49,10 @@ const Patient = () => {
         method: 'GET',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}` }
       });
+
       const data = await response.json();
+      console.log(data);
+
       if (!response.ok || !data) {
         alert('환자가 존재하지 않습니다.');
         return;
@@ -69,7 +74,9 @@ const Patient = () => {
         method: 'GET',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}` }
       });
+
       const data = await response.json();
+      console.log(data);
       if (!response.ok || !data) {
         alert('환자가 존재하지 않습니다.');
         return;
@@ -83,7 +90,6 @@ const Patient = () => {
     }
   };
 
-  // ======== 보고서 삭제 ========
   const handleDeleteReport = async (resultId) => {
     try {
       const response = await fetch(`${SERVER_URL}/diagnosis/${resultId}`, {
@@ -92,7 +98,6 @@ const Patient = () => {
       });
       if (response.ok) {
         alert("보고서가 삭제되었습니다.");
-        // 삭제된 resultId 제외
         setSelectedPatient(prev => ({
           ...prev,
           xrayImages: prev.xrayImages.filter(x => x.diagnosisResult?.resultId !== resultId)
@@ -106,7 +111,6 @@ const Patient = () => {
     }
   };
 
-  // ======== AI 예측 우선순위 ========
   const getPriority = (probability) => {
     if (probability >= 0.9) return 'high';
     if (probability >= 0.8) return 'moderate';
@@ -122,7 +126,6 @@ const Patient = () => {
     }
   };
 
-  // ======== 렌더링 ========
   return (
     <div className={styles.patientContainer}>
       <main className={styles.mainContent}>
@@ -228,6 +231,15 @@ const Patient = () => {
                               <div className={styles.recordInfo}>
                                 <div className={styles.recordHeader}>
                                   <p className={styles.recordDate}>촬영일: {xray.uploadedAt.split('T')[0]}</p>
+                                  <p className={styles.resultId}>resultId: {diagnosis.resultId}</p>
+                                  {Number(selectedPatient.memberId) === memberId && (
+                                  <span className={styles.deleteText} onClick={() => {
+                                    const confirmed = window.confirm("정말 삭제하시겠습니까?");
+                                    if (confirmed) handleDeleteReport(diagnosis.resultId);
+                                  }}>
+                                    보고서 삭제
+                                  </span>
+                                )}
                                 </div>
                                 <div className={styles.diagnosisSection}>
                                   <h5 className={styles.sectionSubtitle}>AI Top-3 예측 결과</h5>
@@ -237,14 +249,22 @@ const Patient = () => {
                                     <li>3️⃣ {diagnosis.top3Disease} — {(diagnosis.top3Probability * 100).toFixed(1)}%</li>
                                   </ul>
                                 </div>
-                                {Number(selectedPatient.memberId) === memberId && (
-                                  <span className={styles.deleteText} onClick={() => {
-                                    const confirmed = window.confirm("정말 삭제하시겠습니까?");
-                                    if (confirmed) handleDeleteReport(diagnosis.resultId);
-                                  }}>
-                                    보고서 삭제
-                                  </span>
+                                {diagnosis.comments && diagnosis.comments.length > 0 && (
+                                  <div className={styles.commentSection}>
+                                    <h5 className={styles.sectionSubtitle}>의료진 소견</h5>
+                                    <ul className={styles.commentList}>
+                                      {diagnosis.comments.map((comment) => (
+                                        <li key={comment.commentId} className={styles.commentItem}>
+                                          🩺 {comment.content}
+                                          <span className={styles.commentMeta}>
+                                            ({new Date(comment.createdAt).toLocaleDateString('ko-KR')})
+                                          </span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
                                 )}
+                                
                               </div>
 
                               <div className={styles.imageGroup}>

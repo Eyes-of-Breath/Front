@@ -14,6 +14,7 @@ function Result() {
     // 2. patient 객체로부터 필요한 데이터 추출
     const xrayImage = patient?.xrayImages?.[0];
     const diagnosisResult = xrayImage?.diagnosisResult;
+    const resultId = patient?.xrayImages?.[0]?.diagnosisResult?.resultId;
 
     const [findings, setFindings] = useState('');
     const [impression, setImpression] = useState('');
@@ -37,7 +38,35 @@ function Result() {
     if (!patient || !xrayImage || !diagnosisResult) return null;
     
     const handleSaveDraft = () => alert('임시 저장되었습니다.');
-    const handleSubmitReport = () => alert('보고서가 제출되었습니다.');
+    const handleSubmitReport = async () => {
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_SERVER_URL}/diagnosis/${resultId}/comments`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        content: findings
+                    }),
+                }
+            );
+
+            if (response.ok) {
+                alert("보고서가 성공적으로 제출되었습니다.");
+            } else {
+                const errorData = await response.json();
+                console.error("보고서 제출 실패:", errorData);
+                alert("보고서 제출에 실패했습니다.");
+            }
+        } catch (error) {
+            console.error("보고서 제출 중 오류:", error);
+            alert("보고서 제출 중 오류가 발생했습니다.");
+        }
+    };
+
     const handleSendEmail = () => alert(`${email}로 결과가 전송되었습니다.`);
     
     const analysisDate = new Date(diagnosisResult.createdAt).toLocaleDateString('ko-KR');
@@ -51,7 +80,7 @@ function Result() {
                     <div className={styles.card}>
                         <div className={styles.cardHeader}>
                             <h2 className={styles.cardTitle}><User size={18} /> 환자 정보</h2>
-                            <div className={styles.patientIdButton}>ID: {patient.patientCode}</div>
+                            <div className={styles.patientIdButton}>{patient.patientCode}</div>
                         </div>
                         <div className={styles.cardContent}>
                             <div className={styles.patientInfoGrid}>
@@ -109,13 +138,41 @@ function Result() {
                         </div>
                     </div>
                     <div className={styles.card}>
-                        <div className={styles.cardHeader}><h2 className={styles.cardTitle}><FileText size={18} /> 의사 소견</h2></div>
+                        <div className={styles.cardHeader}>
+                            <h2 className={styles.cardTitle}>
+                                <FileText size={18} />
+                                의사 소견
+                            </h2>
+                        </div>
                         <div className={styles.cardContent}>
-                            <div className={styles.inputSection}><label className={styles.inputLabel}>소견</label><textarea className={styles.textarea} value={findings} onChange={(e) => setFindings(e.target.value)} rows={3} /></div>
-                            <div className={styles.inputSection}><label className={styles.inputLabel}>판독 의견</label><textarea className={styles.textarea} value={impression} onChange={(e) => setImpression(e.target.value)} rows={3} /></div>
+                            <div className={styles.inputSection}>
+                                <label className={styles.inputLabel} htmlFor="findings-textarea">소견</label>
+                                <textarea
+                                    id="findings-textarea"
+                                    className={styles.textarea}
+                                    value={findings}
+                                    onChange={(e) => setFindings(e.target.value)}
+                                    placeholder="소견을 입력하세요..."
+                                    rows={4}
+                                />
+                            </div>
                             <div className={styles.buttonGroup}>
-                                <button onClick={handleSaveDraft} className={`${styles.button} ${styles.saveButton}`}><Save size={16} /> 임시 저장</button>
-                                <button onClick={handleSubmitReport} className={`${styles.button} ${styles.submitButton}`}><FileText size={16} /> 보고서 제출</button>
+                                <button 
+                                    onClick={handleSaveDraft}
+                                    className={`${styles.button} ${styles.saveButton}`}
+                                    type="button"
+                                >
+                                    <Save size={16} />
+                                    임시 저장
+                                </button>
+                                <button 
+                                    onClick={handleSubmitReport}
+                                    className={`${styles.button} ${styles.submitButton}`}
+                                    type="button"
+                                >
+                                    <FileText size={16} />
+                                    보고서 제출
+                                </button>
                             </div>
                         </div>
                     </div>

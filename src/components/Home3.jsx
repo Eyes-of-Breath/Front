@@ -126,9 +126,6 @@ function Home3() {
                                 <span style={{ marginLeft: '15px' }}>
                                     수집: {article.crawledAt || 'N/A'}
                                 </span>
-                                <span style={{ marginLeft: '15px' }}>
-                                    ID: {article.newsId}
-                                </span>
                             </div>
                             <button 
                                 onClick={() => openLink(article.newsUrl)}
