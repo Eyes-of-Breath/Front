@@ -4,11 +4,10 @@ import { User, Lock, Trash2, Stethoscope, Building, Mail, BarChart3, Calendar, T
 import profile from '../assets/profile.jpg';
 import { useNavigate } from 'react-router-dom';
 
-const nickname = localStorage.getItem('nickname');
-const email = localStorage.getItem('email');
-
 const Profile = () => {
     const navigate = useNavigate();
+    const nickname = localStorage.getItem('nickname');
+    const email = localStorage.getItem('email');
 
     const [userStats] = useState({
         totalDiagnoses: 147,

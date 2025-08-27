@@ -31,6 +31,7 @@ function Sidebar() {
     const handleLogout = async () => {
         try {
             await signOut(auth);
+            localStorage.clear();
             navigate('/', { replace: true });
         } catch (error) {
             console.error('로그아웃 중 오류 발생:', error);

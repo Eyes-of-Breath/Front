@@ -21,10 +21,8 @@ import megaphoneImg from '../assets/Megaphone.png';
 import profileImg from '../assets/profile.jpg';
 import frmaeImg from '../assets/ProfileFrame.png';
 
-const nickname = localStorage.getItem('nickname');
-
 function Dashboard() {
-    const userName = "Amanda";
+    const nickname = localStorage.getItem('nickname');
     
     const headerRef = useRef(null);
     const cardsRef = useRef([]);

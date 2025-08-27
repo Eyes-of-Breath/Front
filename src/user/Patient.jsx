@@ -3,8 +3,6 @@ import styles from './Patient.module.css';
 import { Search, FileText } from 'lucide-react';
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-const accessToken = localStorage.getItem('accessToken');
-const memberId = Number(localStorage.getItem('memberId'));
 
 const Patient = () => {
   const [searchCriteria, setSearchCriteria] = useState({ name: '', birthDate: '', gender: '' });
@@ -14,6 +12,9 @@ const Patient = () => {
   const [isSearchLoading, setIsSearchLoading] = useState(false);
   const [isSearchIDLoading, setIsSearchIDLoading] = useState(false);
   const [isSearchCodeLoading, setIsSearchCodeLoading] = useState(false);
+  const accessToken = localStorage.getItem('accessToken');
+  const memberId = Number(localStorage.getItem('memberId'));
+
 
   const handleSearch = async () => {
     setIsSearchLoading(true);

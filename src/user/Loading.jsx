@@ -4,11 +4,11 @@ import { Sparkles } from 'lucide-react';
 import styles from './Loading.module.css';
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-const accessToken = localStorage.getItem('accessToken');
 
 function Loading() {
     const navigate = useNavigate();
     const location = useLocation();
+    const accessToken = localStorage.getItem('accessToken');
 
     // 2. useEffect가 이미 실행되었는지 확인하기 위한 플래그
     const effectRan = useRef(false);

@@ -3,13 +3,13 @@ import { Trash } from "lucide-react";
 import styles from './PatientAll.module.css';
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-const accessToken = localStorage.getItem('accessToken');
-const memberId = Number(localStorage.getItem('memberId'));
 
 function PatientAll() {
     const [patients, setPatients] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const accessToken = localStorage.getItem('accessToken');
+    const memberId = Number(localStorage.getItem('memberId'));
 
     useEffect(() => {
         const fetchPatients = async () => {

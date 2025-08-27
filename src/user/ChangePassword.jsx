@@ -4,10 +4,10 @@ import styles from '../components/Login.module.css';
 import { useNavigate } from 'react-router-dom';
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-const accessToken = localStorage.getItem('accessToken');
 
 function ChangePassword() {
     const navigate = useNavigate();
+    const accessToken = localStorage.getItem('accessToken');
 
     const [password, setPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
