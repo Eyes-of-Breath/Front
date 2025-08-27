@@ -4,6 +4,8 @@ import { User, Lock, Trash2, Stethoscope, Building, Mail, BarChart3, Calendar, T
 import profile from '../assets/profile.jpg';
 import { useNavigate } from 'react-router-dom';
 
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+
 const Profile = () => {
     const navigate = useNavigate();
     const nickname = localStorage.getItem('nickname');
@@ -41,11 +43,36 @@ const Profile = () => {
         navigate("/changePassword");
     };
 
-    const handleClearHistory = () => {
-        const confirmClear = window.confirm('개인 진단 기록만 삭제됩니다.\n환자 의료 기록은 의료법에 따라 별도 보관됩니다.\n정말로 진단 이력을 삭제하시겠습니까?');
-        if (confirmClear) {
-            console.log('개인 진단 이력 삭제 확인됨');
-            alert('개인 진단 이력이 삭제되었습니다.\n환자 의료 기록은 안전하게 보관됩니다.');
+
+
+    const handleClearHistory = async () => {
+        const confirmClear = window.confirm(
+            '개인 진단 기록이 모두 삭제됩니다.\n환자 의료 기록은 의료법에 따라 안전하게 보관됩니다.\n정말로 삭제하시겠습니까?'
+        );
+
+        if (!confirmClear) return;
+
+        try {
+            const accessToken = localStorage.getItem('accessToken');
+
+            const response = await fetch(`${SERVER_URL}/patients/all`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                alert('회원님의 개인 진단 기록이 모두 삭제되었습니다.');
+            } else {
+                const errData = await response.json();
+                console.error('삭제 실패:', errData);
+                alert('삭제에 실패했습니다. 다시 시도해주세요.');
+            }
+        } catch (error) {
+            console.error('삭제 중 오류 발생:', error);
+            alert('삭제 중 오류가 발생했습니다.');
         }
     };
 
@@ -55,13 +82,13 @@ const Profile = () => {
                 <div className={styles.greeting}>
                     프로필 정보를 수정하세요.
                 </div>
-                
+
                 {/* 프로필 섹션 */}
                 <div className={styles.profileSection}>
-                    <img 
-                        src={profile} 
-                        alt="프로필 이미지" 
-                        className={styles.profileImage} 
+                    <img
+                        src={profile}
+                        alt="프로필 이미지"
+                        className={styles.profileImage}
                     />
                     <div className={styles.profileInfo}>
                         <h1 className={styles.doctorName}>{doctorInfo.name} 선생님</h1>
@@ -87,7 +114,7 @@ const Profile = () => {
                         </div>
                         <ChevronRight size={20} />
                     </button>
-                    
+
                     <button className={styles.actionButton} onClick={handlePasswordChange}>
                         <div className={styles.buttonLeft}>
                             <Lock size={20} />
@@ -95,7 +122,7 @@ const Profile = () => {
                         </div>
                         <ChevronRight size={20} />
                     </button>
-                    
+
                     <button className={`${styles.actionButton} ${styles.dangerButton}`} onClick={handleClearHistory}>
                         <div className={styles.buttonLeft}>
                             <Trash2 size={20} />
