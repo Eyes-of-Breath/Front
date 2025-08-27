@@ -1,47 +1,52 @@
 import React, { useState, useEffect } from 'react';
 
-const API_BASE = 'http://localhost:8080/api';
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+const CACHE_EXPIRATION_TIME = 3600000;
 
+// 뉴스 데이터 통신을 위한 API 객체
 const newsAPI = {
     async getAllNews() {
-        const response = await fetch(`${API_BASE}/news`);
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const response = await fetch(`${SERVER_URL}/news`);
+        if (!response.ok) {
+            throw new Error(`Spring Boot 서버 연결 실패 (HTTP ${response.status})`);
+        }
         return await response.json();
     },
-
-    async checkHealth() {
-        try {
-            const response = await fetch(`${API_BASE}/news/health`);
-            return response.ok;
-        } catch {
-            return false;
-        }
-    }
 };
 
 function Home3() {
     const [news, setNews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [connected, setConnected] = useState(false);
-
+    
     const loadData = async () => {
         setLoading(true);
         setError(null);
         
         try {
-            // 서버 연결 확인
-            const isConnected = await newsAPI.checkHealth();
-            setConnected(isConnected);
-            
-            if (!isConnected) {
-                throw new Error('Spring Boot 서버 연결 실패');
+            const cachedNews = localStorage.getItem('newsCache');
+            const cachedTimestamp = localStorage.getItem('newsCacheTimestamp');
+
+            if (cachedNews && cachedTimestamp) {
+                const isCacheValid = (new Date().getTime() - cachedTimestamp) < CACHE_EXPIRATION_TIME;
+                
+                if (isCacheValid) {
+                    console.log("유효한 캐시를 사용합니다.");
+                    setNews(JSON.parse(cachedNews));
+                    setLoading(false);
+                    return;
+                }
             }
-            
-            // 뉴스 데이터 가져오기
+
+            console.log("새로운 뉴스 데이터를 API로부터 가져옵니다.");
             const newsData = await newsAPI.getAllNews();
-            setNews(newsData || []);
+            const newsArray = Array.isArray(newsData) ? newsData : [];
             
+            setNews(newsArray);
+
+            localStorage.setItem('newsCache', JSON.stringify(newsArray));
+            localStorage.setItem('newsCacheTimestamp', new Date().getTime());
+
         } catch (err) {
             setError(err.message);
             setNews([]);
@@ -55,6 +60,8 @@ function Home3() {
     }, []);
 
     const handleRefresh = () => {
+        localStorage.removeItem('newsCache');
+        localStorage.removeItem('newsCacheTimestamp');
         loadData();
     };
 
@@ -68,23 +75,7 @@ function Home3() {
 
     return (
         <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-            <h1>의료 뉴스 (개발용)</h1>
-            
-            {/* 상태 정보 */}
-            <div style={{ 
-                background: '#f5f5f5', 
-                padding: '15px', 
-                marginBottom: '20px',
-                border: '1px solid #ddd'
-            }}>
-                <h3>연결 상태</h3>
-                <p>서버 연결: {connected ? '✅ 성공' : '❌ 실패'}</p>
-                <p>뉴스 개수: {news.length}개</p>
-                <p>상태: {loading ? '로딩 중...' : error ? `에러: ${error}` : '정상'}</p>
-                <button onClick={handleRefresh} disabled={loading}>
-                    {loading ? '로딩 중...' : '새로고침'}
-                </button>
-            </div>
+            <h1>의료 뉴스</h1>
 
             {/* 뉴스 목록 */}
             {loading ? (
