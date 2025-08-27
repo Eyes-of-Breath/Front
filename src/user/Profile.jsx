@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import styles from './Profile.module.css'; // CSS Module import
 import { User, Lock, Trash2, Stethoscope, Building, Mail, BarChart3, Calendar, TrendingUp, Settings, Shield, Award, ChevronRight } from 'lucide-react';
 import profile from '../assets/profile.jpg';
+import { useNavigate } from 'react-router-dom';
 
 const nickname = localStorage.getItem('nickname');
 const email = localStorage.getItem('email');
 
 const Profile = () => {
+    const navigate = useNavigate();
+
     const [userStats] = useState({
         totalDiagnoses: 147,
         thisMonth: 23,
@@ -36,8 +39,7 @@ const Profile = () => {
     };
 
     const handlePasswordChange = () => {
-        console.log('비밀번호 변경 클릭');
-        alert('비밀번호 변경 페이지로 이동합니다.');
+        navigate("/changePassword");
     };
 
     const handleClearHistory = () => {

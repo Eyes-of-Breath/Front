@@ -21,12 +21,7 @@ function Result() {
     const [heatmapOpacity, setHeatmapOpacity] = useState(0.5);
     
     useEffect(() => {
-        // if (!patient || !xrayImage || !diagnosisResult) {
-        //     alert("잘못된 접근입니다. 분석 페이지로 이동합니다.");
-        //     navigate('/analysis');
-        //     return;
-        // }
-        if (!patient || !xrayImage ) {
+        if (!patient || !xrayImage || !diagnosisResult) {
             alert("잘못된 접근입니다. 분석 페이지로 이동합니다.");
             navigate('/analysis');
             return;

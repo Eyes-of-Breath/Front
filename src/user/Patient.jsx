@@ -4,6 +4,7 @@ import { Search, FileText } from 'lucide-react';
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const accessToken = localStorage.getItem('accessToken');
+const memberId = Number(localStorage.getItem('memberId'));
 
 const Patient = () => {
   const [searchCriteria, setSearchCriteria] = useState({ name: '', birthDate: '', gender: '' });
@@ -123,20 +124,47 @@ const Patient = () => {
     }
   };
 
-  const handleReset = () => {
-    setSearchCriteria({ name: '', birthDate: '', gender: '' });
-    setSelectedPatient(null);
+  // const handleReset = () => {
+  //   setSearchCriteria({ name: '', birthDate: '', gender: '' });
+  //   setSelectedPatient(null);
+  // };
+
+  // const handleResetID = () => {
+  //   setSearchID({ patientID: '' });
+  //   setSelectedPatient(null);
+  // };
+
+  // const handleResetCode = () => {
+  //   setSearchID({ patientID: '' });
+  //   setSelectedPatient(null);
+  // };
+
+  const handleDeleteReport = async (imageId) => {
+    try {
+      const response = await fetch(`${SERVER_URL}/diagnosis/${imageId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        }
+      });
+
+      if (response.ok) {
+        alert("보고서가 삭제되었습니다.");
+        // 상태 업데이트
+        setSelectedPatient(prev => ({
+          ...prev,
+          xrayImages: prev.xrayImages.filter(x => x.imageId !== imageId)
+        }));
+      } else {
+        alert("삭제 실패");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("삭제 중 오류가 발생했습니다.");
+    }
   };
 
-  const handleResetID = () => {
-    setSearchID({ patientID: '' });
-    setSelectedPatient(null);
-  };
 
-  const handleResetCode = () => {
-    setSearchID({ patientID: '' });
-    setSelectedPatient(null);
-  };
 
   const getPriority = (probability) => {
     if (probability >= 0.9) return 'high';
@@ -166,7 +194,9 @@ const Patient = () => {
             lineHeight: '1.6',
             textShadow: '0 1px 3px rgba(0, 0, 0, 0.2)',
             paddingLeft: '0.5rem',
-            textAlign: 'left'
+            textAlign: 'left',
+            marginBottom: '1rem',
+            flex: 1,
           }}
         >
           여기서 환자 정보를 관리하세요.
@@ -174,14 +204,6 @@ const Patient = () => {
 
         <div
           className={styles.mainLayout}
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 3fr',
-            gap: '2rem',
-            height: '100vh',
-            overflow: 'hidden',
-            alignItems: 'start'
-          }}
         >
           {/* 왼쪽: 검색 섹션 */}
           <div className={styles.leftSection}>
@@ -339,8 +361,20 @@ const Patient = () => {
                                     </li>
                                   </ul>
                                 </div>
+                                {Number(selectedPatient.memberId) === memberId && (
+                                  <span
+                                    className={styles.deleteText} // CSS에서 cursor: pointer 등 스타일 적용 가능
+                                    onClick={() => {
+                                      const confirmed = window.confirm("정말 삭제하시겠습니까?");
+                                      if (confirmed) {
+                                        handleDeleteReport(xray.imageId);
+                                      }
+                                    }}
+                                  >
+                                    보고서 삭제
+                                  </span>
+                                )}
                               </div>
-
                               {/* 이미지 영역 */}
                               <div className={styles.imageGroup}>
                                 {/* AI 진단 이미지 */}
@@ -349,7 +383,6 @@ const Patient = () => {
                                   alt={xray.fileName}
                                   className={styles.previewImage}
                                 />
-
                                 {/* Grad-CAM 이미지 */}
                                 <img
                                   src={xray.diagnosisResult.gradcamImagePath}
@@ -359,7 +392,6 @@ const Patient = () => {
                               </div>
                             </div>
                           </div>
-
                         );
                       })
                     ) : (

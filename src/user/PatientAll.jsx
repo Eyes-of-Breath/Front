@@ -82,14 +82,15 @@ function PatientAll() {
                                 <table className={styles.patientTable}>
                                     <thead>
                                         <tr>
-                                            <th>Patient ID</th>
-                                            <th>Name</th>
-                                            <th>Birth Date</th>
-                                            <th>Gender</th>
-                                            <th>Patient Code</th>
-                                            <th>Height</th>
-                                            <th>Weight</th>
-                                            <th>BloodType</th>
+                                            <th>환자 ID</th>
+                                            <th>이름</th>
+                                            <th>생년월일</th>
+                                            <th>성별</th>
+                                            <th>환자 Code</th>
+                                            <th>키</th>
+                                            <th>몸무게</th>
+                                            <th>혈액형</th>
+                                            <th>보고서 수</th>
                                             <th>환자 삭제</th>
                                         </tr>
                                     </thead>
@@ -104,6 +105,7 @@ function PatientAll() {
                                                 <td>{p.height}</td>
                                                 <td>{p.weight}</td>
                                                 <td>{p.bloodType}</td>
+                                                <td>{p.xrayImages.length}</td>
                                                 <td>
                                                     {p.memberId === memberId && (
                                                         <button onClick={() => handleDelete(p.patientId)}>

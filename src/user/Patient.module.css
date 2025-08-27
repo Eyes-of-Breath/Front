@@ -22,11 +22,10 @@
 }
 
 .mainContent {
-    max-width: 1400px; /* 최대 너비 늘림 */
-    margin: 0 2rem 0 2rem; /* 양쪽 모두 2rem 여백 */
+    margin: 0 2rem 2rem 2rem;
     padding: 0;
-    height: 100vh; /* 전체 화면 높이 */
-    overflow: hidden; /* 메인 컨테이너는 스크롤 안됨 */
+    height: 100vh;
+    overflow: hidden;
 }
 
 .greeting {
@@ -52,17 +51,14 @@
 /* 메인 레이아웃 */
 .mainLayout {
     display: grid;
-    grid-template-columns: 1fr 2.5fr; /* 오른쪽 비율 증가 */
+    grid-template-columns: 1fr 3.5fr; /* 오른쪽 비율 증가 */
     gap: 2rem;
-    height: 100vh; /* 전체 화면 높이 */
-    overflow: hidden; /* 전체 스크롤 방지 */
+    flex: 1; /* 전체 화면 높이 */
     align-items: start; /* 상단 정렬로 맞춤 */
 }
 
 .leftSection {
     position: sticky;
-    top: 1rem; /* 위쪽 여백과 동일하게 맞춤 */
-    height: fit-content;
     max-height: 100vh;
     overflow: hidden; /* 왼쪽은 스크롤 안됨 */
     align-self: start; /* 상단 정렬 */
@@ -71,7 +67,7 @@
 .rightSection {
     height: 100vh; /* 전체 화면 높이 */
     overflow-y: auto; /* 오른쪽만 스크롤 */
-    padding: 1rem 0.5rem 0 0; /* 원래대로 복구 */
+    padding: 0 0.5rem 0 0; /* 원래대로 복구 */
     background: transparent; /* 배경 투명하게 */
     margin-top: 0; /* 상단 마진 제거 */
     position: relative;
@@ -381,7 +377,7 @@
 }
 
 .previewImage {
-  width: 50%;
+  width: 15vw;
   /* height: 50%; */
   object-fit: cover;
 }
@@ -422,6 +418,19 @@
     background-color: #f9fafb;
 }
 
+.deleteText {
+    display: inline-block;
+    color: #333;
+    cursor: pointer;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.deleteText:hover {
+  color: #d62828;        /* 마우스 올리면 진한 빨간색 */
+}
+
+
 /* 빈 상태 */
 .emptyState {
     text-align: center;
@@ -446,7 +455,8 @@
   padding: 0.6rem;
   border: 1px solid #eee;
   border-radius: 10px;
-  background: #fafafa;
+  background: #eee;
+  position: relative;
 }
 
 .sectionSubtitle {

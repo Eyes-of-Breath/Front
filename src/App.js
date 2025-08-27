@@ -13,6 +13,7 @@ import Patient from './user/Patient';
 import Profile from './user/Profile';
 import Analysis from './user/Analysis';
 import PatientAll from './user/PatientAll';
+import ChangePassword from './user/ChangePassword';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path='loading' element={<Loading />} />
           <Route path='result' element={<Result />} />
           <Route path='profile' element={<Profile />} />
+          <Route path='changePassword' element={<ChangePassword />} />
         </Route>
       </Routes>
     </Router>
