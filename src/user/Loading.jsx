@@ -54,14 +54,29 @@ function Loading() {
 
                 // new-patient가 실패하면 existing-patient로 재시도
                 if (!response.ok) {
-                    console.warn("new-patient 요청 실패, existing-patient로 재시도합니다.");
+                    console.warn("new-patient 요청 실패, patientId를 조회합니다");
+                    response = await fetch(`${SERVER_URL}/patients/code/${encodeURIComponent(patientInfo.patientCode)}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${accessToken}`,
+                        },
+
+                    })
+
+                    const data = await response.json();
+                    const patientId = data.patientId;
+
+                    const existingPatientForm = new FormData();
+                    existingPatientForm.append('file', uploadedFile);
+                    existingPatientForm.append('patientId', patientId);
+
                     response = await fetch(`${SERVER_URL}/diagnosis/start/existing-patient`, {
                         method: 'POST',
                         headers: {
                             "Authorization": `Bearer ${accessToken}`,
                         },
-                        // body: JSON.stringify({ email, password }),
-
+                        body: existingPatientForm,
                     });
                 }
 

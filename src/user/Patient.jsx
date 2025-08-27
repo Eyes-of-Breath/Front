@@ -162,7 +162,6 @@ const Patient = () => {
             fontSize: '1.5rem',
             fontWeight: '300',
             color: '#1a1a1a',
-            margin: '0 0 1rem 0',
             paddingTop: '2rem',
             lineHeight: '1.6',
             textShadow: '0 1px 3px rgba(0, 0, 0, 0.2)',
@@ -232,21 +231,19 @@ const Patient = () => {
                   <button onClick={handleSearch} disabled={isSearchLoading} className={styles.button}>
                     {isSearchLoading ? '검색 중...' : '검색'}
                   </button>
-                  <button onClick={handleReset} className={styles.resetButton}>
+                  {/* <button onClick={handleReset} className={styles.resetButton}>
                     초기화
-                  </button>
+                  </button> */}
                 </div>
               </div>
             </div>
-            {/* <div className={styles.searchSection}>
+            <div className={styles.searchSection}>
               <h2 className={styles.searchTitle}>
                 <Search size={16} style={{ marginRight: '8px' }} />
                 환자 ID로 검색
               </h2>
-
               <div className={styles.searchForm}>
                 <div className={styles.formGroup}>
-                  <label className={styles.patientID}>환자 ID:</label>
                   <input
                     type="text"
                     value={searchID.patientID}
@@ -259,12 +256,9 @@ const Patient = () => {
                   <button onClick={handleSearchID} disabled={isSearchIDLoading} className={styles.button}>
                     {isSearchIDLoading ? '검색 중...' : '검색'}
                   </button>
-                  <button onClick={handleResetID} className={styles.resetButton}>
-                    초기화
-                  </button>
                 </div>
               </div>
-            </div> */}
+            </div>
             <div className={styles.searchSection}>
               <h2 className={styles.searchTitle}>
                 <Search size={16} style={{ marginRight: '8px' }} />
@@ -272,7 +266,6 @@ const Patient = () => {
               </h2>
               <div className={styles.searchForm}>
                 <div className={styles.formGroup}>
-                  <label className={styles.patientID}>환자 Code:</label>
                   <input
                     type="text"
                     value={searchCode.patientCode}
@@ -282,11 +275,8 @@ const Patient = () => {
                   />
                 </div>
                 <div className={styles.buttonGroup}>
-                  <button onClick={handleSearchCode} disabled={isSearchIDLoading} className={styles.button}>
-                    {isSearchLoading ? '검색 중...' : '검색'}
-                  </button>
-                  <button onClick={handleResetCode} className={styles.resetButton}>
-                    초기화
+                  <button onClick={handleSearchCode} disabled={isSearchCodeLoading} className={styles.button}>
+                    {isSearchCodeLoading ? '검색 중...' : '검색'}
                   </button>
                 </div>
               </div>
@@ -379,7 +369,7 @@ const Patient = () => {
 
                 </div>
               </div>
-            ) : !isSearchIDLoading ? (
+            ) : !isSearchLoading || !isSearchIDLoading || !isSearchCodeLoading ? (
               <div className={styles.emptyState}>
                 <p>환자를 검색하면 엑스레이 기록이 여기에 표시됩니다.</p>
               </div>
