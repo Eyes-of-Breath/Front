@@ -26,18 +26,16 @@ function ChangePassword() {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${accessToken}`,
                 },
-                body: JSON.stringify({ password, newPassword }),
+                body: JSON.stringify({ currentPassword: password, newPassword }),
             });
-
-            const data = await response.json();
 
             if (!response.ok) {
                 let message = '비밀번호 변경에 실패했습니다.';
                 setError(message);
                 return;
             }
-
-            // navigate("/home");
+            
+            navigate("/");
 
         } catch (err) {
             setError('서버와 통신 중 오류가 발생했습니다.');
