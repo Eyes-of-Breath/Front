@@ -1,134 +1,111 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react'; // 1. useRef import 추가
 import { useNavigate, useLocation } from 'react-router-dom';
-import { 
-    Camera, 
-    Sparkles, 
-    Search,
-    FileText
-} from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import styles from './Loading.module.css';
+
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+const accessToken = localStorage.getItem('accessToken');
 
 function Loading() {
     const navigate = useNavigate();
     const location = useLocation();
-    const [progress, setProgress] = useState(0);
-    const [currentStep, setCurrentStep] = useState(0);
-    
-    // 이전 페이지에서 전달받은 데이터
-    const { patientInfo, uploadedFile, imagePreview } = location.state || {};
 
-    const analysisSteps = [
-        { icon: Camera, message: "이미지를 꼼꼼히 살펴보고 있어요", duration: 1000 },
-        { icon: Sparkles, message: "AI가 열심히 분석 중이에요", duration: 2000 },
-        { icon: Search, message: "병변 영역을 찾고 있어요", duration: 1500 },
-        { icon: FileText, message: "진단 결과를 정리하고 있어요", duration: 1000 }
-    ];
+    // 2. useEffect가 이미 실행되었는지 확인하기 위한 플래그
+    const effectRan = useRef(false);
+
+    const { patientInfo, uploadedFile } = location.state || {};
 
     useEffect(() => {
-        // 데이터가 없으면 업로드 페이지로 리다이렉트
+        // 3. Strict Mode에서 두 번째 렌더링일 경우 API 호출을 막음
+        if (effectRan.current === true) {
+            return;
+        }
+
         if (!patientInfo || !uploadedFile) {
             navigate('/analysis');
             return;
         }
 
-        let stepTimeout;
-        let progressInterval;
+        const startAnalysis = async () => {
+            try {
+                if (!accessToken) {
+                    alert("로그인 정보가 만료되었습니다. 다시 로그인해주세요.");
+                    navigate('/login');
+                    return;
+                }
 
-        const runAnalysis = async () => {
-            for (let i = 0; i < analysisSteps.length; i++) {
-                setCurrentStep(i);
-                
-                // 각 단계별 진행률 업데이트
-                const stepDuration = analysisSteps[i].duration;
-                const progressIncrement = (100 / analysisSteps.length) / (stepDuration / 50);
-                
-                progressInterval = setInterval(() => {
-                    setProgress(prev => {
-                        const newProgress = prev + progressIncrement;
-                        const maxProgress = ((i + 1) / analysisSteps.length) * 100;
-                        return Math.min(newProgress, maxProgress);
+                const formData = new FormData();
+                formData.append('file', uploadedFile);
+                formData.append('name', patientInfo.name);
+                formData.append('patientCode', patientInfo.patientCode);
+                formData.append('birthDate', patientInfo.birthDate);
+                formData.append('gender', patientInfo.gender === '남성' ? 'M' : 'F');
+                formData.append('bloodType', patientInfo.bloodType);
+                formData.append('height', patientInfo.height);
+                formData.append('weight', patientInfo.weight);
+
+                let response = await fetch(`${SERVER_URL}/diagnosis/start/new-patient`, {
+                    method: 'POST',
+                    headers: {
+                        "Authorization": `Bearer ${accessToken}`,
+                    },
+                    body: formData
+                });
+
+                // new-patient가 실패하면 existing-patient로 재시도
+                if (!response.ok) {
+                    console.warn("new-patient 요청 실패, existing-patient로 재시도합니다.");
+                    response = await fetch(`${SERVER_URL}/diagnosis/start/existing-patient`, {
+                        method: 'POST',
+                        headers: {
+                            "Authorization": `Bearer ${accessToken}`,
+                        },
+                        // body: JSON.stringify({ email, password }),
+
                     });
-                }, 50);
+                }
 
-                await new Promise(resolve => {
-                    stepTimeout = setTimeout(resolve, stepDuration);
-                });
+                const result = await response.json();
+                console.log('백엔드 실제 응답:', result);
 
-                clearInterval(progressInterval);
-            }
-
-            // 분석 완료 후 결과 페이지로 이동
-            setTimeout(() => {
                 navigate('/result', {
-                    state: {
-                        patientInfo,
-                        uploadedFile,
-                        imagePreview,
-                        analysisResult: {
-                            // 시뮬레이션된 AI 분석 결과
-                            probability: {
-                                normal: 15,
-                                pneumonia: 75,
-                                tuberculosis: 8,
-                                other: 2
-                            },
-                            severity: "중등도",
-                            recommendation: "추가 검사 권장",
-                            confidence: 87,
-                            detectedAreas: [
-                                { x: 45, y: 30, width: 20, height: 15, type: "pneumonia" },
-                                { x: 60, y: 45, width: 12, height: 10, type: "inflammation" }
-                            ]
-                        }
-                    }
+                    state: { patient: result }
                 });
-            }, 500);
+
+            } catch (error) {
+                console.error("AI 분석 요청 실패:", error);
+                if (error.response && error.response.status === 401) {
+                    alert("인증 정보가 유효하지 않습니다. 다시 로그인해주세요.");
+                    navigate('/login');
+                } else {
+                    alert("분석 중 오류가 발생했습니다. 다시 시도해주세요.");
+                    navigate(-1);
+                }
+            }
         };
 
-        runAnalysis();
+        startAnalysis();
 
+        // 4. useEffect가 처음 실행된 후 플래그를 true로 설정
         return () => {
-            clearTimeout(stepTimeout);
-            clearInterval(progressInterval);
+            effectRan.current = true;
         };
-    }, [navigate, patientInfo, uploadedFile, imagePreview]);
+        // 5. 의존성 배열을 비워 최초 한 번만 실행되도록 보장
+    }, []);
 
     if (!patientInfo || !uploadedFile) {
-        return null; // 리다이렉트 중
+        return null;
     }
-
-    const currentStepData = analysisSteps[currentStep] || analysisSteps[0];
-    const CurrentIcon = currentStepData.icon;
 
     return (
         <div className={styles.container}>
             <div className={styles.loadingWrapper}>
                 <div className={styles.iconContainer}>
-                    <CurrentIcon size={64} className={styles.animatedIcon} />
+                    <Sparkles size={64} className={styles.animatedIcon} />
                 </div>
-                
-                <h1 className={styles.title}>
-                    AI 분석 진행 중
-                </h1>
-                
-                <p className={styles.message}>
-                    {currentStepData.message}
-                </p>
-                
-                <div className={styles.progressBar}>
-                    <div 
-                        className={styles.progressFill}
-                        style={{ width: `${progress}%` }}
-                    />
-                </div>
-                
-                <div className={styles.progressText}>
-                    {Math.round(progress)}% 완료
-                </div>
-                
-                <div className={styles.estimatedTime}>
-                    예상 소요 시간: 약 {Math.max(1, Math.ceil((100 - progress) / 20))}분
-                </div>
+                <h1 className={styles.title}>AI 분석 진행 중</h1>
+                <p className={styles.message}>AI가 열심히 분석 중이에요. 잠시만 기다려주세요.</p>
+                <div className={styles.simpleSpinner}></div>
             </div>
         </div>
     );

@@ -39,8 +39,6 @@ function PatientAll() {
         fetchPatients();
     }, []);
 
-    console.log(memberId);
-
     const handleDelete = async (patientId) => {
         if (!window.confirm("정말 삭제하시겠습니까?")) return;
 
@@ -60,19 +58,6 @@ function PatientAll() {
             alert("삭제에 실패했습니다.");
         }
     };
-
-    // if (loading) return (
-    //     <div className={styles.loadingContainer}>
-    //         <div className={styles.spinner}></div>
-    //         <p>환자 목록을 불러오고 있습니다.</p>
-    //     </div>
-    // );
-
-    // if (error) return (
-    //     <div className={styles.loadingContainer}>
-    //         <p style={{ color: "red" }}>{error}</p>
-    //     </div>
-    // );
 
     return (
         <div className={styles.pageContainer}>
@@ -104,7 +89,7 @@ function PatientAll() {
                                             <th>Patient Code</th>
                                             <th>Height</th>
                                             <th>Weight</th>
-                                            <th>MemberID</th>
+                                            <th>BloodType</th>
                                             <th>환자 삭제</th>
                                         </tr>
                                     </thead>
@@ -118,7 +103,7 @@ function PatientAll() {
                                                 <td>{p.patientCode}</td>
                                                 <td>{p.height}</td>
                                                 <td>{p.weight}</td>
-                                                <td>{p.memberId}</td>
+                                                <td>{p.bloodType}</td>
                                                 <td>
                                                     {p.memberId === memberId && (
                                                         <button onClick={() => handleDelete(p.patientId)}>

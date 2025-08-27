@@ -22,7 +22,7 @@ function PatientUploadInterface() {
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [patientInfo, setPatientInfo] = useState({
         name: '',
-        patientId: '',
+        patientCode: '',
         birthDate: '',
         gender: '',
         bloodType: '',
@@ -44,7 +44,7 @@ function PatientUploadInterface() {
         // 여기서는 시뮬레이션으로 랜덤 데이터 생성
         const sampleData = {
             name: '김환자',
-            patientId: `P-${Date.now().toString().slice(-6)}`,
+            patientCode: `P-${Date.now().toString().slice(-6)}`,
             birthDate: '1980-05-15',
             gender: '남성',
             bloodType: 'A+',
@@ -95,10 +95,21 @@ function PatientUploadInterface() {
     };
 
     const handleAnalysis = async () => {
-        // 필수 정보 확인
-        if (!patientInfo.name || !patientInfo.patientId) {
-            alert('환자 이름과 ID는 필수 입력 항목입니다.');
-            return;
+        const requiredFields = {
+            name: "이름을 입력해주세요.",
+            patientCode: "환자 Code를 입력해주세요.",
+            birthDate: "생년월일을 입력해주세요.",
+            gender: "성별을 선택해주세요.",
+            bloodType: "혈액형을 선택해주세요.",
+            height: "키를 입력해주세요.",
+            weight: "몸무게를 입력해주세요."
+        };
+
+        for (const [key, message] of Object.entries(requiredFields)) {
+            if (!patientInfo[key]) {
+                alert(message);
+                return;
+            }
         }
 
         if (!uploadedFile) {
@@ -165,12 +176,12 @@ function PatientUploadInterface() {
                             
                             <div className={styles.inputGroup}>
                                 <div className={styles.inputLabel}>
-                                    환자 ID
+                                    환자 Code
                                 </div>
                                 <input
                                     type="text"
-                                    name="patientId"
-                                    value={patientInfo.patientId}
+                                    name="patientCode"
+                                    value={patientInfo.patientCode}
                                     onChange={handleInputChange}
                                     className={styles.input}
                                     placeholder="P-20250504"
@@ -287,7 +298,7 @@ function PatientUploadInterface() {
                                 <Upload size={32} color="white" />
                             </div>
                             <h2 className={styles.cardTitle}>
-                                DICOM 파일 업로드
+                                흉부 X-ray 업로드
                             </h2>
                             <p className={styles.cardDescription}>
                                 기존 의료 영상 파일을 업로드하여 분석하세요
