@@ -157,6 +157,27 @@ function Calendar() {
         );
     };
 
+    // 시간을 분으로 변환하는 함수
+    const timeToMinutes = (timeStr) => {
+        const [hours, minutes] = timeStr.split(':').map(Number);
+        return hours * 60 + minutes;
+    };
+
+    // 일정이 해당 시간 슬롯과 겹치는지 확인
+    const isAppointmentInTimeSlot = (appointment, timeSlot) => {
+        const aptStartMinutes = timeToMinutes(appointment.time);
+        const aptEndMinutes = aptStartMinutes + (appointment.duration * 60);
+        const slotStartMinutes = timeToMinutes(timeSlot);
+        const slotEndMinutes = slotStartMinutes + 60;
+        
+        return aptStartMinutes < slotEndMinutes && aptEndMinutes > slotStartMinutes;
+    };
+
+    // 일정이 시작되는 시간 슬롯인지 확인
+    const isAppointmentStart = (appointment, timeSlot) => {
+        return appointment.time === timeSlot;
+    };
+
     const changeWeek = (direction) => {
         const newWeek = new Date(currentWeek);
         newWeek.setDate(newWeek.getDate() + (direction * 7));

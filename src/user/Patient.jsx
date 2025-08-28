@@ -111,21 +111,22 @@ const Patient = () => {
     }
   };
 
-  const getSeverityColor = (probability) => {
-    if (probability >= 0.9) return {
-      outer: '#bbc9f7',
-      inner: '#e6ecff',
-      gradient: 'linear-gradient(135deg, #bbc9f7, #e6ecff)'
+  // 심각도 분류 함수
+  const getSeverityInfo = (probability) => {
+    if (probability >= 0.9) return { 
+      level: 'high', 
+      text: '높음', 
+      class: 'severityHigh' 
     };
-    if (probability >= 0.8) return {
-      outer: '#f7e99c',
-      inner: '#fef4d6',
-      gradient: 'linear-gradient(135deg, #f7e99c, #fef4d6)'
+    if (probability >= 0.8) return { 
+      level: 'moderate', 
+      text: '보통', 
+      class: 'severityModerate' 
     };
-    return {
-      outer: '#c3e1ad',
-      inner: '#e8f5d8',
-      gradient: 'linear-gradient(135deg, #c3e1ad, #e8f5d8)'
+    return { 
+      level: 'normal', 
+      text: '낮음', 
+      class: 'severityNormal' 
     };
   };
 
@@ -232,21 +233,24 @@ const Patient = () => {
                         if (!diagnosis) return null;
 
                         const probability = diagnosis.probability;
-                        const severityColor = getSeverityColor(probability);
+                        const severityInfo = getSeverityInfo(probability);
+                        let severityEmoji = '';
+                        if (severityInfo.level === 'high') severityEmoji = '🚨';
+                        else if (severityInfo.level === 'moderate') severityEmoji = '🔬';
+                        else severityEmoji = '✅';
 
                         return (
                           <div key={xray.imageId} className={styles.recordCard}>
                             <div className={styles.recordLayout}>
                               <div className={styles.recordInfo}>
                                 <div className={styles.recordHeader}>
-                                  <div 
-                                    className={styles.severityDot} 
-                                    style={{ background: severityColor.gradient }}
-                                  ></div>
+                                  <div className={`${styles.severityIndicator} ${styles[severityInfo.class]}`}>
+                                    <span>{severityEmoji} 위험도: {severityInfo.text}</span>
+                                  </div>
                                   <p className={styles.recordDate}>{xray.uploadedAt.split('T')[0]}</p>
                                   {Number(selectedPatient.memberId) === memberId && (
                                     <Trash2 
-                                      size={16} 
+                                      size={18} 
                                       className={styles.deleteIcon} 
                                       onClick={() => {
                                         const confirmed = window.confirm("정말 삭제하시겠습니까?");
@@ -256,26 +260,45 @@ const Patient = () => {
                                   )}
                                 </div>
 
-
+                                {/* <div className={styles.diagnosisSection}>
+                                  <div className={styles.diagnosisTitle}>
+                                    🔬 AI 진단 결과
+                                  </div>
+                                  <div className={styles.confidenceScore}>
+                                    {Math.round(probability * 100)}%
+                                  </div>
+                                  <div className={styles.confidenceLabel}>
+                                    신뢰도
+                                  </div>
+                                </div> */}
 
                                 {diagnosis.comments && diagnosis.comments.length > 0 && (
                                   <div className={styles.commentSection}>
-                                    {diagnosis.comments.map((comment, index) => (
+                                    {diagnosis.comments.map((comment) => (
                                       <div key={comment.commentId} className={styles.commentItem}>
-                                        <p className={styles.doctorName}>{comment.doctorName || '의료진'} 소견:</p>
+                                        <p className={styles.doctorName}>{comment.doctorName || '의료진'} 소견</p>
                                         <p className={styles.commentText}>
-                                          {comment.content} ({new Date(comment.createdAt).toLocaleDateString('ko-KR')})
+                                          {comment.content}
+                                          <br />
+                                          <small style={{ color: '#94a3b8', fontSize: '12px' }}>
+                                            {new Date(comment.createdAt).toLocaleDateString('ko-KR')}
+                                          </small>
                                         </p>
                                       </div>
                                     ))}
                                   </div>
                                 )}
-                                
                               </div>
 
                               <div className={styles.imageGroup}>
-                                <img src={diagnosis.imageUrl} alt={xray.fileName} className={styles.previewImage} />
-                                <img src={diagnosis.gradcamImagePath} alt="Grad-CAM" className={styles.previewImage} />
+                                <div>
+                                  <div className={styles.imageLabel}>원본 X-Ray</div>
+                                  <img src={diagnosis.imageUrl} alt={xray.fileName} className={styles.previewImage} />
+                                </div>
+                                <div>
+                                  <div className={styles.imageLabel}>AI 분석 결과</div>
+                                  <img src={diagnosis.gradcamImagePath} alt="Grad-CAM" className={styles.previewImage} />
+                                </div>
                               </div>
                             </div>
                           </div>
