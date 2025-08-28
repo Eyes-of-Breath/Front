@@ -377,7 +377,7 @@ function PatientUploadInterface() {
                         
                         <div className={styles.fileInfo}>
                             <p>
-                                <Info size={14} /> 지원 형식: DICOM, DCM, JPG, PNG
+                                <Info size={14} /> 지원 형식: JPG, PNG
                             </p>
                             <p>
                                 <Info size={14} /> 최대 파일 크기: 50MB

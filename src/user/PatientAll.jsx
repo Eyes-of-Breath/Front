@@ -90,29 +90,33 @@ function PatientAll() {
                                             <th>키</th>
                                             <th>몸무게</th>
                                             <th>혈액형</th>
+                                            <th>보고서 수</th>
                                             <th>환자 삭제</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {patients.map((p) => (
-                                            <tr key={p.patientId}>
-                                                <td>{p.patientId}</td>
-                                                <td>{p.name}</td>
-                                                <td>{p.birthDate}</td>
-                                                <td>{p.gender}</td>
-                                                <td>{p.patientCode}</td>
-                                                <td>{p.height}</td>
-                                                <td>{p.weight}</td>
-                                                <td>{p.bloodType}</td>
-                                                <td>
-                                                    {p.memberId === memberId && (
-                                                        <button onClick={() => handleDelete(p.patientId)}>
-                                                            <Trash size={18} />
-                                                        </button>
-                                                    )}
-                                                </td>
-                                            </tr>
-                                        ))}
+                                        {patients
+                                            .filter(p => (p.xrayImages || []).some(img => img.diagnosisResult !== null))
+                                            .map((p) => (
+                                                <tr key={p.patientId}>
+                                                    <td>{p.patientId}</td>
+                                                    <td>{p.name}</td>
+                                                    <td>{p.birthDate}</td>
+                                                    <td>{p.gender}</td>
+                                                    <td>{p.patientCode}</td>
+                                                    <td>{p.height}</td>
+                                                    <td>{p.weight}</td>
+                                                    <td>{p.bloodType}</td>
+                                                    <td>{p.xrayImages.filter(img => img.diagnosisResult !== null).length}</td>
+                                                    <td>
+                                                        {p.memberId === memberId && (
+                                                            <button onClick={() => handleDelete(p.patientId)}>
+                                                                <Trash size={18} />
+                                                            </button>
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            ))}
                                     </tbody>
                                 </table>
                             </div>
