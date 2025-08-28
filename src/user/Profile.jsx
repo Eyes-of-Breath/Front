@@ -80,7 +80,7 @@ const Profile = () => {
         <div className={styles.profileContainer}>
             <main className={styles.mainContent}>
                 <div className={styles.greeting}>
-                    프로필 정보를 수정하세요.
+                    내 프로필을 최신 상태로 유지해보세요 👤
                 </div>
 
                 {/* 프로필 섹션 */}

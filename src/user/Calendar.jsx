@@ -241,7 +241,7 @@ function Calendar() {
                 {/* 왼쪽 할일 체크리스트 */}
                 <div className={styles.leftSidebar}>
                     <h1 className={styles.greeting}>
-                        오늘의 할일
+                        일정을 한눈에 확인해보세요 📅
                     </h1>
                     
                     {/* 진행률 표시 */}

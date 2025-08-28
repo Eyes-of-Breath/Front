@@ -89,7 +89,7 @@ function Sidebar() {
                         aria-label={label}
                         data-tooltip={label}
                     >
-                        <IconComponent size={28} className={styles.icon} />
+                        <IconComponent size={20} className={styles.icon} />
                     </button>
                 ))}
             </div>
@@ -104,7 +104,7 @@ function Sidebar() {
                     aria-label="도움말"
                     data-tooltip="도움말"
                 >
-                    <HelpCircle size={28} className={styles.icon} />
+                    <HelpCircle size={20} className={styles.icon} />
                 </button>
             </div>
 
@@ -116,7 +116,7 @@ function Sidebar() {
                     aria-label="로그아웃"
                     data-tooltip="로그아웃"
                 >
-                    <LogOut size={28} className={styles.icon} />
+                    <LogOut size={20} className={styles.icon} />
                 </button>
             </div>
         </nav>

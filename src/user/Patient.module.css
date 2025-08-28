@@ -81,7 +81,6 @@
 .rightSection::-webkit-scrollbar-track {
     background: rgba(255, 255, 255, 0.1);
     border-radius: 4px;
-    margin-top: 1rem; /* 스크롤바 트랙 위쪽 여백 */
 }
 
 .rightSection::-webkit-scrollbar-thumb {
@@ -116,7 +115,7 @@
 }
 
 .searchTitle {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: bold;
     color: #333;
     margin-bottom: 1rem;
@@ -294,12 +293,40 @@
     gap: 0.5rem;
 }
 
+/* 상태 표시 원과 헤더 스타일 */
 .recordHeader {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-    margin-bottom: 0.25rem;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.severityDot {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    position: relative;
+    filter: blur(1px);
+    transform: translateX(7px);
+    flex-shrink: 0;
+}
+
+.recordDate {
+    font-size: 17px;
+    color: #1a1a1a;
+    margin: 0;
+    transform: translateX(12px);
+}
+
+.deleteIcon {
+    color: #ef4444;
+    cursor: pointer;
+    margin-left: auto;
+    transition: color 0.2s;
+}
+
+.deleteIcon:hover {
+    color: #dc2626;
 }
 
 .badge {
@@ -326,7 +353,7 @@
     background-color: #fee2e2;
 }
 
-.recordDate, .recordConfidence {
+.recordConfidence {
     font-size: 18px;
     color: #6b7280;
 }
@@ -382,9 +409,10 @@
 }
 
 .previewImage {
-  width: 15vw;
-  height: auto;
-  object-fit: contain;
+    width: 15vw;
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px; /* 모서리 둥글게 */
 }
 
 .previewContainer {
@@ -423,20 +451,6 @@
     background-color: #f9fafb;
 }
 
-.deleteText {
-    display: inline-block;
-    color: #333;
-    cursor: pointer;
-    font-weight: 500;
-    transition: color 0.2s;
-    text-decoration: underline;
-}
-
-.deleteText:hover {
-  color: #d62828;        /* 마우스 올리면 진한 빨간색 */
-}
-
-
 /* 빈 상태 */
 .emptyState {
     text-align: center;
@@ -457,77 +471,60 @@
     display: block;
 }
 
-.diagnosisSection {
-  padding: 0.6rem;
-  border: 1px solid #eee;
-  border-radius: 10px;
-  background: #eee;
-  position: relative;
-}
 
-.sectionSubtitle {
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-bottom: 0.4rem;
-  color: #333;
-}
 
-.diagnosisList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.diagnosisList li {
-  font-size: 0.85rem;
-  margin-bottom: 0.3rem;
-  color: #444;
-}
-
-/* 댓글/의료진 소견 섹션 */
+/* 댓글/의료진 소견 - 박스 없이 줄글로 */
 .commentSection {
-  margin-top: 12px;
-  padding: 10px;
-  background-color: #f9fafb;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-}
-
-.sectionSubtitle {
-  font-size: 14px;
-  font-weight: 600;
-  color: #374151;
-  margin-bottom: 6px;
-}
-
-.commentList {
-  list-style: none;
-  padding-left: 0;
-  margin: 0;
+    margin-top: 1rem;
+    line-height: 1.5;
 }
 
 .commentItem {
-  font-size: 13px;
-  color: #111827;
-  margin-bottom: 4px;
-  line-height: 1.4;
+    margin-bottom: 0.75rem;
+}
+
+.doctorName {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 0.25rem 0;
+    padding-left: 0.5rem;
+
+}
+
+.commentText {
+    font-size: 16px;
+    color: #374151;
+    margin: 0;
+    padding-left: 0.5rem;
+}
+
+.commentList {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.commentItem {
+    font-size: 13px;
+    color: #111827;
+    margin-bottom: 4px;
+    line-height: 1.4;
 }
 
 .commentMeta {
-  font-size: 11px;
-  color: #6b7280;
-  margin-left: 6px;
+    font-size: 11px;
+    color: #6b7280;
+    margin-left: 6px;
 }
-
 
 .imageGroup {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
-  padding-right: 1rem;
-  align-items: flex-start;
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-right: 1rem;
+    align-items: flex-start;
 }
-
 
 /* 반응형 */
 @media (max-width: 768px) {
