@@ -11,11 +11,9 @@
     background-position: center;
     background-repeat: no-repeat;
     height: 100vh;
-    padding: 1.5rem;
-    padding-top: 0.5rem;
+    padding: 2rem;
     display: flex;
     flex-direction: column;
-    align-items: center;
     font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
     overflow: hidden;
 }
@@ -25,7 +23,7 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     color: white;
     width: 100%;
     max-width: 1400px;
@@ -46,7 +44,6 @@
     font-size: 1.5rem;
     font-weight: 300;
     color: #1a1a1a;
-    margin: 0.5rem 0 0.5rem 0;
     line-height: 1.6;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     flex-shrink: 0;
@@ -60,7 +57,6 @@
     grid-template-rows: repeat(2, 1fr);
     gap: 1rem;
     width: 100%;
-    max-width: 1400px;
     height: calc(100vh - 100px);
     overflow: hidden;
 }

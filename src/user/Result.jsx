@@ -114,13 +114,6 @@ function Result() {
                                     />
                                 </div>
                             </div>
-                            <div className={styles.aiReportSection}>
-                                <h3 className={styles.aiReportTitle}><Brain size={14} /> AI 분석 요약</h3>
-                                <p className={styles.aiReportText}>
-                                    AI 분석 결과, **{diagnosisResult.top1Disease}** 가능성이 **{(diagnosisResult.top1Probability * 100).toFixed(1)}%**로 가장 높게 예측되었습니다.
-                                    {diagnosisResult.top2Disease && ` 다음으로 ${diagnosisResult.top2Disease} 가능성이 ${(diagnosisResult.top2Probability * 100).toFixed(1)}%로 예측됩니다.`}
-                                </p>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -146,14 +139,13 @@ function Result() {
                         </div>
                         <div className={styles.cardContent}>
                             <div className={styles.inputSection}>
-                                <label className={styles.inputLabel} htmlFor="findings-textarea">소견</label>
                                 <textarea
                                     id="findings-textarea"
                                     className={styles.textarea}
                                     value={findings}
                                     onChange={(e) => setFindings(e.target.value)}
                                     placeholder="소견을 입력하세요..."
-                                    rows={4}
+                                    rows={8}
                                 />
                             </div>
                             <div className={styles.buttonGroup}>
@@ -173,18 +165,6 @@ function Result() {
                                     <FileText size={16} />
                                     보고서 제출
                                 </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div className={styles.card}>
-                         <div className={styles.cardHeader}>
-                            <h2 className={styles.cardTitle}><Mail size={18} /> 검사 결과 발송</h2>
-                            <button onClick={handleSendEmail} className={styles.sendButton}><Send size={16} /> 발송</button>
-                        </div>
-                        <div className={styles.cardContent}>
-                            <div className={styles.inputSection}>
-                                <label className={styles.inputLabel}>환자 이메일 주소</label>
-                                <input type="email" className={styles.emailInput} value={email} onChange={(e) => setEmail(e.target.value)} placeholder="patient@example.com" />
                             </div>
                         </div>
                     </div>

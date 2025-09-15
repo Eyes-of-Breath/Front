@@ -239,7 +239,7 @@
     background-repeat: no-repeat;
     height: 100vh;
     overflow: hidden;
-    padding: 1.5rem;
+    padding: 2rem;
     display: flex;
     font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
 }

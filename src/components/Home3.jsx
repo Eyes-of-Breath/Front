@@ -122,10 +122,7 @@ function Home3() {
                                 color: '#999',
                                 marginTop: '10px'
                             }}>
-                                <span>발행: {article.publishedAt || 'N/A'}</span>
-                                <span style={{ marginLeft: '15px' }}>
-                                    수집: {article.crawledAt || 'N/A'}
-                                </span>
+                                <span>발행: {article.publishedAt.split('T')[0] || 'N/A'}</span>
                             </div>
                             <button 
                                 onClick={() => openLink(article.newsUrl)}

@@ -141,7 +141,7 @@ function Dashboard() {
                     <div className={styles.greetingSection}>
                         <div className={styles.greetingContent}>
                             <h1 className={styles.greeting}>
-                                안녕하세요 {nickname}님, 오늘 하루는 어떠신가요?
+                                안녕하세요 {nickname} 선생님, 오늘 하루는 어떠신가요? 👋
                             </h1>
                         </div>
                     </div>

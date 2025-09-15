@@ -110,7 +110,7 @@
   border-radius: 50%;
   border-left-color: #6bb6ff; /* 테마 색상과 일치 */
   margin-top: 2rem;
-
+  align-items: center;
   animation: spin 1s ease infinite;
 }
 

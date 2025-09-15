@@ -142,13 +142,13 @@
 /* 카드3 (병변 확률) - 높이 줄임 */
 .rightColumn .card:nth-child(1) {
     flex: 0 0 auto;
-    height: calc((100vh - 80px) * 0.28);
+    height: calc((100vh - 80px) * 0.3);
 }
 
 /* 카드4 (의사 소견) - 높이 늘림 */
 .rightColumn .card:nth-child(2) {
     flex: 0 0 auto;
-    height: calc((100vh - 80px) * 0.475 - 0.5rem);
+    height: calc((100vh - 80px) * 0.67 - 0.5rem);
     margin-top: 1rem;
 }
 
@@ -222,7 +222,6 @@
     background-color: #000;
     border-radius: 0.5rem;
     overflow: hidden;
-    margin-bottom: 0.75rem;
     min-height: 0;
     position: relative;
 }
@@ -335,8 +334,8 @@
 }
 
 .conditionDot {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     flex-shrink: 0;
 }
@@ -390,7 +389,7 @@
     padding: 0.75rem;
     border: 1px solid #d1d5db;
     border-radius: 0.375rem;
-    font-size: 0.875rem;
+    font-size: 1rem;
     color: #1f2937;
     background-color: white;
     resize: none;
