@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { 
-    Plus, 
-    Trash2, 
+import {
+    Plus,
+    Trash2,
     Check,
     X,
     ChevronLeft,
@@ -14,6 +14,8 @@ import {
 } from 'lucide-react';
 import styles from './Calendar.module.css';
 
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+
 function Calendar() {
     const [currentWeek, setCurrentWeek] = useState(new Date());
     const [currentTime, setCurrentTime] = useState(new Date());
@@ -21,16 +23,46 @@ function Calendar() {
     const [selectedSlot, setSelectedSlot] = useState(null);
     const [editingEvent, setEditingEvent] = useState(null);
     const [newTodo, setNewTodo] = useState('');
-    
-    // 할일 목록 데이터
-    const [todos, setTodos] = useState([
-        { id: 1, text: 'CT 판독 보고서 작성', completed: false },
-        { id: 2, text: 'MRI 스캔 결과 검토', completed: true },
-        { id: 3, text: '환자 상담 준비', completed: false },
-        { id: 4, text: '의료진 회의 자료 준비', completed: false },
-        { id: 5, text: '장비 점검 스케줄 확인', completed: true }
-    ]);
-    
+    const [todos, setTodos] = useState([]);
+    const [loadingTodos, setLoadingTodos] = useState([]);
+    const accessToken = localStorage.getItem('accessToken');
+
+    const [isLoading, setIsLoading] = useState(false);
+
+    // 시계 업데이트
+    useEffect(() => {
+        const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+        return () => clearInterval(timer);
+    }, []);
+
+    const getToday = () => new Date().toISOString().split("T")[0];
+
+    const fetchTodayTodos = async () => {
+        setIsLoading(true);
+        const today = getToday();
+        const url = `${SERVER_URL}/schedule/todos?date=${today}`;
+
+        try {
+            const res = await fetch(url, {
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
+                },
+            });
+            if (!res.ok) throw new Error("API 요청 실패");
+            const data = await res.json();
+            console.log(data);
+            setTodos(data);
+        } catch (error) {
+            console.error("할 일 조회 중 오류:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchTodayTodos();
+    }, []);
+
     // 캘린더 일정 데이터
     const [appointments, setAppointments] = useState([
         {
@@ -76,7 +108,7 @@ function Calendar() {
 
     // 시간 슬롯 (9시~18시)
     const timeSlots = [
-        '09:00', '10:00', '11:00', '12:00', '13:00', 
+        '09:00', '10:00', '11:00', '12:00', '13:00',
         '14:00', '15:00', '16:00', '17:00', '18:00'
     ];
 
@@ -103,22 +135,22 @@ function Calendar() {
         const now = currentTime;
         const currentHour = now.getHours();
         const currentMinute = now.getMinutes();
-        
+
         if (currentHour < 9 || currentHour >= 19) {
             return null;
         }
-        
+
         const slotHour = Math.floor(currentHour);
         const relativeSlot = slotHour - 9;
         const minutePercent = currentMinute / 60;
         const position = relativeSlot * 60 + (minutePercent * 60);
-        
+
         return position;
     }, [currentTime]);
 
     const currentDayIndex = useMemo(() => {
         const today = new Date();
-        
+
         for (let i = 0; i < weekDates.length; i++) {
             if (today.toDateString() === weekDates[i].toDateString()) {
                 return i;
@@ -127,22 +159,55 @@ function Calendar() {
         return null;
     }, [weekDates]);
 
-    // 할일 관련 함수들
-    const addTodo = () => {
-        if (newTodo.trim()) {
-            setTodos(prev => [...prev, {
-                id: Date.now(),
-                text: newTodo.trim(),
-                completed: false
-            }]);
-            setNewTodo('');
+    const addTodo = async () => {
+        const today = getToday();
+        try {
+            const response = await fetch(`${SERVER_URL}/schedule/todos`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${accessToken}`,
+                },
+                body: JSON.stringify({
+                    content: newTodo,
+                    targetDate: today,
+                }),
+            });
+
+            if (response.ok) {
+                alert("할 일이 성공적으로 등록되었습니다!");
+                setNewTodo("");
+                fetchTodayTodos();
+            } else {
+                alert("할 일 등록에 실패했습니다.");
+            }
+        } catch (err) {
+            console.error("Error", err);
+            alert("네트워크 오류가 발생했습니다.");
         }
     };
 
-    const toggleTodo = (id) => {
-        setTodos(prev => prev.map(todo => 
-            todo.id === id ? { ...todo, completed: !todo.completed } : todo
-        ));
+    const toggleTodo = async (todoId) => {
+        setLoadingTodos(prev => [...prev, todoId]);
+        try {
+            const response = await fetch(`${SERVER_URL}/schedule/todos/${todoId}/toggle`, {
+                method: 'PATCH',
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`,
+                },
+            });
+
+            if (!response.ok) throw new Error('토글 실패');
+
+            setTodos(prev =>
+                prev.map(todo =>
+                    todo.todoId === todoId ? { ...todo, completed: !todo.completed } : todo
+                )
+            );
+        } catch (err) {
+            console.error('Error toggling todo:', err);
+            alert('할 일 상태 변경에 실패했습니다.');
+        }
     };
 
     const deleteTodo = (id) => {
@@ -151,8 +216,8 @@ function Calendar() {
 
     // 캘린더 관련 함수들
     const getAppointmentAt = (dayIndex, timeSlot) => {
-        return appointments.find(apt => 
-            apt.day === dayIndex && 
+        return appointments.find(apt =>
+            apt.day === dayIndex &&
             apt.time === timeSlot
         );
     };
@@ -190,12 +255,12 @@ function Calendar() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        
+
         if (editingEvent) {
-            setAppointments(prev => prev.map(apt => 
-                apt.id === editingEvent.id 
-                    ? { 
-                        ...apt, 
+            setAppointments(prev => prev.map(apt =>
+                apt.id === editingEvent.id
+                    ? {
+                        ...apt,
                         title: formData.title,
                         time: formData.time,
                         duration: formData.duration,
@@ -215,7 +280,7 @@ function Calendar() {
             };
             setAppointments(prev => [...prev, newAppointment]);
         }
-        
+
         setFormData({
             title: '',
             time: '09:00',
@@ -238,20 +303,17 @@ function Calendar() {
     return (
         <div className={styles.body}>
             <div className={styles.container}>
-                {/* 왼쪽 할일 체크리스트 */}
                 <div className={styles.leftSidebar}>
                     <h1 className={styles.greeting}>
-                        오늘의 할일
+                        오늘의 할 일
                     </h1>
-                    
-                    {/* 진행률 표시 */}
                     <div className={styles.progressCard}>
                         <div className={styles.progressHeader}>
                             <span className={styles.progressText}>진행률</span>
                             <span className={styles.progressNumbers}>{completedTodos}/{totalTodos}</span>
                         </div>
                         <div className={styles.progressBar}>
-                            <div 
+                            <div
                                 className={styles.progressFill}
                                 style={{ width: `${totalTodos > 0 ? (completedTodos / totalTodos) * 100 : 0}%` }}
                             ></div>
@@ -260,15 +322,13 @@ function Calendar() {
                             {totalTodos > 0 ? Math.round((completedTodos / totalTodos) * 100) : 0}% 완료
                         </div>
                     </div>
-
-                    {/* 새 할일 추가 */}
                     <div className={styles.addTodoSection}>
                         <div className={styles.addTodoInput}>
                             <input
                                 type="text"
                                 value={newTodo}
                                 onChange={(e) => setNewTodo(e.target.value)}
-                                placeholder="새 할일을 입력하세요..."
+                                placeholder="새 할 일을 입력하세요"
                                 onKeyPress={(e) => {
                                     if (e.key === 'Enter') {
                                         addTodo();
@@ -303,38 +363,50 @@ function Calendar() {
                     </div>
 
                     {/* 할일 목록 */}
-                    <div className={styles.todoList}>
-                        {todos.map(todo => (
-                            <div 
-                                key={todo.id} 
-                                className={`${styles.todoItem} ${todo.completed ? styles.completed : ''}`}
-                            >
-                                <button
-                                    className={`${styles.todoCheckbox} ${todo.completed ? styles.checked : ''}`}
-                                    onClick={() => toggleTodo(todo.id)}
-                                    style={{
-                                        color: todo.completed ? '#6b7280' : '#6b7280'
-                                    }}
-                                >
-                                    <Check size={12} style={{ opacity: todo.completed ? 1 : 0 }} />
-                                </button>
-                                
-                                <div className={styles.todoContent}>
-                                    <span className={todo.completed ? styles.todoTextCompleted : styles.todoText}>
-                                        {todo.text}
-                                    </span>
-                                    <div className={styles.todoActions}>
+                    <div>
+                        <div className={styles.todoList}>
+                            {isLoading ? (
+                                <div>로딩 중...</div>
+                            ) : todos.length === 0 ? (
+                                <div>할 일이 없습니다.</div>
+                            ) : (
+                                todos.map((todo) => (
+                                    <div
+                                        key={todo.todoId}
+                                        className={`${styles.todoItem} ${todo.completed ? styles.completed : ""}`}
+                                    >
+                                        {/* 체크박스 버튼 */}
                                         <button
-                                            onClick={() => deleteTodo(todo.id)}
-                                            className={styles.todoDeleteBtn}
+                                            className={`${styles.todoCheckbox} ${todo.completed ? styles.checked : ""}`}
+                                            onClick={() => toggleTodo(todo.todoId)}
+                                            disabled={loadingTodos.includes(todo.todoId)}
+                                            style={{
+                                                color: "#6b7280",
+                                            }}
                                         >
-                                            <Trash2 size={14} />
+                                            <Check size={12} style={{ opacity: todo.completed ? 1 : 0 }} />
                                         </button>
+
+                                        {/* 내용 영역 */}
+                                        <div className={styles.todoContent}>
+                                            <div className={styles.todoDetails}>
+                                                {todo.content}
+                                            </div>
+                                            <div className={styles.todoActions}>
+                                                <button
+                                                    onClick={() => deleteTodo(todo.id)}
+                                                    className={styles.todoDeleteBtn}
+                                                >
+                                                    <Trash2 size={14} />
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                        ))}
+                                ))
+                            )}
+                        </div>
                     </div>
+
                 </div>
 
                 {/* 오른쪽 캘린더 */}
@@ -342,7 +414,7 @@ function Calendar() {
                     <div className={styles.weekCalendar}>
                         {/* 캘린더 헤더 */}
                         <div className={styles.calendarHeader}>
-                            <button 
+                            <button
                                 className={styles.navButton}
                                 onClick={() => changeWeek(-1)}
                             >
@@ -352,7 +424,7 @@ function Calendar() {
                             <h2 className={styles.weekTitle}>
                                 {weekDates[0].getMonth() + 1}월 {weekDates[0].getDate()}일 ~ {weekDates[6].getDate()}일
                             </h2>
-                            <button 
+                            <button
                                 className={styles.navButton}
                                 onClick={() => changeWeek(1)}
                             >
@@ -374,51 +446,51 @@ function Calendar() {
 
                             {/* 각 요일 컬럼 */}
                             {dayNames.map((dayName, dayIndex) => (
-                                <div key={dayIndex} className={styles.dayColumn}>
+                                <div className={styles.dayColumn} style={{ position: 'relative' }}>
                                     <div className={`${styles.dayHeader} ${dayIndex === currentDayIndex ? styles.today : ''}`}>
                                         <div className={styles.dayName}>{dayName}</div>
-                                        <div className={styles.dayDate}>
-                                            {weekDates[dayIndex].getDate()}
-                                        </div>
+                                        <div className={styles.dayDate}>{weekDates[dayIndex].getDate()}</div>
                                     </div>
-                                    
+
                                     {/* 시간 슬롯들 */}
                                     <div className={styles.dayTimeSlots}>
                                         {timeSlots.map(timeSlot => {
                                             const appointment = getAppointmentAt(dayIndex, timeSlot);
                                             return (
-                                                <div 
-                                                    key={timeSlot} 
+                                                <div
+                                                    key={timeSlot}
                                                     className={styles.timeCell}
                                                     onClick={() => !appointment && handleTimeSlotClick(dayIndex, timeSlot)}
                                                 >
                                                     {appointment && (
-                                                        <div 
+                                                        <div
                                                             className={styles.appointment}
                                                             onClick={(e) => handleAppointmentClick(appointment, e)}
                                                         >
-                                                            <div className={styles.appointmentTitle}>
-                                                                {appointment.title}
-                                                            </div>
-                                                            <div className={styles.appointmentTime}>
-                                                                {appointment.time}
-                                                            </div>
+                                                            <div className={styles.appointmentTitle}>{appointment.title}</div>
+                                                            <div className={styles.appointmentTime}>{appointment.time}</div>
                                                         </div>
                                                     )}
                                                 </div>
                                             );
                                         })}
-                                        
-                                        {/* 현재 시간 표시선 */}
-                                        {dayIndex === currentDayIndex && currentTimePosition !== null && (
-                                            <div 
-                                                className={styles.currentTimeLine}
-                                                style={{ 
-                                                    top: `${60 + currentTimePosition}px`
-                                                }}
-                                            />
-                                        )}
                                     </div>
+
+                                    {/* 오늘 시간 표시선 */}
+                                    {dayIndex === currentDayIndex && currentTimePosition !== null && (
+                                        <div
+                                            className={styles.currentTimeLine}
+                                            style={{
+                                                position: 'absolute',
+                                                top: `${120 + currentTimePosition}px`,
+                                                left: 0,
+                                                width: '100%',
+                                                height: '2px',
+                                                backgroundColor: 'red', // 원하는 색
+                                                zIndex: 10
+                                            }}
+                                        />
+                                    )}
                                 </div>
                             ))}
                         </div>
@@ -439,9 +511,9 @@ function Calendar() {
                             </button>
                         </div>
 
-                        <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '1.5rem'}}>
-                            <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
-                                <label style={{fontSize: '0.9rem', fontWeight: '500', color: '#374151'}}>제목 *</label>
+                        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                <label style={{ fontSize: '0.9rem', fontWeight: '500', color: '#374151' }}>제목 *</label>
                                 <input
                                     type="text"
                                     style={{
@@ -458,9 +530,9 @@ function Calendar() {
                                 />
                             </div>
 
-                            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem'}}>
-                                <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
-                                    <label style={{fontSize: '0.9rem', fontWeight: '500', color: '#374151'}}>시작 시간 *</label>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                    <label style={{ fontSize: '0.9rem', fontWeight: '500', color: '#374151' }}>시작 시간 *</label>
                                     <select
                                         style={{
                                             padding: '0.75rem',
@@ -479,8 +551,8 @@ function Calendar() {
                                         ))}
                                     </select>
                                 </div>
-                                <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
-                                    <label style={{fontSize: '0.9rem', fontWeight: '500', color: '#374151'}}>소요 시간</label>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                    <label style={{ fontSize: '0.9rem', fontWeight: '500', color: '#374151' }}>소요 시간</label>
                                     <select
                                         style={{
                                             padding: '0.75rem',
@@ -500,8 +572,8 @@ function Calendar() {
                                 </div>
                             </div>
 
-                            <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
-                                <label style={{fontSize: '0.9rem', fontWeight: '500', color: '#374151'}}>메모</label>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                                <label style={{ fontSize: '0.9rem', fontWeight: '500', color: '#374151' }}>메모</label>
                                 <textarea
                                     style={{
                                         padding: '0.75rem',
@@ -518,7 +590,7 @@ function Calendar() {
                                 />
                             </div>
 
-                            <div style={{display: 'flex', gap: '0.75rem', marginTop: '1rem', justifyContent: 'flex-end'}}>
+                            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem', justifyContent: 'flex-end' }}>
                                 {editingEvent && (
                                     <button
                                         type="button"
@@ -561,7 +633,7 @@ function Calendar() {
                                 >
                                     취소
                                 </button>
-                                <button 
+                                <button
                                     type="submit"
                                     style={{
                                         background: 'linear-gradient(135deg, #87ceeb, #6bb6ff)',
