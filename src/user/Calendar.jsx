@@ -210,8 +210,24 @@ function Calendar() {
         }
     };
 
-    const deleteTodo = (id) => {
-        setTodos(prev => prev.filter(todo => todo.id !== id));
+    const deleteTodo = async (todoId) => {
+        if (!window.confirm("정말 삭제하시겠습니까?")) return;
+
+        try {
+            await fetch(`${SERVER_URL}/schedule/todos/${todoId}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${accessToken}`,
+                },
+            });
+
+            setTodos(prev => prev.filter(todo => todo.todoId !== todoId));
+            alert("삭제 완료!");
+        } catch (err) {
+            console.error("삭제 오류:", err);
+            alert("삭제에 실패했습니다.");
+        }
     };
 
     // 캘린더 관련 함수들
@@ -394,7 +410,7 @@ function Calendar() {
                                             </div>
                                             <div className={styles.todoActions}>
                                                 <button
-                                                    onClick={() => deleteTodo(todo.id)}
+                                                    onClick={() => deleteTodo(todo.todoId)}
                                                     className={styles.todoDeleteBtn}
                                                 >
                                                     <Trash2 size={14} />
