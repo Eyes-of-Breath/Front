@@ -550,7 +550,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 0;
-    padding-bottom: 1rem;
+    padding-bottom: 1.5rem;
     border-bottom: 2px solid rgba(226, 232, 240, 0.3);
 }
 
@@ -564,8 +564,23 @@
     font-weight: 500;
     font-size: 0.9rem;
     transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
     box-shadow: 0 2px 8px rgba(135, 206, 235, 0.4);
 }
+
+.navButton.prev {
+    min-width: 70px;
+    padding-right: 1.5rem;
+}
+
+.navButton.next {
+    min-width: 70px;
+    padding-left: 1.5rem;
+}
+
 
 .navButton:hover {
     background: linear-gradient(135deg, #6bb6ff, #5aa3e6);
@@ -625,7 +640,6 @@
     overflow: visible;
     min-height: 660px;
     max-height: 660px;
-    margin-top: 1rem;
 }
 
 .timeColumn {
@@ -759,11 +773,10 @@
     outline-offset: -2px;
 }
 
-/* 일정 스타일 - 업무 유형별 색상 */
 .appointment {
     border-radius: 4px;
     padding: 0.25rem 0.5rem;
-    height: calc(100% - 0.5rem);
+    height: calc(50px * var(--duration));
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -772,7 +785,7 @@
     cursor: pointer;
     color: white;
     position: relative;
-    margin: 0.25rem;
+    z-index: 1;
     overflow: hidden;
 }
 
@@ -781,7 +794,6 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* 업무 유형별 색상 */
 .reading {
     background: linear-gradient(135deg, #87ceeb, #6bb6ff) !important;
 }
