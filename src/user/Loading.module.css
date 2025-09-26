@@ -1,0 +1,137 @@
+/* Loading.module.css */
+
+* {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+}
+
+.container {
+    height: 100vh;
+    background-color: #f9fafb;
+    background-image: url('../assets/blue_gradient_background.svg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.loadingWrapper {
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+}
+
+.iconContainer {
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.animatedIcon {
+    color: #6bb6ff;
+    animation: bounce 0.6s ease-in-out infinite alternate, sparkle 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    from {
+        transform: translateY(0px);
+    }
+    to {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes sparkle {
+    0%, 100% {
+        filter: drop-shadow(0 0 5px rgba(107, 182, 255, 0.5));
+    }
+    50% {
+        filter: drop-shadow(0 0 15px rgba(107, 182, 255, 0.8)) drop-shadow(0 0 25px rgba(107, 182, 255, 0.4));
+    }
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.message {
+    font-size: 1rem;
+    color: #6b7280;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+    min-height: 1.5rem;
+}
+
+/* 간단한 스피너 애니메이션 */
+.simpleSpinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border-left-color: #6bb6ff;
+    margin: 2rem auto 0;
+    animation: spin 1s ease infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* 기존 진행률 바 스타일 (필요시 사용) */
+.progressBar {
+    width: 100%;
+    height: 8px;
+    background-color: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.progressFill {
+    height: 100%;
+    background: linear-gradient(90deg, #6bb6ff 0%, #87ceeb 100%);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progressText {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #6bb6ff;
+    margin-bottom: 1.5rem;
+}
+
+.estimatedTime {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* 애니메이션 감소 모드 지원 */
+@media (prefers-reduced-motion: reduce) {
+    .animatedIcon {
+        animation: none;
+    }
+    
+    .simpleSpinner {
+        animation: none;
+        border-left-color: #6bb6ff;
+    }
+}

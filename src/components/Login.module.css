@@ -1,0 +1,122 @@
+body {
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 1920 1080' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3CradialGradient id='mainGradient' cx='20%25' cy='30%25' r='80%25'%3E%3Cstop offset='0%25' style='stop-color:%23ffffff;stop-opacity:1' /%3E%3Cstop offset='50%25' style='stop-color:%23fafbff;stop-opacity:0.9' /%3E%3Cstop offset='80%25' style='stop-color:%23f5f7ff;stop-opacity:0.7' /%3E%3Cstop offset='100%25' style='stop-color:%234285f4;stop-opacity:0.1' /%3E%3C/radialGradient%3E%3CradialGradient id='dreamyGradient1' cx='70%25' cy='20%25' r='60%25'%3E%3Cstop offset='0%25' style='stop-color:%23ffffff;stop-opacity:0.8' /%3E%3Cstop offset='60%25' style='stop-color:%23fafbff;stop-opacity:0.4' /%3E%3Cstop offset='100%25' style='stop-color:%232196f3;stop-opacity:0.05' /%3E%3C/radialGradient%3E%3CradialGradient id='dreamyGradient2' cx='10%25' cy='80%25' r='70%25'%3E%3Cstop offset='0%25' style='stop-color:%23ffffff;stop-opacity:0.9' /%3E%3Cstop offset='70%25' style='stop-color:%23f8faff;stop-opacity:0.3' /%3E%3Cstop offset='100%25' style='stop-color:%2342a5f5;stop-opacity:0.08' /%3E%3C/radialGradient%3E%3CradialGradient id='dreamyGradient3' cx='90%25' cy='70%25' r='50%25'%3E%3Cstop offset='0%25' style='stop-color:%23ffffff;stop-opacity:0.9' /%3E%3Cstop offset='80%25' style='stop-color:%23f5f7ff;stop-opacity:0.2' /%3E%3Cstop offset='100%25' style='stop-color:%231976d2;stop-opacity:0.06' /%3E%3C/radialGradient%3E%3CradialGradient id='centerHighlight' cx='50%25' cy='40%25' r='40%25'%3E%3Cstop offset='0%25' style='stop-color:%23ffffff;stop-opacity:0.9' /%3E%3Cstop offset='80%25' style='stop-color:%23fafbff;stop-opacity:0.3' /%3E%3Cstop offset='100%25' style='stop-color:%23ffffff;stop-opacity:0' /%3E%3C/radialGradient%3E%3Cfilter id='dreamyBlur' x='-100%25' y='-100%25' width='300%25' height='300%25'%3E%3CfeGaussianBlur in='SourceGraphic' stdDeviation='20'/%3E%3C/filter%3E%3Cfilter id='softBlur' x='-100%25' y='-100%25' width='300%25' height='300%25'%3E%3CfeGaussianBlur in='SourceGraphic' stdDeviation='12'/%3E%3C/filter%3E%3Cfilter id='blur' x='-50%25' y='-50%25' width='200%25' height='200%25'%3E%3CfeGaussianBlur in='SourceGraphic' stdDeviation='3'/%3E%3C/filter%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23mainGradient)'/%3E%3Crect width='100%25' height='100%25' fill='url(%23dreamyGradient1)' filter='url(%23dreamyBlur)'/%3E%3Crect width='100%25' height='100%25' fill='url(%23dreamyGradient2)' filter='url(%23softBlur)'/%3E%3Crect width='100%25' height='100%25' fill='url(%23dreamyGradient3)' filter='url(%23dreamyBlur)'/%3E%3Crect width='100%25' height='100%25' fill='url(%23centerHighlight)' filter='url(%23softBlur)'/%3E%3Cellipse cx='300' cy='250' rx='200' ry='120' fill='%23ffffff' opacity='0.08' filter='url(%23dreamyBlur)'/%3E%3Cellipse cx='1500' cy='400' rx='180' ry='100' fill='%23fafbff' opacity='0.06' filter='url(%23dreamyBlur)'/%3E%3Cellipse cx='800' cy='700' rx='160' ry='90' fill='%23f8faff' opacity='0.05' filter='url(%23dreamyBlur)'/%3E%3Cellipse cx='1200' cy='200' rx='140' ry='80' fill='%23ffffff' opacity='0.04' filter='url(%23dreamyBlur)'/%3E%3Cellipse cx='400' cy='800' rx='120' ry='70' fill='%23fafbff' opacity='0.05' filter='url(%23dreamyBlur)'/%3E%3C/svg%3E") no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+}
+
+.login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login_form {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    margin: 50px auto;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 
+        0 20px 25px -5px rgba(135, 206, 235, 0.15),
+        0 10px 10px -5px rgba(135, 206, 235, 0.08);
+    border: 1px solid rgba(135, 206, 235, 0.3);
+}
+
+.title {
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 30px;
+    font-size: 28px;
+    font-weight: 700;
+    color: #374151;
+    margin: 0;
+    font-family: 'Pretendard', sans-serif;
+    letter-spacing: -0.02em;
+}
+
+.login_form p {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 14px;
+    color: #6b7280;
+    font-family: 'Pretendard', sans-serif;
+}
+
+.login_form p b {
+    color: #4a90e2;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.login_form p b:hover {
+    color: #357abd;
+    text-decoration: underline;
+}
+
+.login_form label {
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    font-family: 'Pretendard', sans-serif;
+}
+
+.login_form input {
+    margin-bottom: 16px;
+    padding: 16px;
+    border-radius: 12px;
+    border: 2px solid rgba(135, 206, 235, 0.3);
+    font-size: 16px;
+    font-family: 'Pretendard', sans-serif;
+    transition: all 0.2s ease;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #374151;
+}
+
+.login_form input:focus {
+    outline: none;
+    border-color: #87ceeb;
+    box-shadow: 0 0 0 3px rgba(135, 206, 235, 0.2);
+}
+
+.login_form input::placeholder {
+    color: #9ca3af;
+    font-family: 'Pretendard', sans-serif;
+}
+
+.login_form button {
+    margin-top: 8px;
+    padding: 16px;
+    background: linear-gradient(135deg, #87ceeb 0%, #6bb6ff 50%, #4a90e2 100%);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 12px;
+    font-family: 'Pretendard', sans-serif;
+    transition: all 0.2s ease;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.login_form button:hover:not(:disabled) {
+    background: linear-gradient(135deg, #6bb6ff 0%, #4a90e2 50%, #357abd 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px rgba(135, 206, 235, 0.3);
+}
+
+.login_form button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.login_form button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}

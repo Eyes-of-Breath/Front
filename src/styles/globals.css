@@ -1,0 +1,31 @@
+/* SceneController base styles */
+.scene-host { position: relative; width:100%; height:100vh; overflow:hidden; }
+.scene-layer { position:absolute; inset:0; }
+.scene-content { width:100%; height:100%; }
+
+/* Section baseline */
+.section { min-height:100vh; position:relative; display:grid; place-items:center; }
+
+/* Typed CSS custom properties for smooth variable animations */
+@property --rad1-x { syntax: '<percentage>'; inherits: true; initial-value: 20%; }
+@property --rad1-y { syntax: '<percentage>'; inherits: true; initial-value: 30%; }
+@property --rad3-x { syntax: '<percentage>'; inherits: true; initial-value: 40%; }
+@property --rad3-y { syntax: '<percentage>'; inherits: true; initial-value: 70%; }
+@property --rad6-x { syntax: '<percentage>'; inherits: true; initial-value: 90%; }
+@property --rad6-y { syntax: '<percentage>'; inherits: true; initial-value: 60%; }
+
+/* 최소 전역값 */
+*{box-sizing:border-box;margin:0;padding:0}
+html,body,#root{height:100%}
+
+body{
+  background: var(--bg-svg-like);  /* ← 방금 만든 합성 배경 */
+  color: #0f172a;                  /* 필요시 tokens로 바꿔도 됨 */
+  font-family: system-ui, -apple-system, "Pretendard Variable", Roboto, sans-serif;
+  line-height: 1.5;
+}
+body.is-lock{ overflow: hidden }
+
+@media (prefers-reduced-motion: reduce){
+  *{animation:none!important;transition:none!important}
+}

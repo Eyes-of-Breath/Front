@@ -1,0 +1,105 @@
+:root{ --home1-gradient: url('../assets/blue_gray_gradient.svg'); }
+
+/* 전역 스타일 리셋 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #fff;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: #333;
+}
+
+.container {
+  position: relative;
+  width: 100%;
+  /* Robust full-viewport height across browsers */
+  height: 100vh;     /* basic fallback */
+  height: 100svh;    /* small viewport height (iOS Safari address bar shown) */
+  height: 100dvh;    /* dynamic viewport height (modern browsers) */
+  min-height: 100vh;
+  overflow: hidden;
+  background: var(--home1-gradient) center/cover no-repeat scroll;
+}
+
+/* 커튼 효과를 위한 슬라이드 컨테이너 */
+.slideContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  /* Robust full-viewport height across browsers */
+  height: 100vh;
+  height: 100svh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+/* 현재 화면 스타일 */
+.currentSlide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  will-change: transform;
+  overflow: visible; /* Home2 애니메이션을 위해 visible로 변경 */
+}
+
+/* 다음 화면 스타일 (아래에 미리 준비) */
+.nextSlide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  overflow: visible; /* Home2 애니메이션을 위해 visible로 변경 */
+}
+
+/* 메인 콘텐츠 영역 */
+.outer {
+  /* Robust full-viewport height across browsers */
+  height: 100vh;
+  height: 100svh;
+  height: 100dvh;
+  min-height: 100vh;
+  /* Let the WINDOW handle scroll for GSAP ScrollTrigger pinning */
+  overflow: visible;
+  scroll-behavior: auto; /* avoid interfering with ScrollTrigger */
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .logoText {
+    font-size: 1.25rem;
+  }
+  
+  .logoIcon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  
+  .loginButton {
+    padding: 0.4rem 1rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .logoText {
+    font-size: 1.1rem;
+  }
+}
+
+/* 부드러운 전환 효과 */
+.outer > div {
+  transition: opacity 0.3s ease-in-out;
+}

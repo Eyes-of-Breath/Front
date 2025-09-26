@@ -1,0 +1,243 @@
+:root{
+  /* default positions for background drift (used by .bg and as static fallback elsewhere) */
+  --rad1-x:20%; --rad1-y:30%;
+  --rad3-x:40%; --rad3-y:70%;
+  --rad6-x:90%; --rad6-y:60%;
+
+  /* Home1 background (color + gradients + image) as a single variable */
+  --home1-bg:
+    radial-gradient(circle at var(--rad1-x) var(--rad1-y), rgba(135,206,235,0.5) 0%, rgba(135,206,235,0) 40%),
+    radial-gradient(circle at var(--rad3-x) var(--rad3-y), rgba(123,169,231,0.6) 0%, rgba(123,169,231,0) 30%),
+    radial-gradient(circle at var(--rad6-x) var(--rad6-y), rgba(123,169,231,0.3) 0%, rgba(123,169,231,0) 40%),
+    linear-gradient(135deg, #d1e7ff 0%, #b8d4ff 30%, #9fc1ff 60%, #86aeff 100%),
+    url('../assets/blue_gray_gradient.svg') no-repeat center center / cover;
+}
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100svh; /* avoid bottom white gap on mobile/browser UI */
+  min-height: 100vh; /* fallback */
+  width: 100%;
+  padding: 0 0 0 5rem;
+  box-sizing: border-box;
+  gap: 2rem;
+}
+
+.textSection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding-right: 2rem;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 2rem;
+  line-height: 1.2;
+  text-align: left;
+  font-family: 'Pretendard', sans-serif;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  color: #34495e;
+  line-height: 1.8;
+  font-weight: 400;
+  text-align: left;
+  margin: 0;
+  font-family: 'Pretendard', sans-serif;
+}
+
+.imageSection {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+  min-height: 0;
+}
+
+.projectImage {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.container {
+  position: relative;   /* 자식 absolute 배경을 위한 기준 */
+  overflow: hidden;     /* 배경 번짐 잘려나가지 않도록 필요시 제거 */
+}
+
+.centerImageWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.centerImage {
+  max-width: 95vw;
+  max-height: 95vh;
+  object-fit: contain;
+  display: block;
+  transform:translateX(-40px); /* 약간 왼쪽으로 치우치게 */
+}
+
+/* 배경 레이어 */
+.bg {
+  position: absolute;
+  inset: 0;  /* top/right/bottom/left 모두 0 */
+  z-index: 0; /* behind content within container */
+  pointer-events: none;
+  
+  background: var(--home1-bg);
+  
+  animation:
+    drift1 18s ease-in-out infinite,
+    drift3 26s ease-in-out infinite,
+    drift6 32s ease-in-out infinite;
+}
+
+/* Keep all content above background */
+.container > *:not(.bg):not(.overlayText):not(.scrollHint){
+  position: relative;
+  z-index: 1;
+}
+
+/* 드리프트 애니메이션: CSS 변수만 살짝 변하게 */
+@keyframes drift1 {
+  0%   { --rad1-x:20%; --rad1-y:30%; }
+  50%  { --rad1-x:22%; --rad1-y:28%; }
+  100% { --rad1-x:20%; --rad1-y:30%; }
+}
+@keyframes drift3 {
+  0%   { --rad3-x:40%; --rad3-y:70%; }
+  50%  { --rad3-x:38%; --rad3-y:72%; }
+  100% { --rad3-x:40%; --rad3-y:70%; }
+}
+@keyframes drift6 {
+  0%   { --rad6-x:90%; --rad6-y:60%; }
+  50%  { --rad6-x:88%; --rad6-y:62%; }
+  100% { --rad6-x:90%; --rad6-y:60%; }
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+  .container {
+    flex-direction: column;
+    padding: 2rem;
+    gap: 2rem;
+  }
+  
+  .textSection {
+    text-align: center;
+    padding-right: 0;
+  }
+  
+  .title {
+    font-size: 2.5rem;
+  }
+  
+  .subtitle {
+    font-size: 1.3rem;
+    text-align: center;
+  }
+  
+  .projectImage {
+    max-height: 50vh;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+  
+  .subtitle {
+    font-size: 1.1rem;
+  }
+}
+
+/* Element-level reveal (replace scene slide) */
+.textSection, .imageSection{
+  opacity: 0;
+  transform: translateY(30px);
+  will-change: transform, opacity;
+}
+
+/* Centered big white text overlay */
+.overlayText {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+  padding: clamp(16px, 4vw, 48px);
+  pointer-events: none; /* let image interactions pass through if any */
+  z-index: 2; /* ensure above centerImage */
+  text-shadow: 0 1px 12px rgba(0,0,0,.22);
+}
+
+.overlayText h1 {
+  margin: 0 0 0.5em;
+  font-size: clamp(28px, 6vw, 72px);
+  line-height: 1.08;
+  letter-spacing: 0.01em;
+  font-weight: 700;
+}
+
+.overlayText p {
+  margin: 0;
+  max-width: min(92vw, 900px);
+  font-size: clamp(16px, 2.6vw, 24px);
+  line-height: 1.6;
+  opacity: 0.95;
+}
+
+.scrollHint {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  color: #fff;
+  font-size: 0.9rem;
+  opacity: 0.85;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  animation: fadeIn 1s ease forwards 1.2s;
+  z-index: 3;
+}
+
+.scrollIcon {
+  width: 28px;
+  height: 28px;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
