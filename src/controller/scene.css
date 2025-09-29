@@ -1,0 +1,43 @@
+/* src/controller/scene.css */
+.scene-host {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  /* Robust full-viewport height across browsers */
+  height: 100vh;   /* basic fallback */
+  height: 100svh;  /* small viewport height (iOS Safari address bar shown) */
+  height: 100dvh;  /* dynamic viewport height (modern browsers) */
+  min-height: 100vh;
+  overflow: hidden;
+  z-index: 1; /* sits under preloader overlay (9999) */
+  overscroll-behavior: none; /* prevent rubber-banding and scroll chaining */
+  touch-action: auto;       /* allow native scroll/gestures; Observer can be scoped per-layer */
+  isolation: isolate;       /* create a new stacking context for predictable z-index */
+  contain: paint;           /* limit paint invalidation to this context */
+  background-color: var(--scene-bg, transparent); /* avoid white/dark flash between scenes */
+}
+  
+  .scene-layer {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    will-change: transform, opacity;
+    backface-visibility: hidden;    /* reduce flicker during 3D transforms */
+    transform: translateZ(0);        /* promote to its own layer */
+    pointer-events: auto;            /* default; toggled by controller during transitions */
+  }
+
+  /* When a layer is hidden for accessibility/interaction, ensure it doesn’t intercept events */
+  .scene-layer[aria-hidden="true"] {
+    pointer-events: none;
+    visibility: hidden; /* aligns with gsap autoAlpha:0 behavior */
+  }
+  
+  .scene-content {
+    width: 100%;
+    height: 100%;
+    position: relative; /* 각 씬에서 배경 레이어 깔 때 기준 */
+    contain: layout paint; /* prevent layout bleed between scenes */
+  }
+
+/* Paper mask overlay removed: Home2 renders without curtain */

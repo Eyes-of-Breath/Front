@@ -37,15 +37,16 @@
   text-align: left;
   letter-spacing: -0.02em;
   position: relative;
+  padding-left: 3rem;
 }
 
 .quoteText::before {
   content: '"';
   position: absolute;
-  left: -2rem;
+  left: 0;
   top: -1rem;
   font-size: 6rem;
-  color: #87ceeb;
+  color: #ABCAFF;
   opacity: 0.3;
   font-family: Georgia, serif;
   line-height: 1;
@@ -53,10 +54,10 @@
 
 /* 하이라이트 텍스트 */
 .highlight {
-  color: #6bb6ff;
+  color: #85AFFC;
   font-weight: 600;
   position: relative;
-  background: linear-gradient(120deg, transparent 0%, rgba(107, 182, 255, 0.1) 0%, rgba(107, 182, 255, 0.1) 100%, transparent 100%);
+  background: linear-gradient(120deg, transparent 0%, rgba(171, 202, 255, 0.15) 0%, rgba(148, 189, 242, 0.15) 100%, transparent 100%);
   padding: 0.1em 0.3em;
   border-radius: 0.3em;
 }
@@ -69,17 +70,11 @@
   text-align: right;
   font-style: italic;
   position: relative;
+  padding-right: 0;
 }
 
 .author::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  width: 40px;
-  height: 1px;
-  background: linear-gradient(to right, #87ceeb, transparent);
-  transform: translateY(-50%);
+  display: none;
 }
 
 /* 반응형 디자인 */
@@ -87,26 +82,23 @@
   .container {
     padding: 1rem;
   }
-  
+
   .quoteText {
     font-size: 1.8rem;
-    text-align: center;
+    text-align: left;
     margin-bottom: 1.5rem;
+    padding-left: 2rem;
   }
-  
+
   .quoteText::before {
-    left: -1rem;
+    left: 0;
     top: -0.5rem;
     font-size: 4rem;
   }
-  
+
   .author {
     font-size: 1.1rem;
-    text-align: center;
-  }
-  
-  .author::before {
-    display: none;
+    text-align: right;
   }
 }
 
@@ -114,9 +106,11 @@
   .quoteText {
     font-size: 1.4rem;
     line-height: 1.5;
+    padding-left: 1.5rem;
   }
-  
+
   .author {
     font-size: 1rem;
+    text-align: right;
   }
 }

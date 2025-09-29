@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
 import styles from './Login.module.css';
+import backgroundImage from '../assets/blue_gradient_background.svg';
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
@@ -58,9 +59,13 @@ function Login() {
     };
 
     useEffect(() => {
-        document.body.style.backgroundColor = '#EEF2FF';
+        document.body.style.backgroundImage = `url(${backgroundImage})`;
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundRepeat = 'no-repeat';
         return () => {
-            document.body.style.backgroundColor = '';
+            document.body.style.backgroundImage = '';
+            document.body.style.backgroundSize = '';
+            document.body.style.backgroundRepeat = '';
         };
     }, []);
 

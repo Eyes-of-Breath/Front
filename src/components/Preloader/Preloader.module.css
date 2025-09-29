@@ -1,0 +1,38 @@
+/* Overlay */
+.overlay{ position:fixed; inset:0; z-index:9999; background: var(--home1-bg); color: var(--ink-strong, #111827); clip-path: none; opacity:1; will-change: opacity; pointer-events:auto; overflow:hidden; }
+.inner{ position:absolute; inset:0; display:grid; grid-template-rows: 0.4fr auto 0.2fr; }
+
+/* Center ghost heading */
+.centerGhost{
+  align-self:end; justify-self:center; text-align:center;
+  font-weight:800; letter-spacing:-0.02em;
+  font-size: clamp(28px, 10vw, 96px);
+  line-height:1;
+  color:transparent;
+  -webkit-text-stroke: 1px rgba(0,0,0,0.04);
+  text-shadow:
+    0 1px 0 rgba(255,255,255,0.8),
+    0 8px 30px rgba(0,0,0,0.06);
+  opacity:.9;
+  user-select:none; pointer-events:none;
+  white-space: nowrap;
+  grid-row: 1;
+}
+
+/* Bottom bar */
+.bottom{ grid-row: 2; align-self:end; padding-top:28px; padding-bottom:28px; padding-left: var(--rail-left, clamp(16px, 6vw, 48px)); padding-right: var(--rail-right, clamp(16px, 6vw, 48px)); display:grid; gap:12px; }
+.meta{ display:flex; align-items:center; justify-content:space-between; font-size:12px; letter-spacing:.08em; text-transform:uppercase; opacity:.75; }
+.track{ position:relative; height:2px; background: var(--line-muted, #D1D5DB); overflow:hidden; }
+.fill{ position:absolute; inset:0 auto 0 0; width:100%; background:#111; transform-origin:left center; transform:scaleX(0); }
+
+/* Small brand at bottom-left */
+.brand{ position:absolute; left: var(--rail-left, clamp(16px, 6vw, 48px)); bottom:28px; font-size:14px; font-weight:600; opacity:.8; }
+
+/* Percent on meta right */
+.percent{ font-variant-numeric: tabular-nums; }
+
+/* Accessibility */
+@media (prefers-contrast: more){ .track{ background:#9CA3AF;} .fill{ background:#000; } }
+
+/* Small brand directly under the gauge bar */
+.brandUnderBar{ font-size:12px; font-weight:600; opacity:.65; margin-top:8px; }

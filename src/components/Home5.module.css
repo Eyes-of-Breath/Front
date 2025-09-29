@@ -1,351 +1,311 @@
+body {
+  background: #ffffff; /* Match the .container background */
+}
+
 /* 메인 컨테이너 */
 .container {
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - 3rem); /* Reduce height by 3rem */
   background: #ffffff;
-  padding: 4rem 2rem 2rem;
+  padding: 3rem;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
   color: #1e293b;
+  overflow: hidden;
+  margin-top: 5rem; /* Increased from 3rem to 5rem */
+  clip-path: inset(0 0 3rem 0); /* Cuts off the bottom 3rem */
+}
+
+/* 푸터 콘텐츠 */
+.footerContent {
+  display: flex;
+  gap: 4rem;
+  margin-bottom: 2rem;
+}
+
+/* 왼쪽 섹션 */
+.leftSection {
+  flex: 0 0 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
 /* 로고 섹션 */
 .logoSection {
-  margin-bottom: 4rem;
-}
-
-.logo {
   display: flex;
   align-items: center;
+  gap: 1rem;
 }
 
 .logoIcon {
-  position: relative;
-  width: 80px;
-  height: 80px;
-  margin-right: 1rem;
-}
-
-.iconPart1 {
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 50px;
-  height: 80px;
-  background: linear-gradient(135deg, #87ceeb 0%, #6bb6ff 50%, #b0d4f1 100%);
-  border-radius: 40px 0 0 40px;
-  box-shadow: 0 4px 20px rgba(135, 206, 235, 0.3);
-}
-
-.iconPart2 {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 40px;
-  height: 80px;
-  background: linear-gradient(45deg, #1e293b 0%, #475569 100%);
-  border-radius: 0 40px 40px 0;
-  box-shadow: 0 4px 20px rgba(30, 41, 59, 0.2);
-}
-
-/* 메인 콘텐츠 */
-.mainContent {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 4rem;
-  margin-bottom: 4rem;
-  flex-grow: 1;
-}
-
-.section {
+  height: 50px;
+  background: linear-gradient(135deg, #ABCAFF 0%, #85AFFC 100%);
+  border-radius: 8px;
   display: flex;
-  flex-direction: column;
-}
-
-.sectionTitle {
+  align-items: center;
+  justify-content: center;
   font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
-  color: #94a3b8;
-  margin-bottom: 1.5rem;
-  text-transform: uppercase;
+  color: #ffffff;
 }
 
-.linkList {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+.logoText {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+  letter-spacing: 0.5px;
 }
 
-.link {
+/* 설명 텍스트 */
+.description {
   font-size: 1.125rem;
-  font-weight: 400;
-  color: #1e293b;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  padding: 0.25rem 0;
-  position: relative;
-}
-
-.link::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #87ceeb, #6bb6ff);
-  transition: width 0.3s ease;
-}
-
-.link:hover {
-  color: #6bb6ff;
-  transform: translateX(4px);
-}
-
-.link:hover::after {
-  width: 100%;
-}
-
-/* 연락처 정보 */
-.contactInfo {
-  margin-bottom: 3rem;
-}
-
-.locationGroup {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 3rem;
-}
-
-.location {
-  display: flex;
-  flex-direction: column;
-}
-
-.cityName {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #1e293b;
-  margin-bottom: 0.5rem;
-}
-
-.address {
-  font-size: 0.875rem;
+  line-height: 1.6;
   color: #64748b;
-  line-height: 1.5;
-  margin-bottom: 0.75rem;
-}
-
-.email {
-  font-size: 0.875rem;
-  color: #6bb6ff;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  position: relative;
-  display: inline-block;
-}
-
-.email::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background: #6bb6ff;
-  transition: width 0.3s ease;
-}
-
-.email:hover {
-  color: #87ceeb;
-}
-
-.email:hover::after {
-  width: 100%;
-}
-
-/* 푸터 */
-.footer {
-  border-top: 1px solid #e2e8f0;
-  padding-top: 1.5rem;
-  margin-top: auto;
-}
-
-.copyright {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #64748b;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
   margin: 0;
 }
 
+/* CTA 버튼 */
+.ctaButton {
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #85AFFC 0%, #94BDF2 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: fit-content;
+}
+
+.ctaButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(133, 175, 252, 0.3);
+  background: linear-gradient(135deg, #94BDF2 0%, #ABCAFF 100%);
+}
+
+/* 소셜 아이콘 */
+.socialIcons {
+  display: flex;
+  gap: 1rem;
+}
+
+.socialIcon {
+  width: 45px;
+  height: 45px;
+  background: #f8fafc;
+  color: #85AFFC;
+  border: 1px solid #e2e8f0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.socialIcon:hover {
+  transform: translateY(-3px);
+  background: linear-gradient(135deg, #ABCAFF 0%, #85AFFC 100%);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 5px 15px rgba(133, 175, 252, 0.3);
+}
+
+/* 오른쪽 섹션 */
+.rightSection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+/* 팀 그리드 */
+.teamGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem 3rem;
+}
+
+/* 팀원 정보 */
+.teamMember {
+  padding: 0;
+}
+
+.memberName {
+  font-size: 1.125rem;
+  font-weight: 400;
+  color: #94a3b8;
+  margin-bottom: 0.5rem;
+}
+
+.memberRole {
+  font-size: 1rem;
+  color: #1e293b;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+.memberEmail {
+  font-size: 1rem;
+  color: #1e293b;
+  font-weight: 500;
+}
+
+/* 뉴스레터 */
+.newsletter {
+  margin-top: 2rem;
+}
+
+.newsletterTitle {
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: #1e293b;
+  margin-bottom: 1.5rem;
+}
+
+.newsletterForm {
+  display: flex;
+  gap: 0;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 50px;
+  padding: 0.5rem;
+}
+
+.emailInput {
+  flex: 1;
+  padding: 0.875rem 1.5rem;
+  background: transparent;
+  border: none;
+  color: #1e293b;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.emailInput::placeholder {
+  color: #94a3b8;
+}
+
+.subscribeButton {
+  padding: 0.875rem 2rem;
+  background: linear-gradient(135deg, #85AFFC 0%, #94BDF2 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.subscribeButton:hover {
+  transform: scale(1.02);
+  background: linear-gradient(135deg, #94BDF2 0%, #ABCAFF 100%);
+  box-shadow: 0 5px 15px rgba(133, 175, 252, 0.3);
+}
+
+/* 카피라이트 */
+.copyright {
+  background: linear-gradient(135deg, #ABCAFF 0%, #85AFFC 50%, #94BDF2 100%);
+  padding: 1.5rem 2rem;
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+  color: #ffffff;
+}
+
 /* 반응형 디자인 */
+@media (max-width: 1200px) {
+  .footerContent {
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .leftSection {
+    flex: none;
+  }
+
+  .teamGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
   .container {
-    padding: 2rem 1rem 1.5rem;
+    padding: 2rem 1.5rem;
   }
 
-  .logoIcon {
-    width: 60px;
-    height: 60px;
-  }
-
-  .iconPart1 {
-    width: 38px;
-    height: 60px;
-    border-radius: 30px 0 0 30px;
-  }
-
-  .iconPart2 {
-    width: 30px;
-    height: 60px;
-    border-radius: 0 30px 30px 0;
-  }
-
-  .mainContent {
-    grid-template-columns: 1fr;
-    gap: 3rem;
-    margin-bottom: 3rem;
-  }
-
-  .locationGroup {
+  .teamGrid {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
 
-  .link {
-    font-size: 1rem;
+  .copyright {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
   }
 
-  .sectionTitle {
-    font-size: 0.7rem;
+  .newsletterForm {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+    border-radius: 20px;
+  }
+
+  .emailInput {
+    padding: 1rem;
+  }
+
+  .subscribeButton {
+    padding: 1rem;
   }
 }
 
 @media (max-width: 480px) {
   .container {
-    padding: 1.5rem 1rem 1rem;
+    padding: 1.5rem 1rem;
   }
 
-  .logoSection {
-    margin-bottom: 2rem;
+  .logoText {
+    font-size: 1.25rem;
   }
 
-  .logoIcon {
-    width: 50px;
-    height: 50px;
+  .description {
+    font-size: 1rem;
   }
 
-  .iconPart1 {
-    width: 32px;
-    height: 50px;
-    border-radius: 25px 0 0 25px;
-  }
-
-  .iconPart2 {
-    width: 25px;
-    height: 50px;
-    border-radius: 0 25px 25px 0;
-  }
-
-  .mainContent {
-    gap: 2rem;
-    margin-bottom: 2rem;
-  }
-
-  .link {
+  .ctaButton {
+    padding: 0.875rem 1.5rem;
     font-size: 0.95rem;
   }
 
-  .cityName {
+  .memberName {
+    font-size: 1rem;
+  }
+
+  .memberRole,
+  .memberEmail {
     font-size: 0.9rem;
   }
 
-  .address,
-  .email {
-    font-size: 0.8rem;
-  }
-}
-
-/* 애니메이션 효과 */
-.logoIcon {
-  animation: logoFloat 6s ease-in-out infinite;
-}
-
-@keyframes logoFloat {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
-}
-
-/* 호버 효과 개선 */
-.section:hover .sectionTitle {
-  color: #3b82f6;
-  transition: color 0.3s ease;
-}
-
-/* 그리드 아이템 순서 조정 */
-@media (max-width: 768px) {
-  .section:nth-child(1) { order: 1; }
-  .section:nth-child(2) { order: 2; }
-  .section:nth-child(3) { order: 3; }
-}
-
-/* 접근성 개선 */
-.link:focus,
-.email:focus {
-  outline: 2px solid #3b82f6;
-  outline-offset: 2px;
-  border-radius: 2px;
-}
-
-/* 다크 모드 지원 */
-@media (prefers-color-scheme: dark) {
-  .container {
-    background: #0f172a;
-    color: #e2e8f0;
-  }
-
-  .sectionTitle {
-    color: #64748b;
-  }
-
-  .link {
-    color: #e2e8f0;
-  }
-
-  .link:hover {
-    color: #60a5fa;
-  }
-
-  .cityName {
-    color: #e2e8f0;
-  }
-
-  .address {
-    color: #94a3b8;
-  }
-
-  .email {
-    color: #60a5fa;
-  }
-
-  .email:hover {
-    color: #93c5fd;
-  }
-
-  .footer {
-    border-top-color: #334155;
+  .newsletterTitle {
+    font-size: 1.125rem;
   }
 
   .copyright {
-    color: #94a3b8;
+    font-size: 0.8rem;
+    padding: 1.25rem 1rem;
   }
 }

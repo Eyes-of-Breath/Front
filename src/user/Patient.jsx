@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './Patient.module.css';
-import { Search, FileText } from 'lucide-react';
+import { Search, FileText, Trash2 } from 'lucide-react';
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
@@ -111,26 +111,36 @@ const Patient = () => {
     }
   };
 
-  const getPriority = (probability) => {
-    if (probability >= 0.9) return 'high';
-    if (probability >= 0.8) return 'moderate';
-    return 'low';
+  // 심각도 분류 함수
+  const getSeverityInfo = (probability) => {
+    if (probability >= 0.9) return { 
+      level: 'high', 
+      text: '높음', 
+      class: 'severityHigh' 
+    };
+    if (probability >= 0.8) return { 
+      level: 'moderate', 
+      text: '보통', 
+      class: 'severityModerate' 
+    };
+    return { 
+      level: 'normal', 
+      text: '낮음', 
+      class: 'severityNormal' 
+    };
   };
 
-  const getPriorityIcon = (priority) => {
-    switch (priority) {
-      case 'high': return '⚠️';
-      case 'moderate': return '📊';
-      case 'low': return '✅';
-      default: return '❔';
-    }
+  const getStatusClass = (probability) => {
+    if (probability >= 0.9) return 'statusHigh';
+    if (probability >= 0.8) return 'statusModerate';
+    return 'statusNormal';
   };
 
   return (
     <div className={styles.patientContainer}>
       <main className={styles.mainContent}>
         <div style={{ fontSize: '1.5rem', fontWeight: '300', color: '#1a1a1a', paddingTop: '2rem', lineHeight: '1.6', textShadow: '0 1px 3px rgba(0, 0, 0, 0.2)', paddingLeft: '0.5rem', textAlign: 'left', marginBottom: '1rem', flex: 1 }}>
-          여기서 환자 정보를 관리하세요.
+          빠른 검색으로 필요한 정보를 바로 찾아보세요 🔍
         </div>
 
         <div className={styles.mainLayout}>
@@ -223,53 +233,72 @@ const Patient = () => {
                         if (!diagnosis) return null;
 
                         const probability = diagnosis.probability;
-                        const priority = getPriority(probability);
+                        const severityInfo = getSeverityInfo(probability);
+                        let severityEmoji = '';
+                        if (severityInfo.level === 'high') severityEmoji = '🚨';
+                        else if (severityInfo.level === 'moderate') severityEmoji = '🔬';
+                        else severityEmoji = '✅';
 
                         return (
                           <div key={xray.imageId} className={styles.recordCard}>
                             <div className={styles.recordLayout}>
                               <div className={styles.recordInfo}>
                                 <div className={styles.recordHeader}>
-                                  <p className={styles.recordDate}>촬영일: {xray.uploadedAt.split('T')[0]}</p>
-                                  <p className={styles.resultId}>resultId: {diagnosis.resultId}</p>
+                                  <div className={`${styles.severityIndicator} ${styles[severityInfo.class]}`}>
+                                    <span>{severityEmoji} 위험도: {severityInfo.text}</span>
+                                  </div>
+                                  <p className={styles.recordDate}>{xray.uploadedAt.split('T')[0]}</p>
                                   {Number(selectedPatient.memberId) === memberId && (
-                                  <span className={styles.deleteText} onClick={() => {
-                                    const confirmed = window.confirm("정말 삭제하시겠습니까?");
-                                    if (confirmed) handleDeleteReport(diagnosis.resultId);
-                                  }}>
-                                    보고서 삭제
-                                  </span>
-                                )}
+                                    <Trash2 
+                                      size={18} 
+                                      className={styles.deleteIcon} 
+                                      onClick={() => {
+                                        const confirmed = window.confirm("정말 삭제하시겠습니까?");
+                                        if (confirmed) handleDeleteReport(diagnosis.resultId);
+                                      }}
+                                    />
+                                  )}
                                 </div>
-                                <div className={styles.diagnosisSection}>
-                                  <h5 className={styles.sectionSubtitle}>AI Top-3 예측 결과</h5>
-                                  <ul className={styles.diagnosisList}>
-                                    <li>1️⃣ {diagnosis.top1Disease} — {(diagnosis.top1Probability * 100).toFixed(1)}%</li>
-                                    <li>2️⃣ {diagnosis.top2Disease} — {(diagnosis.top2Probability * 100).toFixed(1)}%</li>
-                                    <li>3️⃣ {diagnosis.top3Disease} — {(diagnosis.top3Probability * 100).toFixed(1)}%</li>
-                                  </ul>
-                                </div>
+
+                                {/* <div className={styles.diagnosisSection}>
+                                  <div className={styles.diagnosisTitle}>
+                                    🔬 AI 진단 결과
+                                  </div>
+                                  <div className={styles.confidenceScore}>
+                                    {Math.round(probability * 100)}%
+                                  </div>
+                                  <div className={styles.confidenceLabel}>
+                                    신뢰도
+                                  </div>
+                                </div> */}
+
                                 {diagnosis.comments && diagnosis.comments.length > 0 && (
                                   <div className={styles.commentSection}>
-                                    <h5 className={styles.sectionSubtitle}>의료진 소견</h5>
-                                    <ul className={styles.commentList}>
-                                      {diagnosis.comments.map((comment) => (
-                                        <li key={comment.commentId} className={styles.commentItem}>
-                                          🩺 {comment.content}
-                                          <span className={styles.commentMeta}>
-                                            ({new Date(comment.createdAt).toLocaleDateString('ko-KR')})
-                                          </span>
-                                        </li>
-                                      ))}
-                                    </ul>
+                                    {diagnosis.comments.map((comment) => (
+                                      <div key={comment.commentId} className={styles.commentItem}>
+                                        <p className={styles.doctorName}>{comment.doctorName || '의료진'} 소견</p>
+                                        <p className={styles.commentText}>
+                                          {comment.content}
+                                          <br />
+                                          <small style={{ color: '#94a3b8', fontSize: '12px' }}>
+                                            {new Date(comment.createdAt).toLocaleDateString('ko-KR')}
+                                          </small>
+                                        </p>
+                                      </div>
+                                    ))}
                                   </div>
                                 )}
-                                
                               </div>
 
                               <div className={styles.imageGroup}>
-                                <img src={diagnosis.imageUrl} alt={xray.fileName} className={styles.previewImage} />
-                                <img src={diagnosis.gradcamImagePath} alt="Grad-CAM" className={styles.previewImage} />
+                                <div>
+                                  <div className={styles.imageLabel}>원본 X-Ray</div>
+                                  <img src={diagnosis.imageUrl} alt={xray.fileName} className={styles.previewImage} />
+                                </div>
+                                <div>
+                                  <div className={styles.imageLabel}>AI 분석 결과</div>
+                                  <img src={diagnosis.gradcamImagePath} alt="Grad-CAM" className={styles.previewImage} />
+                                </div>
                               </div>
                             </div>
                           </div>
