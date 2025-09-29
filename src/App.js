@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 // Context
 import { PreloaderProvider, usePreloader } from './context/PreloaderContext';
@@ -27,7 +30,8 @@ import Home2 from './components/Home2';
 import Home3 from './components/Home3';
 import Home4 from './components/Home4';
 import Home5 from './components/Home5';
-import ScanlineH1toH2 from './effects/ScanlineH1toH2';
+
+gsap.registerPlugin(ScrollTrigger);
 
 function App() {
   return (
@@ -61,20 +65,47 @@ function App() {
 
 function AppShell(){
   const { isLoaded, markLoaded } = usePreloader();
+  useEffect(() => {
+    const startEl = document.querySelector('#home2');
+    const endEl = document.querySelector('#home5');
+
+    if (!startEl || !endEl) return;
+
+    // prevent duplicates on hot reload or remount
+    const prev = ScrollTrigger.getById('header-color-h2toh5');
+    if (prev) prev.kill();
+
+    const trigger = ScrollTrigger.create({
+      id: 'header-color-h2toh5',
+      trigger: startEl,
+      start: 'top 80%',      // when Home2 nears viewport
+      endTrigger: endEl,
+      end: 'bottom top',     // until Home5 leaves the top
+      scrub: 0.3,
+      anticipatePin: 1,
+      onEnter:     () => document.body.classList.add('header-red'),
+      onEnterBack: () => document.body.classList.add('header-red'),
+      onLeave:     () => document.body.classList.remove('header-red'),
+      onLeaveBack: () => document.body.classList.remove('header-red'),
+    });
+
+    ScrollTrigger.refresh();
+
+    return () => {
+      document.body.classList.remove('header-red');
+      trigger.kill();
+    };
+  }, []);
   return (
     <>
       <Header />
       {/* Central scroll container for sections */}
       <div id="scroll-root">
-        <section className="section"><Home1 /></section>
-        {/* Transition: Home1 → Home2 (scanline cut-paper) */}
-        <section className="section">
-          <ScanlineH1toH2 pinVh={280} scrub={0.5} />
-        </section>
-        <section className="section"><Home2 /></section>
-        <section className="section"><Home3 /></section>
-        <section className="section"><Home4 /></section>
-        <section className="section"><Home5 /></section>
+        <section className="section" id="home1"><Home1 /></section>
+        <section className="section" id="home2"><Home2 /></section>
+        <section className="section" id="home3"><Home3 /></section>
+        <section className="section" id="home4"><Home4 /></section>
+        <section className="section" id="home5"><Home5 /></section>
       </div>
       <Preloader onDone={markLoaded} active={!isLoaded} />
     </>

@@ -1,307 +1,300 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowRight } from 'lucide-react';
-// CSS 모듈 스타일 객체
-const styles = {
-    container: {
-        fontFamily: '"Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-        backgroundColor: '#FFFFFF',
-        minHeight: '100vh',
-        padding: '0'
-    },
-    parent: {
-        backgroundColor: '#FFFFFF',
-        display: 'flex',
-        justifyContent: 'center',
-        minHeight: '100vh'
-    },
-    column1: {
-        display: 'flex',
-        width: '25vw',
-        flexDirection: 'column',
-        gap: '10px',
-        marginTop: '5vh', // 여백 줄임
-        marginLeft: '3vw',
-        marginRight: '3vw'
-    },
-    column2: {
-        backgroundColor: '#FFFFFF',
-        display: 'flex',
-        flex: 1,
-        flexDirection: 'column',
-        gap: '50px',
-        paddingTop: '11vh', // 여백 줄임
-        paddingLeft: '4vw',
-        paddingRight: '3vw'
-    },
-    title: {
-        margin: 0,
-        fontSize: '40px',
-        fontWeight: 600,
-        color: '#1F2937'
-    },
-    subtitle: {
-        margin: 0,
-        fontSize: '18px',
-        fontWeight: 300,
-        color: '#6B7280',
-        letterSpacing: '1px',
-        textTransform: 'uppercase',
-        opacity: 0.8
-    },
-    newsRow: {
-        display: 'flex',
-        opacity: 0,
-        transform: 'translateY(30px)',
-        transition: 'all 0.6s ease',
-        marginBottom: '40px'
-    },
-    newsRowExtraGap: {
-        marginBottom: '100px' // 2~3번째 기사 사이 큰 여백
-    },
-    newsRowVisible: {
-        opacity: 1,
-        transform: 'translateY(0)'
-    },
-    imageWrapper: {
-        overflow: 'hidden',
-        borderRadius: '8px',
-        width: '250px',
-        height: '250px',
-        minWidth: '250px',
-        maxWidth: '250px',
-        minHeight: '250px',
-        maxHeight: '250px',
-        flexShrink: 0
-    },
-    image: {
-        width: '250px',
-        height: '250px',
-        objectFit: 'cover',
-        objectPosition: 'center',
-        borderRadius: '8px',
-        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-        boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
-        minWidth: '250px',
-        maxWidth: '250px',
-        minHeight: '250px',
-        maxHeight: '250px'
-    },
-    imageHover: {
-        transform: 'scale(1.05)',
-        boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15)'
-    },
-    newsText: {
-        display: 'flex',
-        flexDirection: 'column',
-        marginLeft: '4vw',
-        marginRight: '3vw',
-        justifyContent: 'center'
-    },
-    date: {
-        margin: '0 0 8px 0',
-        fontSize: '14px',
-        color: '#6B7280',
-        fontWeight: 500
-    },
-    newsTitle: {
-        margin: 0,
-        fontSize: '22px',
-        fontWeight: 600,
-        color: '#1F2937',
-        lineHeight: 1.4,
-        marginBottom: '12px'
-    },
-    newsContent: {
-        margin: '0 0 20px 0',
-        fontSize: '16px',
-        color: '#4B5563',
-        lineHeight: 1.6
-    },
-    button: {
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '8px',
-        width: '120px',
-        height: '40px',
-        backgroundColor: '#FFFFFF',
-        borderRadius: '0',
-        border: '2px solid #E5E7EB',
-        fontSize: '14px',
-        fontWeight: 500,
-        cursor: 'pointer',
-        marginTop: '1vh',
-        transition: 'all 0.3s ease',
-        color: '#374151',
-        fontFamily: 'inherit'
-    },
-    buttonHover: {
-        borderColor: '#3B82F6',
-        color: '#3B82F6',
-        transform: 'translateY(-1px)'
-    }
-};
+import React, { useState, useEffect, useRef } from 'react';
+import { ArrowRight, ChevronRight, ChevronLeft, Play, Pause, Stethoscope, Heart, Activity } from 'lucide-react';
+import styles from './Home3.module.css';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-const CACHE_EXPIRATION_TIME = 3600000;
+gsap.registerPlugin(ScrollTrigger);
 
-// 뉴스 데이터 통신을 위한 API 객체
+// 환경 변수에서 서버 URL 가져오기
+const SERVER_URL = process.env.REACT_APP_SERVER_URL || 'http://localhost:8080';
+const CACHE_EXPIRATION_TIME = 3600000; // 1시간
+
 const newsAPI = {
     async getAllNews() {
-        const response = await fetch(`${SERVER_URL}/news`);
-        if (!response.ok) {
-            throw new Error(`Spring Boot 서버 연결 실패 (HTTP ${response.status})`);
+        try {
+            // 캐시 확인
+            const cachedNews = localStorage.getItem('newsCache');
+            const cachedTimestamp = localStorage.getItem('newsCacheTimestamp');
+            
+            if (cachedNews && cachedTimestamp) {
+                const isCacheValid = (new Date().getTime() - Number(cachedTimestamp)) < CACHE_EXPIRATION_TIME;
+                if (isCacheValid) {
+                    console.log('캐시된 데이터 사용');
+                    return JSON.parse(cachedNews);
+                }
+            }
+
+            // 실제 API 호출
+            console.log('서버에서 데이터 가져오는 중...');
+            const response = await fetch(`${SERVER_URL}/news`);
+            if (!response.ok) {
+                throw new Error(`서버 연결 실패 (HTTP ${response.status})`);
+            }
+            
+            const newsArr = await response.json();
+            console.log('받아온 뉴스 데이터:', newsArr);
+            
+            // 캐시 저장
+            localStorage.setItem('newsCache', JSON.stringify(newsArr));
+            localStorage.setItem('newsCacheTimestamp', String(new Date().getTime()));
+            
+            return Array.isArray(newsArr) ? newsArr : [];
+        } catch (error) {
+            console.error('뉴스 데이터 로드 실패:', error);
+            
+            // 에러 발생 시 캐시된 데이터라도 반환
+            const cachedNews = localStorage.getItem('newsCache');
+            if (cachedNews) {
+                console.log('에러 발생, 캐시된 데이터 사용');
+                return JSON.parse(cachedNews);
+            }
+            
+            throw error;
         }
-        return await response.json();
     },
 };
 
-function Home3() {
+function MedicalCarousel() {
+    const parentRef = useRef(null);
     const [newsData, setNewsData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [hoveredImage, setHoveredImage] = useState(null);
-    const [hoveredButton, setHoveredButton] = useState(null);
-    const [visibleRows, setVisibleRows] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [isAutoPlay, setIsAutoPlay] = useState(true);
 
-    // 기존 API 호출 및 캐싱 로직 유지
-    const loadData = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            const cachedNews = localStorage.getItem('newsCache');
-            const cachedTimestamp = localStorage.getItem('newsCacheTimestamp');
-            if (cachedNews && cachedTimestamp) {
-                const isCacheValid = (new Date().getTime() - cachedTimestamp) < CACHE_EXPIRATION_TIME;
-                if (isCacheValid) {
-                    setNewsData(JSON.parse(cachedNews));
-                    setLoading(false);
-                    return;
-                }
-            }
-            const newsArr = await newsAPI.getAllNews();
-            setNewsData(Array.isArray(newsArr) ? newsArr : []);
-            localStorage.setItem('newsCache', JSON.stringify(newsArr));
-            localStorage.setItem('newsCacheTimestamp', new Date().getTime());
-        } catch (err) {
-            setError(err.message);
-            setNewsData([]);
-        } finally {
-            setLoading(false);
-        }
-    };
+    // 브랜드 컬러를 활용한 아이콘 색상
+    const medicalIcons = [
+        <Stethoscope size={24} color="#85AFFC" />,
+        <Heart size={24} color="#94BDF2" />,
+        <Activity size={24} color="#ACD7F2" />,
+        <Stethoscope size={24} color="#B4D2FF" />
+    ];
 
     useEffect(() => {
+        const loadData = async () => {
+            try {
+                const newsArr = await newsAPI.getAllNews();
+                setNewsData(Array.isArray(newsArr) ? newsArr : []);
+                setError(null);
+            } catch (err) {
+                console.error('데이터 로딩 실패:', err);
+                setError(err.message);
+                setNewsData([]);
+            } finally {
+                setLoading(false);
+            }
+        };
         loadData();
     }, []);
 
-    // 애니메이션 효과: 뉴스 행이 순차적으로 보이도록
     useEffect(() => {
-        if (!loading && newsData.length > 0) {
-            let i = 0;
-            const interval = setInterval(() => {
-                setVisibleRows(prev => {
-                    if (prev.length < newsData.length) {
-                        return [...prev, prev.length];
-                    } else {
-                        clearInterval(interval);
-                        return prev;
-                    }
-                });
-                i++;
-            }, 120);
-            return () => clearInterval(interval);
-        }
-    }, [loading, newsData]);
+        if (!isAutoPlay || newsData.length <= 1) return;
+        const interval = setInterval(() => {
+            setCurrentIndex(prev => (prev + 1) % newsData.length);
+        }, 5000);
+        return () => clearInterval(interval);
+    }, [isAutoPlay, newsData.length]);
+
+    useEffect(() => {
+        if (!parentRef.current) return;
+      
+        const inc = () => {
+          const n = +(document.body.dataset.headerTheme || 0) + 1;
+          document.body.dataset.headerTheme = String(n);
+          document.body.classList.add('header-red');
+        };
+        const dec = () => {
+          const n = Math.max(0, +(document.body.dataset.headerTheme || 0) - 1);
+          document.body.dataset.headerTheme = String(n);
+          if (n === 0) document.body.classList.remove('header-red');
+        };
+      
+        const st = ScrollTrigger.create({
+          id: 'home3-theme',
+          trigger: parentRef.current,
+          start: 'top bottom',
+          end: 'bottom top',
+          onEnter: inc,
+          onEnterBack: inc,
+          onLeave: dec,
+          onLeaveBack: dec,
+        });
+      
+        return () => {
+          st.kill();
+          dec();
+        };
+    }, []);
+
+    const nextSlide = () => {
+        setCurrentIndex(prev => (prev + 1) % newsData.length);
+        setIsAutoPlay(false);
+    };
+    
+    const prevSlide = () => {
+        setCurrentIndex(prev => (prev - 1 + newsData.length) % newsData.length);
+        setIsAutoPlay(false);
+    };
 
     const openLink = (url) => {
         if (url && url.startsWith('http')) {
-            window.open(url, '_blank');
+            window.open(url, '_blank', 'noopener,noreferrer');
         } else {
-            alert('링크가 없습니다');
+            alert('유효한 링크가 없습니다');
         }
     };
 
-    // 이미지 파일 경로 배열 (article1.png, article2.png 번갈아)
-    const newsImages = [
-        require('../assets/article1.png'),
-        require('../assets/article2.png')
-    ];
+    const handleRetry = () => {
+        setLoading(true);
+        setError(null);
+        window.location.reload();
+    };
+
+    if (loading) {
+        return (
+            <div className={styles.carouselRoot} ref={parentRef}>
+                <div className={styles.loadingContainer}>
+                    <div className={styles.spinner}></div>
+                    <p>뉴스 데이터를 불러오는 중...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className={styles.carouselRoot} ref={parentRef}>
+                <div className={styles.loadingContainer}>
+                    <p style={{ color: '#ef4444', marginBottom: '1rem' }}>
+                        ⚠️ 데이터 로드 실패: {error}
+                    </p>
+                    <button 
+                        onClick={handleRetry}
+                        style={{
+                            padding: '0.75rem 1.5rem',
+                            backgroundColor: '#85AFFC',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            fontSize: '1rem'
+                        }}
+                    >
+                        다시 시도
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    if (newsData.length === 0) {
+        return (
+            <div className={styles.carouselRoot} ref={parentRef}>
+                <div className={styles.loadingContainer}>
+                    <p>표시할 뉴스가 없습니다.</p>
+                </div>
+            </div>
+        );
+    }
 
     return (
-        <div style={styles.container}>
-            <div style={styles.parent}>
-                {/* 왼쪽 열 - 타이틀 */}
-                <div style={styles.column1}>
-                    <h1 style={styles.title}>주요 기사</h1>
-                    <h2 style={styles.subtitle}>LATEST NEWS</h2>
-                </div>
-                {/* 오른쪽 열 - 뉴스 내용 */}
-                <div style={styles.column2}>
-                    {loading ? (
-                        <p>데이터 로딩 중...</p>
-                    ) : error ? (
-                        <div style={{ color: 'red', padding: '10px', background: '#ffe6e6' }}>
-                            <h3>오류 발생</h3>
-                            <p>{error}</p>
-                            <p><strong>확인사항:</strong></p>
-                            <ul>
-                                <li>Spring Boot 서버가 localhost:8080에서 실행 중인가?</li>
-                                <li>MySQL이 실행 중이고 연결되어 있는가?</li>
-                                <li>/api/news 엔드포인트가 존재하는가?</li>
-                            </ul>
-                        </div>
-                    ) : newsData.length === 0 ? (
-                        <div style={{ padding: '10px', background: '#fff3cd' }}>
-                            <h3>데이터 없음</h3>
-                            <p>뉴스 테이블에 데이터가 없습니다.</p>
-                            <p>NewsScheduler가 1시간마다 자동으로 뉴스를 수집합니다.</p>
-                        </div>
-                    ) : (
-                        newsData.slice(0, 2).map((news, index) => {
-                            return (
-                                <div className="scene-content" key={news.id || news.newsId || index}>
-                                    <div
-                                        style={{
-                                            ...styles.newsRow,
-                                            ...(visibleRows.includes(index) ? styles.newsRowVisible : {}),
-                                        }}
-                                    >
-                                        {/* 이미지 */}
-                                        <div style={styles.imageWrapper}>
-                                            <img
-                                                src={newsImages[index % newsImages.length]}
-                                                alt="뉴스 이미지"
-                                                style={styles.image}
-                                            />
-                                        </div>
-                                        {/* 텍스트 내용 */}
-                                        <div style={styles.newsText}>
-                                            <p style={styles.date}>{news.date || news.publishedAt || 'N/A'}</p>
-                                            <h3 style={styles.newsTitle}>{news.title}</h3>
-                                            <p style={styles.newsContent}>{news.content || news.summary}</p>
-                                            <button
-                                                style={{
-                                                    ...styles.button,
-                                                    ...(hoveredButton === index ? styles.buttonHover : {}),
-                                                }}
-                                                onMouseEnter={() => setHoveredButton(index)}
-                                                onMouseLeave={() => setHoveredButton(null)}
-                                                onClick={() => openLink(news.newsUrl)}
-                                            >
-                                                더 보기
-                                                <ArrowRight size={16} />
-                                            </button>
-                                        </div>
+        <div className={styles.carouselRoot} ref={parentRef}>
+            {/* 섹션 타이틀 */}
+            <div style={{
+                textAlign: 'center',
+                marginBottom: '60px',
+                animation: 'fadeInUp 0.8s ease-out'
+            }}>
+                <p style={{
+                    fontSize: '14px',
+                    fontWeight: '600',
+                    color: '#85AFFC',
+                    letterSpacing: '2px',
+                    textTransform: 'uppercase',
+                    marginBottom: '12px'
+                }}>
+                    Medical News
+                </p>
+                <h2 style={{
+                    fontSize: '36px',
+                    fontWeight: '700',
+                    color: '#1F2937',
+                    margin: 0,
+                    lineHeight: 1.2
+                }}>
+                    최신 의학 뉴스
+                </h2>
+            </div>
+
+            <div className={styles.carouselSection}>
+                <button 
+                    className={`${styles.navButton} ${styles.navLeft}`} 
+                    onClick={prevSlide}
+                    aria-label="이전 뉴스"
+                >
+                    <ChevronLeft size={20} color="#6B7280" />
+                </button>
+
+                <div className={styles.carouselViewport}>
+                    <div 
+                        className={styles.carouselTrack}
+                        style={{
+                            transform: `translateX(calc(-${currentIndex * 640}px + 50% - 320px))`
+                        }}
+                    >
+                        {newsData.map((news, index) => (
+                            <div
+                                key={news.id || index}
+                                className={`${styles.carouselSlide} ${
+                                    index === currentIndex ? styles.active : styles.inactive
+                                }`}
+                            >
+                                <div className={styles.slideContent}>
+                                    <div className={styles.slideIcon}>
+                                        {medicalIcons[index % medicalIcons.length]}
                                     </div>
+                                    <h3 className={styles.slideTitle}>
+                                        {news.title || '제목 없음'}
+                                    </h3>
+                                    <p className={styles.slideDate}>
+                                        {news.date || news.publishedDate || new Date().toLocaleDateString('ko-KR')}
+                                    </p>
+                                    <p className={styles.slideDescription}>
+                                        {news.content || news.description || news.summary || '내용이 없습니다.'}
+                                    </p>
+                                    <button
+                                        className={styles.slideButton}
+                                        onClick={() => openLink(news.newsUrl || news.url || news.link)}
+                                    >
+                                        더 보기
+                                        <ArrowRight size={16} color="#FFFFFF" />
+                                    </button>
                                 </div>
-                            );
-                        })
-                    )}
+                            </div>
+                        ))}
+                    </div>
                 </div>
+
+                <button 
+                    className={`${styles.navButton} ${styles.navRight}`} 
+                    onClick={nextSlide}
+                    aria-label="다음 뉴스"
+                >
+                    <ChevronRight size={20} color="#6B7280" />
+                </button>
+
+                {/* 자동 재생 컨트롤 - 중앙 하단 */}
+                <button
+                    className={styles.playButton}
+                    onClick={() => setIsAutoPlay(!isAutoPlay)}
+                    aria-label={isAutoPlay ? '자동재생 중지' : '자동재생 시작'}
+                >
+                    {isAutoPlay ? <Pause size={22} color="#85AFFC" /> : <Play size={22} color="#85AFFC" />}
+                </button>
             </div>
         </div>
     );
 }
 
-export default Home3;
+export default MedicalCarousel;

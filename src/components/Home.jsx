@@ -5,7 +5,6 @@ import Home2 from './Home2';
 import Home3 from './Home3';
 import Home4 from './Home4';
 import Home5 from './Home5';
-import ScanlineH1toH2 from '../effects/ScanlineH1toH2';
 
 // Continuous-scroll Home: stack sections vertically and let each section
 // manage its own (non-pin) GSAP reveal if needed.
@@ -13,9 +12,6 @@ function Home() {
   return (
     <div className={styles.container}>
       <section className="section"><Home1 /></section>
-      <section className="section">
-        <ScanlineH1toH2 pinVh={280} scrub={0.5} />
-      </section>
       <section className="section"><Home2 forceFirstSection={true} /></section>
       <section className="section"><Home3 /></section>
       <section className="section"><Home4 /></section>

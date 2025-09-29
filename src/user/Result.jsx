@@ -1,7 +1,7 @@
 // Result.jsx (최종 수정본)
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { User, FileText, Save, Activity, Eye, Layers, PenTool } from 'lucide-react';
+import { User, FileText, Save, Send, Activity, Eye, Brain, Mail, Layers } from 'lucide-react';
 import styles from './Result.module.css';
 
 function Result() {
@@ -18,6 +18,7 @@ function Result() {
 
     const [findings, setFindings] = useState('');
     const [impression, setImpression] = useState('');
+    const [email, setEmail] = useState('');
     const [heatmapOpacity, setHeatmapOpacity] = useState(0.5);
     
     useEffect(() => {
@@ -26,7 +27,12 @@ function Result() {
             navigate('/analysis');
             return;
         }
-        // 소견/판독 입력란은 처음에 빈 값으로 둡니다.
+
+        // 3. 실제 AI 결과로 소견/판독 의견 초기 텍스트 생성
+        const topDisease = diagnosisResult.top1Disease || "주요 병변";
+        const probability = (diagnosisResult.top1Probability * 100).toFixed(2);
+        setFindings(`환자의 흉부 X-ray에서 AI 분석 결과, '${topDisease}' 의심 소견이 가장 높게 나타났습니다.`);
+        setImpression(`1. ${topDisease} (높은 확률: ${probability}%)\n2. 추가적인 임상적 평가를 권장합니다.`);
     }, [navigate, patient, xrayImage, diagnosisResult]);
 
     if (!patient || !xrayImage || !diagnosisResult) return null;
@@ -60,21 +66,10 @@ function Result() {
             alert("보고서 제출 중 오류가 발생했습니다.");
         }
     };
+
+    const handleSendEmail = () => alert(`${email}로 결과가 전송되었습니다.`);
     
     const analysisDate = new Date(diagnosisResult.createdAt).toLocaleDateString('ko-KR');
-
-    // AI 분석 요약 텍스트 생성 (한 문장으로 연결)
-    const generateAiSummary = () => {
-        let summaryText = `AI 분석 결과, ${diagnosisResult.top1Disease} 가능성이 ${(diagnosisResult.top1Probability * 100).toFixed(1)}%로 가장 높게 예측되었습니다.`;
-        
-        if (diagnosisResult.top2Disease) {
-            summaryText += ` 다음으로 ${diagnosisResult.top2Disease} 가능성이 ${(diagnosisResult.top2Probability * 100).toFixed(1)}%로 예측됩니다.`;
-        }
-        
-        summaryText += ` 추가적인 임상 검사 및 전문의 상담을 통해 정확한 진단을 확정하시기 바랍니다.`;
-        
-        return summaryText;
-    };
 
     // 4. JSX 전체를 실제 데이터에 연결
     return (
@@ -129,9 +124,9 @@ function Result() {
                         </div>
                         <div className={styles.cardContent}>
                             <div className={styles.probabilityList}>
-                                {diagnosisResult.top1Disease && <ProbabilityItem name={diagnosisResult.top1Disease} value={(diagnosisResult.top1Probability * 100).toFixed(1)} color="#bbc9f7" />}
-                                {diagnosisResult.top2Disease && <ProbabilityItem name={diagnosisResult.top2Disease} value={(diagnosisResult.top2Probability * 100).toFixed(1)} color="#a3d5f7" />}
-                                {diagnosisResult.top3Disease && <ProbabilityItem name={diagnosisResult.top3Disease} value={(diagnosisResult.top3Probability * 100).toFixed(1)} color="#f7e99c" />}
+                                {diagnosisResult.top1Disease && <ProbabilityItem name={diagnosisResult.top1Disease} value={(diagnosisResult.top1Probability * 100).toFixed(1)} color="#dc2626" />}
+                                {diagnosisResult.top2Disease && <ProbabilityItem name={diagnosisResult.top2Disease} value={(diagnosisResult.top2Probability * 100).toFixed(1)} color="#d97706" />}
+                                {diagnosisResult.top3Disease && <ProbabilityItem name={diagnosisResult.top3Disease} value={(diagnosisResult.top3Probability * 100).toFixed(1)} color="#6b7280" />}
                             </div>
                         </div>
                     </div>
@@ -144,14 +139,13 @@ function Result() {
                         </div>
                         <div className={styles.cardContent}>
                             <div className={styles.inputSection}>
-                                <label className={styles.inputLabel} htmlFor="findings-textarea">소견</label>
                                 <textarea
                                     id="findings-textarea"
                                     className={styles.textarea}
                                     value={findings}
                                     onChange={(e) => setFindings(e.target.value)}
                                     placeholder="소견을 입력하세요..."
-                                    rows={4}
+                                    rows={8}
                                 />
                             </div>
                             <div className={styles.buttonGroup}>
@@ -171,20 +165,6 @@ function Result() {
                                     <FileText size={16} />
                                     보고서 제출
                                 </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div className={styles.card}>
-                         <div className={styles.cardHeader}>
-                            <h2 className={styles.cardTitle}><PenTool size={18} /> AI 분석 요약</h2>
-                        </div>
-                        <div className={styles.cardContent}>
-                            <div className={styles.aiSummaryContent}>
-                                <div className={styles.summarySection}>
-                                    <p className={styles.summaryText}>
-                                        {generateAiSummary()}
-                                    </p>
-                                </div>
                             </div>
                         </div>
                     </div>

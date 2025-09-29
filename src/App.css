@@ -33,3 +33,21 @@
   pointer-events: none;
   z-index: 9990;       /* 프리로더(9999)보다 낮고, 씬보다 높게 */
 }
+
+/* Normalize stacked sections in AppShell to remove accidental vertical gaps */
+#scroll-root {
+  margin: 0;
+  padding: 0;
+}
+
+#scroll-root > .section {
+  position: relative;
+  min-height: 100vh;
+  margin: 0;              /* kill vertical gaps between sections */
+  overflow: hidden;       /* prevent child margin from visually bleeding out */
+  display: flow-root;     /* new BFC — stops margin-collapsing */
+}
+
+/* extra guards for first/last child margins inside each section */
+#scroll-root > .section > :first-child { margin-top: 0; }
+#scroll-root > .section > :last-child  { margin-bottom: 0; }

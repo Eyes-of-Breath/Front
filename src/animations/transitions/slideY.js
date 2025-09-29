@@ -8,14 +8,15 @@ import { gsap } from "gsap";
  * - Temporarily manages z-index to ensure next is on top during the swap.
  * `dir` can be "next"/"prev" or numeric `1` / `-1` (treated as next/prev respectively).
  */
-export function createSlideY({ currentEl, nextEl, dir = "next", dur = 0.6, ease = "power2.inOut", hideCurrent = true, useDisplaySwap = true }) {
+export function createSlideY({ currentEl, nextEl, dir = "next", dur = 0.6, ease = "power2.inOut", hideCurrent = true, useDisplaySwap = true, autoPlay = true }) {
   const tl = gsap.timeline({ paused: true });
 
   // Normalize ease to a GSAP ease string if someone passes an object accidentally
   if (typeof ease !== 'string') ease = 'power2.inOut';
 
   // Normalize direction to numeric sign (1 = next/down, -1 = prev/up)
-  const dirNum = (dir === 1 || dir === "1" || dir === "next" || dir === "forward" || dir === "down") ? 1 : -1;
+  const dirDown = [1, "1", "next", "forward", "down"].includes(dir);
+  const dirNum = dirDown ? 1 : -1;
 
   if (!currentEl || !nextEl) {
     console.warn("[slideY] missing element(s)", { currentEl, nextEl });
@@ -60,6 +61,10 @@ export function createSlideY({ currentEl, nextEl, dir = "next", dur = 0.6, ease 
       // Clear performance hints
       gsap.set([currentEl, nextEl], { willChange: 'auto', clearProps: 'opacity,filter' });
     });
+
+  if (autoPlay) {
+    tl.play(0);
+  }
 
   return tl;
 }

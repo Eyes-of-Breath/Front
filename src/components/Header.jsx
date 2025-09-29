@@ -1,11 +1,18 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styles from './Header.module.css';
 import kaduceus from '../assets/logo_white.png';
 
 function HeaderInner(){
   const navigate = useNavigate();
+  
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   return (
     <header className={styles.root} aria-label="site header">
@@ -17,10 +24,26 @@ function HeaderInner(){
         </span>
         <nav className={styles.nav} aria-label="primary">
           <ul className={styles.navList}>
-            <li className={styles.navItem}><Link to="/" className={styles.navLink}>Home</Link></li>
-            <li className={styles.navItem}><Link to="/about" className={styles.navLink}>About</Link></li>
-            <li className={styles.navItem}><Link to="/services" className={styles.navLink}>Services</Link></li>
-            <li className={styles.navItem}><Link to="/contact" className={styles.navLink}>Contact</Link></li>
+            <li className={styles.navItem}>
+              <button onClick={() => scrollToSection('home1')} className={styles.navLink}>
+                Home
+              </button>
+            </li>
+            <li className={styles.navItem}>
+              <button onClick={() => scrollToSection('home2')} className={styles.navLink}>
+                About
+              </button>
+            </li>
+            <li className={styles.navItem}>
+              <button onClick={() => scrollToSection('home3')} className={styles.navLink}>
+                Article
+              </button>
+            </li>
+            <li className={styles.navItem}>
+              <button onClick={() => scrollToSection('home5')} className={styles.navLink}>
+                Credit
+              </button>
+            </li>
           </ul>
         </nav>
         <button

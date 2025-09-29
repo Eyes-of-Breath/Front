@@ -4,7 +4,8 @@ import { gsap } from "gsap";
 import { Observer } from "gsap/Observer";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import * as SlideYMod from "../animations/transitions/slideY";
-import SCENES from "../scenes/registry"; // 씬 레지스트리
+import SCENES from "../scenes"; // 씬 레지스트리
+import Home1 from "../components/Home1";
 import "./scene.css"; // 레이어 기본 스타일
 import { createRoot } from 'react-dom/client';
 
@@ -16,11 +17,29 @@ const _createSlideY = (SlideYMod && (SlideYMod.createSlideY || SlideYMod.default
 
 // Singleton guard to prevent multiple SceneController instances
 if (typeof window !== 'undefined') {
+  window.__SC_OBSERVER_ENABLED__ = false; // hard-disable wheel interception
+  window.__SC_CURTAIN_ENABLED__ = false;  // hard-disable controller-managed curtain
   window.__SC_ACTIVE = window.__SC_ACTIVE || false;
 }
 
+// Header color: keep body.header-red ON during Home2~Home5
+function setHeaderRedForIndex(idx) {
+  try {
+    // Prefer SCENES metadata if available at runtime
+    const meta = SCENES?.[idx];
+    const id = meta?.id || '';
+    const idMatch = /^home([2-5])$/i.test(id);
+    const rangeMatch = idx >= 2 && idx <= 5; // fallback by position
+    const shouldRed = idMatch || rangeMatch;
+    document.body.classList.toggle('header-red', !!shouldRed);
+  } catch (_) {
+    // On any error, be conservative: turn off to avoid sticky state
+    document.body.classList.remove('header-red');
+  }
+}
+
 export default function SceneController() {
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(1);
   const [busy, setBusy] = useState(false);
 
   const hostRef = useRef(null);
@@ -31,6 +50,7 @@ export default function SceneController() {
   const scrollBufRef = useRef({ amt: 0, dir: 0, since: 0 });
   const lastFireRef = useRef(0);
   const intentRef = useRef({ dir: 0, count: 0, ts: 0 });
+
 
   const [enabled] = useState(() => {
     if (typeof window === 'undefined') return true;
@@ -95,25 +115,36 @@ export default function SceneController() {
     if (hostRef.current) gsap.set(hostRef.current, { pointerEvents: 'auto' });
   }
 
+
   // 첫 씬 마운트 (레이아웃 페이즈에 선마운트하여 깜빡임 방지)
   useLayoutEffect(() => {
-    mountScene(layerARef.current, SCENES[0]);
-    console.log('[SceneController] mounted first scene (layout)', SCENES[0]?.id);
+    mountScene(layerARef.current, SCENES[1]);
+    console.log('[SceneController] mounted first scene (layout)', SCENES[1]?.id);
     // Ensure Home1 is actually visible and the other layer is parked off-screen
     baselineLayers({
       active: layerARef.current,
       inactive: layerBRef.current,
     });
+    // Initialize header color based on initial index
+    setHeaderRedForIndex(1);
+    // Curtain overlay is not used anymore.
   }, []);
 
   useEffect(() => {
     return () => {
       if (typeof window !== 'undefined') window.__SC_ACTIVE = false;
+      // Ensure global header class is cleared on unmount
+      document.body.classList.remove('header-red');
+      // Paper mask overlay cleanup not needed anymore.
     };
   }, []);
 
   // 휠/키 입력 → next/prev
   useEffect(() => {
+    if (!window.__SC_OBSERVER_ENABLED__) {
+      // Wheel interception disabled to allow ScrollTrigger sections to control scroll
+      return;
+    }
     const target = hostRef.current || document;
 
     // Observer 정리
@@ -127,9 +158,9 @@ export default function SceneController() {
     const obs = Observer.create({
       target,
       type: "wheel,touch,pointer",
-      preventDefault: true,
-      passive: false,
-      capture: true,
+      preventDefault: false,
+      passive: true,
+      capture: false,
       lockAxis: true,
       wheelSpeed: 0.6,
       tolerance: 12,
@@ -217,7 +248,7 @@ export default function SceneController() {
 
     window.addEventListener("scene:request", onSceneRequest);
     window.addEventListener("home:scene:request", onHomeSceneRequest); // Home 전용 이벤트
-    window.addEventListener("keydown", onKey);
+    if (window.__SC_OBSERVER_ENABLED__) window.addEventListener("keydown", onKey);
 
     return () => {
       try { 
@@ -228,7 +259,7 @@ export default function SceneController() {
       observerRef.current = null;
       window.removeEventListener("scene:request", onSceneRequest);
       window.removeEventListener("home:scene:request", onHomeSceneRequest);
-      window.removeEventListener("keydown", onKey);
+      if (window.__SC_OBSERVER_ENABLED__) window.removeEventListener("keydown", onKey);
     };
   }, [busy, index]);
 
@@ -243,13 +274,14 @@ export default function SceneController() {
     if (currentLayer) gsap.set(currentLayer, { yPercent: 0, display: 'block', autoAlpha: 1 });
     if (nextLayer)    gsap.set(nextLayer,    { display: 'block', autoAlpha: 1 });
 
-    // A11y: ensure the next layer is announced and current is hidden during transition
-    if (currentLayer) currentLayer.setAttribute('aria-hidden', 'true');
-    if (nextLayer)    nextLayer.setAttribute('aria-hidden', 'false');
+    // A11y: don't hide layers before the animation; hide old one at the end
+    if (currentLayer) currentLayer.removeAttribute('aria-hidden');
+    if (nextLayer)    nextLayer.removeAttribute('aria-hidden');
 
-    const nextIndex =
+    let nextIndex =
       direction === "next" ? Math.min(index + 1, SCENES.length - 1)
                            : Math.max(index - 1, 0);
+    if (nextIndex === 0) nextIndex = 1;
     if (nextIndex === index) { 
       console.log('[SC] go() no-op (edge or blocked)', { index, direction }); 
       return; 
@@ -270,6 +302,8 @@ export default function SceneController() {
       onComplete: () => {
         console.log('[SC] transition complete', { to: nextIndex });
         setIndex(nextIndex);
+        // Update header color for new active scene
+        setHeaderRedForIndex(nextIndex);
         usingARef.current = !usingARef.current;
 
         // A11y: old layer hidden, new layer visible
@@ -327,10 +361,22 @@ export default function SceneController() {
   if (!enabled) return null;
   console.log('[SceneController] mount – enabled=', enabled, 'index=', index, 'blockGlobalWheel=', SCENES[index]?.blockGlobalWheel);
   return (
-    <div ref={hostRef} className="scene-host">
-      <div ref={layerARef} className="scene-layer" />
-      <div ref={layerBRef} className="scene-layer" />
-    </div>
+    <>
+      {/* Fixed bottom background: Home1 always visible under the paper layer */}
+      <div
+        className="bg-fixed"
+        aria-hidden
+        style={{ position: 'fixed', inset: 0, zIndex: 0, pointerEvents: 'none' }}
+      >
+        <Home1 />
+      </div>
+
+      {/* Scene host and two swappable scene layers (no curtain) */}
+      <div ref={hostRef} className="scene-host" style={{ position: 'relative', zIndex: 1 }}>
+        <div ref={layerARef} className="scene-layer" style={{ position: 'relative', zIndex: 2 }} />
+        <div ref={layerBRef} className="scene-layer" style={{ position: 'relative', zIndex: 2 }} />
+      </div>
+    </>
   );
 }
 

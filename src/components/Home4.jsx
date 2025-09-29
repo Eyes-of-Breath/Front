@@ -3,18 +3,17 @@ import styles from './Home4.module.css';
 
 const Home4 = () => {
   const quote = {
-    text: "Artificial intelligence will not replace doctors, but doctors who use AI will replace doctors who don't.",
-    author: "Bertalan Meskó",
-    highlight: "doctors who use AI"
+    text: "We find that large scale training trumps inductive bias, showing that pure Transformers can surpass convolutional networks when given sufficient data.",
+    author: "Alexey Dosovitskiy et al., ViT (ICLR 2021)",
+    highlight: "large scale training"
   };
 
   const renderQuoteText = (text, highlight) => {
     if (!highlight) return text;
-    
     const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
-    return parts.map((part, index) => 
-      part.toLowerCase() === highlight.toLowerCase() ? 
-        <span key={index} className={styles.highlight}>{part}</span> : 
+    return parts.map((part, index) =>
+      part.toLowerCase() === highlight.toLowerCase() ?
+        <span key={index} className={styles.highlight}>{part}</span> :
         part
     );
   };

@@ -4,81 +4,84 @@ import styles from './Home5.module.css';
 const Home5 = () => {
   return (
     <div className={`${styles.container} scene-content`}>
-      {/* 로고 섹션 */}
-      <div className={styles.logoSection}>
-        <div className={styles.logo}>
-          <div className={styles.logoIcon}>
-            <div className={styles.iconPart1}></div>
-            <div className={styles.iconPart2}></div>
+      <div className={styles.footerContent}>
+        {/* 왼쪽 섹션 */}
+        <div className={styles.leftSection}>
+          {/* 로고 */}
+          <div className={styles.logoSection}>
+            <div className={styles.logoIcon}>LOGO</div>
+            <h2 className={styles.logoText}>EYE OF BREATH</h2>
+          </div>
+
+          {/* 설명 텍스트 */}
+          <p className={styles.description}>
+            프로젝트 팀원 소개 페이지
+          </p>
+
+          {/* CTA 버튼 */}
+          <button className={styles.ctaButton}>
+            팀원 정보 보기
+          </button>
+
+          {/* 소셜 아이콘 */}
+          <div className={styles.socialIcons}>
+            <a href="#" className={styles.socialIcon}>in</a>
+            <a href="#" className={styles.socialIcon}>X</a>
+            <a href="#" className={styles.socialIcon}>f</a>
+          </div>
+        </div>
+
+        {/* 오른쪽 섹션 - 팀원 정보 */}
+        <div className={styles.rightSection}>
+          <div className={styles.teamGrid}>
+            {/* 팀원 1 */}
+            <div className={styles.teamMember}>
+              <div className={styles.memberName}>류다현</div>
+              <div className={styles.memberRole}>Project Leader</div>
+              <div className={styles.memberEmail}>fbekgus413@skuniv.ac.kr</div>
+            </div>
+
+            {/* 팀원 2 */}
+            <div className={styles.teamMember}>
+              <div className={styles.memberName}>강지은</div>
+              <div className={styles.memberRole}>Frontend Developer</div>
+              <div className={styles.memberEmail}>kje147459@gachon.ac.kr</div>
+            </div>
+
+            {/* 팀원 3 */}
+            <div className={styles.teamMember}>
+              <div className={styles.memberName}>장준혁</div>
+              <div className={styles.memberRole}>Backend Developer</div>
+              <div className={styles.memberEmail}>joonsoon65@skuniv.ac.kr</div>
+            </div>
+
+            {/* 팀원 4 */}
+            <div className={styles.teamMember}>
+              <div className={styles.memberName}>조성은</div>
+              <div className={styles.memberRole}>UI/UX Designer</div>
+              <div className={styles.memberEmail}>shap2819@hs.ac.kr</div>
+            </div>
+          </div>
+
+          {/* 뉴스레터 구독 */}
+          <div className={styles.newsletter}>
+            <h3 className={styles.newsletterTitle}>팀 소식 받아보기</h3>
+            <div className={styles.newsletterForm}>
+              <input 
+                type="email" 
+                placeholder="이메일을 입력하세요" 
+                className={styles.emailInput}
+              />
+              <button className={styles.subscribeButton}>구독하기</button>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* 메인 콘텐츠 */}
-      <div className={styles.mainContent}>
-        {/* EXPLORE 섹션 */}
-        <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>EXPLORE</h3>
-          <div className={styles.linkList}>
-            <a href="#" className={styles.link}>Principles</a>
-            <a href="#" className={styles.link}>Perspectives</a>
-            <a href="#" className={styles.link}>Portfolio</a>
-            <a href="#" className={styles.link}>People</a>
-          </div>
-        </div>
-
-        {/* PRODUCT 섹션 */}
-        <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>PRODUCT</h3>
-          <div className={styles.linkList}>
-            <a href="#" className={styles.link}>Blueprint</a>
-            <a href="#" className={styles.link}>Benchmarks</a>
-            <a href="#" className={styles.link}>Fragments</a>
-          </div>
-        </div>
-
-        {/* OTHERS 섹션 */}
-        <div className={styles.section}>
-          <h3 className={styles.sectionTitle}>OTHERS</h3>
-          <div className={styles.linkList}>
-            <a href="#" className={styles.link}>Privacy Policy</a>
-            <a href="#" className={styles.link}>Terms of Service</a>
-            <a href="#" className={styles.link}>Cookie Policy</a>
-            <a href="#" className={styles.link}>Disclaimers</a>
-          </div>
-        </div>
-      </div>
-
-      {/* 하단 연락처 정보 */}
-      <div className={styles.contactInfo}>
-        <div className={styles.locationGroup}>
-          <div className={styles.location}>
-            <h4 className={styles.cityName}>Seoul</h4>
-            <p className={styles.address}>
-              123 Gangnam-daero, Gangnam-gu, Seoul 06142,<br />
-              South Korea
-            </p>
-            <a href="mailto:seoul@eyeofbreath.com" className={styles.email}>
-              seoul@eyeofbreath.com
-            </a>
-          </div>
-
-          <div className={styles.location}>
-            <h4 className={styles.cityName}>Busan</h4>
-            <p className={styles.address}>
-              456 Haeundae-ro, Haeundae-gu, Busan 48094,<br />
-              South Korea
-            </p>
-            <a href="mailto:busan@eyeofbreath.com" className={styles.email}>
-              busan@eyeofbreath.com
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {/* 푸터 */}
-      <div className={styles.footer}>
-        <p className={styles.copyright}>©2025, EYE OF BREATH</p>
+      {/* 하단 카피라이트 */}
+      <div className={styles.copyright}>
+        <span>© Copyright 2025. EYE OF BREATH. All rights reserved.</span>
+        <span>Created by Team Members</span>
       </div>
     </div>
   );

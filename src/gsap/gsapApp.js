@@ -8,6 +8,8 @@ export function initGSAP() {
   if (typeof window === "undefined") return;
 
   gsap.registerPlugin(ScrollTrigger);
+  // Avoid restoring previous scroll positions that can cause jumpy layouts
+  try { ScrollTrigger.clearScrollMemory('manual'); } catch (_) {}
 
   // ScrollTrigger safe configs
   ScrollTrigger.config({
@@ -15,6 +17,7 @@ export function initGSAP() {
     limitCallbacks: true,
     autoRefreshEvents: "visibilitychange,DOMContentLoaded,load,resize"
   });
+  try { ScrollTrigger.defaults({ anticipatePin: 1 }); } catch (_) {}
 
   // sensible defaults
   gsap.defaults({ ease: "power1.out", duration: 0.6 });
@@ -22,7 +25,7 @@ export function initGSAP() {
   gsap.ticker.lagSmoothing(1000, 16);
 
   // Defer scroller default to when #scroll-root exists
-  setDefaultScroller();
+  if (window.__USE_CUSTOM_SCROLLER__) setDefaultScroller();
 
   // reduced motion flag
   const mq = window.matchMedia('(prefers-reduced-motion: reduce)');

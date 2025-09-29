@@ -1,6 +1,6 @@
 /* SceneController base styles */
-.scene-host { position: relative; width:100%; height:100vh; overflow:hidden; }
-.scene-layer { position:absolute; inset:0; }
+.scene-host { position: relative; width:100%; height:100vh; overflow:visible; /* allow Home2 columns to move outside without being clipped */ }
+.scene-layer { position:absolute; inset:0; overflow: visible; }
 .scene-content { width:100%; height:100%; }
 
 /* Section baseline */
@@ -28,4 +28,30 @@ body.is-lock{ overflow: hidden }
 
 @media (prefers-reduced-motion: reduce){
   *{animation:none!important;transition:none!important}
+}
+
+/* ===== Layered background model ===== */
+.bg-fixed {
+  position: fixed;
+  inset: 0;
+  z-index: 0;           /* sits under the scrollable paper layer */
+  pointer-events: none; /* background only */
+}
+.bg-fixed > * {
+  width: 100%;
+  height: 100%;
+}
+
+/* Ensure SceneController's stack sits above background and uses white paper base */
+.scene-host {
+  position: relative;
+  z-index: 1;           /* above .bg-fixed */
+  background: #fff;     /* white paper layer for scenes 2..5 */
+}
+
+/* Preloader final kill switch (in case of stray overrides) */
+:global(.preloader.isDone) {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }

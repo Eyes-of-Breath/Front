@@ -1,13 +1,13 @@
 :root{ --home1-gradient: url('../assets/blue_gray_gradient.svg'); }
 
-/* 전역 스타일 리셋 */
-* {
+/* 전역 스타일 리셋 (CSS Modules에서 전역으로 명시) */
+:global(*) {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-body {
+:global(body) {
   background-color: #fff;
   margin: 0;
   padding: 0;
@@ -51,6 +51,9 @@ body {
   z-index: 10;
   will-change: transform;
   overflow: visible; /* Home2 애니메이션을 위해 visible로 변경 */
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  contain: layout paint;
 }
 
 /* 다음 화면 스타일 (아래에 미리 준비) */
@@ -62,6 +65,10 @@ body {
   height: 100%;
   z-index: 5;
   overflow: visible; /* Home2 애니메이션을 위해 visible로 변경 */
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  contain: layout paint;
 }
 
 /* 메인 콘텐츠 영역 */

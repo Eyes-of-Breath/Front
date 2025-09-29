@@ -39,3 +39,5 @@
     position: relative; /* 각 씬에서 배경 레이어 깔 때 기준 */
     contain: layout paint; /* prevent layout bleed between scenes */
   }
+
+/* Paper mask overlay removed: Home2 renders without curtain */
