@@ -1,0 +1,89 @@
+:root{
+
+    /* ---- 기본 색 (SVG stop과 톤 맞춤) ---- */
+    --blue-100: #d1e7ff;
+    --blue-200: #b8d4ff;
+    --blue-300: #9fc1ff;
+    --blue-400: #86aeff;
+  
+    /* skyblue/ cornflower 계열 rgba */
+    --rgba-sky-50:  rgba(135,206,235,0.50);
+    --rgba-sky-40:  rgba(135,206,235,0.40);
+    --rgba-corn-40: rgba(100,149,237,0.40);
+    --rgba-corn-00: rgba(100,149,237,0.00);
+    --rgba-123-60:  rgba(123,169,231,0.60);
+    --rgba-123-30:  rgba(123,169,231,0.30);
+    --rgba-106-50:  rgba(106,159,181,0.50);
+  
+    /* ---- 선형 베이스(= SVG baseGradient) ---- */
+    --grad-base: linear-gradient(
+      135deg,               /* x1=0,y1=0 → x2=100,y2=100 근사치 */
+      var(--blue-100) 0%,
+      var(--blue-200) 30%,
+      var(--blue-300) 60%,
+      var(--blue-400) 100%
+    );
+  
+    /* ---- 각 방사형 그라데이션(= gradient1~7) ---- */
+    /* r(%)는 CSS에서 color-stop 위치로 근사 */
+    --rad-1: radial-gradient(
+      circle at 20% 30%,
+      var(--rgba-sky-50) 0%,
+      rgba(135,206,235,0) 40%
+    );
+    --rad-2: radial-gradient(
+      circle at 80% 20%,
+      var(--rgba-corn-40) 0%,
+      var(--rgba-corn-00) 35%
+    );
+    --rad-3: radial-gradient(
+      circle at 40% 70%,
+      var(--rgba-123-60) 0%,
+      rgba(123,169,231,0) 30%
+    );
+    --rad-4: radial-gradient(
+      circle at 70% 80%,
+      var(--rgba-106-50) 0%,
+      rgba(106,159,181,0) 45%
+    );
+    --rad-5: radial-gradient(
+      circle at 10% 80%,
+      var(--rgba-corn-40) 0%,
+      var(--rgba-corn-00) 35%
+    );
+    --rad-6: radial-gradient(
+      circle at 90% 60%,
+      var(--rgba-123-30) 0%,
+      rgba(123,169,231,0) 40%
+    );
+    --rad-7: radial-gradient(
+      circle at 50% 20%,
+      var(--rgba-sky-40) 0%,
+      rgba(135,206,235,0) 50%
+    );
+  
+    /* ---- 최종 합성 배경(위에서 아래 순서로 겹침) ---- */
+    --bg-svg-like: 
+      var(--rad-7),
+      var(--rad-6),
+      var(--rad-5),
+      var(--rad-4),
+      var(--rad-3),
+      var(--rad-2),
+      var(--rad-1),
+      var(--grad-base);
+
+    --rad1-x: 20%; --rad1-y: 30%; --rad1-r: 40%;
+    --rad2-x: 80%; --rad2-y: 20%; --rad2-r: 35%;
+    --rad3-x: 40%; --rad3-y: 70%; --rad3-r: 30%;
+    --rad4-x: 70%; --rad4-y: 80%; --rad4-r: 45%;
+    --rad5-x: 10%; --rad5-y: 80%; --rad5-r: 35%;
+    --rad6-x: 90%; --rad6-y: 60%; --rad6-r: 40%;
+    --rad7-x: 50%; --rad7-y: 20%; --rad7-r: 50%;
+
+    /* ---- Preloader defaults ---- */
+    --bg-elev-1: #ffffff;
+    --brand-accent: #3b82f6; /* Tailwind blue-500-ish */
+    --ink-strong: #0f172a;   /* slate-900 */
+  }
+  

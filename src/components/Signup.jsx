@@ -5,6 +5,7 @@ import styles from './Signup.module.css';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase';
+import backgroundImage from '../assets/blue_gradient_background.svg';
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
@@ -177,9 +178,12 @@ function Signup() {
     };
 
     useEffect(() => {
-        document.body.style.backgroundColor = '#EEF2FF';
+        document.body.style.backgroundImage = `url(${backgroundImage})`;
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundRepeat = 'no-repeat';
+        document.body.style.backgroundPosition = 'center';
         return () => {
-            document.body.style.backgroundColor = '';
+            document.body.style.backgroundImage = '';
         };
     }, []);
 
