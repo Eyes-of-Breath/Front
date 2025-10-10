@@ -44,14 +44,7 @@ body {
 .logoIcon {
   width: 50px;
   height: 50px;
-  background: linear-gradient(135deg, #ABCAFF 0%, #85AFFC 100%);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #ffffff;
+  object-fit: contain;
 }
 
 .logoText {
@@ -73,7 +66,7 @@ body {
 /* CTA 버튼 */
 .ctaButton {
   padding: 1rem 2rem;
-  background: linear-gradient(135deg, #85AFFC 0%, #94BDF2 100%);
+  background: linear-gradient(135deg, #99C5F8 0%, #8FB5F7 100%);
   color: #ffffff;
   border: none;
   border-radius: 50px;
@@ -87,7 +80,7 @@ body {
 .ctaButton:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(133, 175, 252, 0.3);
-  background: linear-gradient(135deg, #94BDF2 0%, #ABCAFF 100%);
+  background: linear-gradient(135deg, #99C5F8 0%, #8FB5F7 100%);
 }
 
 /* 소셜 아이콘 */
@@ -100,7 +93,7 @@ body {
   width: 45px;
   height: 45px;
   background: #f8fafc;
-  color: #85AFFC;
+  color: #82ADE7;
   border: 1px solid #e2e8f0;
   border-radius: 50%;
   display: flex;
@@ -113,7 +106,7 @@ body {
 
 .socialIcon:hover {
   transform: translateY(-3px);
-  background: linear-gradient(135deg, #ABCAFF 0%, #85AFFC 100%);
+  background: linear-gradient(135deg, #99C5F8 0%, #8FB5F7 100%);
   color: #ffffff;
   border-color: transparent;
   box-shadow: 0 5px 15px rgba(133, 175, 252, 0.3);
@@ -196,7 +189,7 @@ body {
 
 .subscribeButton {
   padding: 0.875rem 2rem;
-  background: linear-gradient(135deg, #85AFFC 0%, #94BDF2 100%);
+  background: linear-gradient(135deg, #99C5F8 0%, #8FB5F7 100%);
   color: #ffffff;
   border: none;
   border-radius: 50px;
@@ -209,13 +202,13 @@ body {
 
 .subscribeButton:hover {
   transform: scale(1.02);
-  background: linear-gradient(135deg, #94BDF2 0%, #ABCAFF 100%);
+  background: linear-gradient(135deg, #99C5F8 0%, #8FB5F7 100%);
   box-shadow: 0 5px 15px rgba(133, 175, 252, 0.3);
 }
 
 /* 카피라이트 */
 .copyright {
-  background: linear-gradient(135deg, #ABCAFF 0%, #85AFFC 50%, #94BDF2 100%);
+  background: linear-gradient(135deg, #A5D5F6 0%, #99C5F8 50%, #8FB5F7 100%);
   padding: 1.5rem 2rem;
   border-radius: 20px;
   display: flex;

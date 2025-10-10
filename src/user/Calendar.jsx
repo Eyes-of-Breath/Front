@@ -348,7 +348,6 @@ function Calendar() {
         }
     };
 
-
     const slotHeight = 60;
     const slotGap = 16;
 
@@ -368,7 +367,7 @@ function Calendar() {
         <div className={styles.body}>
             <div className={styles.container}>
                 <div className={styles.leftSidebar}>
-                    <h1 className={styles.greeting}>오늘의 할 일</h1>
+                    <h1 className={styles.greeting}>{currentTime.getMonth() + 1}월 {currentTime.getDate()}일의 일정을 확인해 보세요</h1>
 
                     <div className={styles.progressCard}>
                         <div className={styles.progressHeader}>
@@ -494,13 +493,16 @@ function Calendar() {
                                                         <div
                                                             key={apt.eventId}
                                                             className={styles.appointment}
-                                                            style={{ height: `${getDurationHeightPx(apt.startTime, apt.endTime)}px` }}
+                                                            style={{ 
+                                                                height: `${getDurationHeightPx(apt.startTime, apt.endTime)}px`,
+                                                                top: 0
+                                                            }}
                                                             onClick={(e) => handleAppointmentClick(apt, e)}
                                                         >
                                                             <div className={styles.appointmentTitle}>{apt.title}</div>
-                                                            <div className={styles.appointmentTime}>
-                                                                {new Date(apt.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(apt.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                                            </div>
+                                                            {apt.description && (
+                                                                <div className={styles.appointmentMemo}>{apt.description}</div>
+                                                            )}
                                                         </div>
                                                     ))}
                                                 </div>

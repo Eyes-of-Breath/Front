@@ -5,12 +5,7 @@
   --rad6-x:90%; --rad6-y:60%;
 
   /* Home1 background (color + gradients + image) as a single variable */
-  --home1-bg:
-    radial-gradient(circle at var(--rad1-x) var(--rad1-y), rgba(135,206,235,0.5) 0%, rgba(135,206,235,0) 40%),
-    radial-gradient(circle at var(--rad3-x) var(--rad3-y), rgba(123,169,231,0.6) 0%, rgba(123,169,231,0) 30%),
-    radial-gradient(circle at var(--rad6-x) var(--rad6-y), rgba(123,169,231,0.3) 0%, rgba(123,169,231,0) 40%),
-    linear-gradient(135deg, #d1e7ff 0%, #b8d4ff 30%, #9fc1ff 60%, #86aeff 100%),
-    url('../assets/blue_gray_gradient.svg') no-repeat center center / cover;
+  --home1-bg: url('../assets/blue_gray_gradient.svg') no-repeat center center / cover;
 }
 .container {
   display: flex;
@@ -97,13 +92,12 @@
   inset: 0;  /* top/right/bottom/left 모두 0 */
   z-index: 0; /* behind content within container */
   pointer-events: none;
-  
   background: var(--home1-bg);
-  
-  animation:
-    drift1 18s ease-in-out infinite,
-    drift3 26s ease-in-out infinite,
-    drift6 32s ease-in-out infinite;
+  opacity: 1;
+  filter: none;
+  mix-blend-mode: normal;
+  background-blend-mode: normal;
+  background-color: #9fc1ff;
 }
 
 /* Keep all content above background */

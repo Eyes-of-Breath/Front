@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './Home5.module.css';
+import logo from '../assets/logo.png'; // 로고 이미지 경로
 
 const Home5 = () => {
   return (
@@ -9,19 +10,21 @@ const Home5 = () => {
         <div className={styles.leftSection}>
           {/* 로고 */}
           <div className={styles.logoSection}>
-            <div className={styles.logoIcon}>LOGO</div>
+            <img src={logo} alt="Logo" className={styles.logoIcon} />
             <h2 className={styles.logoText}>EYE OF BREATH</h2>
           </div>
 
           {/* 설명 텍스트 */}
           <p className={styles.description}>
-            프로젝트 팀원 소개 페이지
+            한이음 프로젝트 수상작
           </p>
 
           {/* CTA 버튼 */}
-          <button className={styles.ctaButton}>
-            팀원 정보 보기
-          </button>
+          <a href="https://www.hanium.or.kr/portal/index.do" target="_blank" rel="noopener noreferrer">
+            <button className={styles.ctaButton}>
+              한이음 드림업
+            </button>
+          </a>
 
           {/* 소셜 아이콘 */}
           <div className={styles.socialIcons}>

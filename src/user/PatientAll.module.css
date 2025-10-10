@@ -1,82 +1,182 @@
 .pageContainer {
   display: flex;
-  flex-direction: column; /* 위에서 아래로 */
-  height: 100vh;          /* 화면 전체 높이 */
+  flex-direction: column;
+  height: 100vh;
   padding: 2rem;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
+.scrollWrapper {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 10px;
+  margin-right: -10px;
+}
 
-.header {
+/* Custom scrollbar styling for scrollWrapper */
+.scrollWrapper::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollWrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollWrapper::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 3px;
+}
+
+.scrollWrapper::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 1);
+}
+
+.greeting {
   font-size: 1.5rem;
   font-weight: 300;
-  margin-bottom: 1rem;
-}
-
-.tableWrapper {
-  flex: 1; /* header를 제외한 나머지 공간 차지 */
-  overflow-x: auto; /* 가로 스크롤 */
-  overflow-y: auto; /* 세로 스크롤 */
-}
-
-.leftSection {
-  overflow-x: hidden; /* 화면 작아도 스크롤 생기도록 */
-}
-
-.searchSection {
-  background-color: rgba(255, 255, 255, 0.95);
-  border-radius: 15px;
-  padding: 25px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
-  
-  overflow-y: hidden; /* 세로 스크롤 가능 */
-  overflow-x: auto; /* 가로 스크롤 가능 */
-}
-
-.tableWrapper {
+  color: #1a1a1a;
+  margin: 0.25rem 0 1.75rem 0;
+  line-height: 1.6;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  padding-left: 1rem;
+  text-align: left;
+  align-self: flex-start;
   width: 100%;
-  overflow-x: auto; /* 테이블이 화면 넘치면 스크롤 */
+  margin-left: -0.75rem;
+}
+
+.patientCount {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #6b7280;
+  background: #ffffff;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  border: 1px solid #f9fafb;
+  margin-left: 1rem;
+}
+
+.tableContainer {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  display: block;
+  position: relative;
 }
 
 .patientTable {
   width: 100%;
-  min-width: 100%; /* 필요 시 조절 */
   border-collapse: collapse;
-  font-family: Arial, sans-serif;
-  table-layout: auto;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
-.patientTable th,
-.patientTable td {
+.patientTable thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.patientTable th {
+  background: linear-gradient(135deg, #87ceeb, #6bb6ff);
+  color: white;
+  padding: 0.875rem 1rem;
   text-align: center;
-  padding: 0.5rem 1rem;
-  border: 1px solid #ddd;
-}
-
-.patientTable thead th {
-  background-color: #f0f0f0;
   font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s ease;
+  white-space: nowrap;
+  border-bottom: none;
 }
 
-.patientTable tbody tr:nth-child(even) {
-  background-color: #fafafa;
+.patientTable th:hover {
+  background: linear-gradient(135deg, #87ceeb, #6bb6ff);
+}
+
+.sortIcon,
+.sortIconActive {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 4px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.sortIconActive {
+  color: white;
+}
+
+.patientTable td {
+  padding: 0.875rem 1rem;
+  text-align: center;
+  border-bottom: 1px solid #f3f4f6;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.patientTable tbody tr {
+  transition: background 0.1s ease;
 }
 
 .patientTable tbody tr:hover {
-  background-color: #f1f1f1;
+  background-color: #f9fafb;
 }
 
-td button {
-  display: flex;
+.nameCell {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.codeCell {
+  font-family: 'Courier New', monospace;
+  font-size: 0.8125rem;
+  color: #6b7280;
+}
+
+.genderBadge {
+  display: inline-block;
+  padding: 0.25rem 0.625rem;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.reportBadge {
+  display: inline-block;
+  padding: 0.25rem 0.625rem;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.deleteButton {
+  display: inline-flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 100%;
-  background: none;
+  padding: 0.375rem;
+  background: transparent;
   border: none;
+  border-radius: 6px;
   cursor: pointer;
-  color: red;
+  color: #ef4444;
+  transition: all 0.15s ease;
+}
+
+.deleteButton:hover {
+  background: #fef2f2;
+}
+
+.emptyMessage {
+  text-align: center;
+  padding: 3rem !important;
+  color: #9ca3af;
+  font-size: 0.9375rem;
 }
 
 .loadingContainer {
@@ -85,20 +185,66 @@ td button {
   justify-content: center;
   align-items: center;
   height: 80vh;
-  font-size: 1.2rem;
-  color: #333;
+  background: white;
+  border-radius: 12px;
 }
 
-.spinner {
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  border-left-color: #4a90e2;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  margin-bottom: 1rem;
-  animation: spin 1s linear infinite;
+.loadingWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.loadingIcon {
+  color: #87ceeb;
+  animation: spin 1.5s linear infinite;
+}
+
+.loadingText {
+  text-align: center;
+}
+
+.loadingText h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 0.375rem 0;
+}
+
+.loadingText p {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  margin: 0;
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+body {
+  overflow: hidden; /* Prevent page scrolling */
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1200px) {
+  .pageContainer {
+      padding: 1rem;
+  }
+  
+  .header {
+      font-size: 1.5rem;
+  }
+  
+  .patientTable th,
+  .patientTable td {
+      padding: 0.75rem 0.875rem;
+      font-size: 0.8125rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .patientTable {
+      font-size: 0.75rem;
+  }
 }

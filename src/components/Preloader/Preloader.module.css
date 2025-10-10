@@ -1,38 +1,157 @@
 /* Overlay */
-.overlay{ position:fixed; inset:0; z-index:9999; background: var(--home1-bg); color: var(--ink-strong, #111827); clip-path: none; opacity:1; will-change: opacity; pointer-events:auto; overflow:hidden; }
-.inner{ position:absolute; inset:0; display:grid; grid-template-rows: 0.4fr auto 0.2fr; }
-
-/* Center ghost heading */
-.centerGhost{
-  align-self:end; justify-self:center; text-align:center;
-  font-weight:800; letter-spacing:-0.02em;
-  font-size: clamp(28px, 10vw, 96px);
-  line-height:1;
-  color:transparent;
-  -webkit-text-stroke: 1px rgba(0,0,0,0.04);
-  text-shadow:
-    0 1px 0 rgba(255,255,255,0.8),
-    0 8px 30px rgba(0,0,0,0.06);
-  opacity:.9;
-  user-select:none; pointer-events:none;
-  white-space: nowrap;
-  grid-row: 1;
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  opacity: 1;
+  pointer-events: auto;
 }
 
-/* Bottom bar */
-.bottom{ grid-row: 2; align-self:end; padding-top:28px; padding-bottom:28px; padding-left: var(--rail-left, clamp(16px, 6vw, 48px)); padding-right: var(--rail-right, clamp(16px, 6vw, 48px)); display:grid; gap:12px; }
-.meta{ display:flex; align-items:center; justify-content:space-between; font-size:12px; letter-spacing:.08em; text-transform:uppercase; opacity:.75; }
-.track{ position:relative; height:2px; background: var(--line-muted, #D1D5DB); overflow:hidden; }
-.fill{ position:absolute; inset:0 auto 0 0; width:100%; background:#111; transform-origin:left center; transform:scaleX(0); }
+/* 브랜드 텍스트 컨테이너 */
+.textContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  margin-bottom: 60px;
+}
 
-/* Small brand at bottom-left */
-.brand{ position:absolute; left: var(--rail-left, clamp(16px, 6vw, 48px)); bottom:28px; font-size:14px; font-weight:600; opacity:.8; }
+/* 회색 베이스 텍스트 */
+.baseText {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-size: clamp(40px, 8vw, 96px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: #D1D5DB;
+  white-space: nowrap;
+  user-select: none;
+}
 
-/* Percent on meta right */
-.percent{ font-variant-numeric: tabular-nums; }
+/* 방사형 그라데이션 배경 */
+.gradient {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0%;
+  height: 0%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle,
+    #92B9FB 0%,
+    #82ADE7 25%,
+    #A5D5F6 50%,
+    #99C5F8 75%,
+    #8FB5F7 100%
+  );
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.8;
+  z-index: 1;
+  pointer-events: none;
+}
 
-/* Accessibility */
-@media (prefers-contrast: more){ .track{ background:#9CA3AF;} .fill{ background:#000; } }
+/* 그라데이션 마스크 텍스트 - 수정됨 */
+.maskText {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-size: clamp(40px, 8vw, 96px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  white-space: nowrap;
+  
+  /* 그라데이션 클리핑 마스크 적용 */
+  background: radial-gradient(
+    circle at center,
+    #92B9FB 0%,
+    #82ADE7 20%,
+    #A5D5F6 40%,
+    #99C5F8 60%,
+    #8FB5F7 80%,
+    #92B9FB 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  
+  background-size: 200% 200%;
+  z-index: 2;
+  transition: opacity 0.3s ease-out;
+  user-select: none;
+}
 
-/* Small brand directly under the gauge bar */
-.brandUnderBar{ font-size:12px; font-weight:600; opacity:.65; margin-top:8px; }
+/* 퍼센트 표시 */
+.percent {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-size: clamp(18px, 3vw, 24px);
+  font-weight: 600;
+  color: #6B7280;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.1em;
+  margin-top: 20px;
+}
+
+/* 반응형 조정 */
+@media (max-width: 768px) {
+  .baseText,
+  .maskText {
+    font-size: clamp(28px, 10vw, 60px);
+  }
+  
+  .percent {
+    font-size: 16px;
+  }
+  
+  .gradient {
+    filter: blur(40px);
+  }
+  
+  .textContainer {
+    margin-bottom: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .baseText,
+  .maskText {
+    font-size: clamp(24px, 12vw, 48px);
+  }
+  
+  .textContainer {
+    padding: 15px;
+  }
+}
+
+/* 접근성 */
+@media (prefers-reduced-motion: reduce) {
+  .gradient,
+  .maskText {
+    transition: none !important;
+  }
+}
+
+/* 고대비 모드 */
+@media (prefers-contrast: high) {
+  .baseText {
+    color: #9CA3AF;
+  }
+  
+  .maskText {
+    background: linear-gradient(to right, #4F46E5, #7C3AED);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
