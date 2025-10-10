@@ -30,18 +30,36 @@
 
 .progressBar {
     width: 100%;
-    height: 8px;
-    background-color: rgba(135, 206, 235, 0.2);
-    border-radius: 4px;
+    height: 16px;
+    background: #E5E7EB;
+    border-radius: 8px;
     overflow: hidden;
-    margin-bottom: 0.5rem;
+    margin: 0.5rem 0;
 }
 
 .progressFill {
     height: 100%;
-    background: linear-gradient(135deg, #87ceeb, #6bb6ff);
-    border-radius: 4px;
-    transition: width 0.3s ease;
+    background: linear-gradient(90deg, #87ceeb, #6bb6ff, #5aa3e6);
+    border-radius: 8px;
+    transition: width 1s ease-in-out;
+    position: relative;
+}
+
+.progressFill::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: repeating-linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.1) 2px,
+        rgba(255, 255, 255, 0.3) 2px,
+        rgba(255, 255, 255, 0.3) 4px
+    );
+    border-radius: 8px;
 }
 
 .progressPercentage {
@@ -269,38 +287,56 @@
 }
 
 /* 캘린더 일정 스타일 간소화 */
+/* 캘린더 일정 스타일 간소화 */
 .appointment {
-    background: linear-gradient(135deg, #87ceeb, #6bb6ff);
-    color: white;
-    border-radius: 6px;
+    background: white;
+    border: 2px solid #87ceeb;
+    border-radius: 8px;
     padding: 0.5rem;
-    height: calc(100% - 0.5rem);
-    margin: 0.25rem;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    box-shadow: 0 2px 4px rgba(135, 206, 235, 0.3);
+    justify-content: flex-start;
+    gap: 0.25rem;
+    box-shadow: 0 2px 4px rgba(135, 206, 235, 0.2);
     transition: all 0.2s ease;
     cursor: pointer;
     overflow: hidden;
+    position: absolute;
+    width: calc(100% - 0.5rem);
+    left: 0.25rem;
+    transform: translateY(6px);    
 }
 
 .appointment:hover {
-    transform: scale(1.02);
-    box-shadow: 0 4px 8px rgba(135, 206, 235, 0.4);
+    border-color: #6bb6ff;
+    box-shadow: 0 4px 8px rgba(135, 206, 235, 0.3);
 }
 
 .appointmentTitle {
     font-weight: 600;
-    font-size: 0.75rem;
-    margin-bottom: 0.2rem;
+    font-size: 0.8rem;
+    color: #1e293b;
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.appointmentMemo {
+    font-size: 0.7rem;
+    color: #64748b;
     line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }
 
 .appointmentTime {
-    font-size: 0.65rem;
-    opacity: 0.9;
-    line-height: 1.1;
+    display: none;
 }
 
 /* 사이드바 폼 스타일 제거 (더 이상 필요없음) */
@@ -773,47 +809,8 @@
     outline-offset: -2px;
 }
 
-.appointment {
-    border-radius: 4px;
-    padding: 0.25rem 0.5rem;
-    height: calc(50px * var(--duration));
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease;
-    cursor: pointer;
-    color: white;
-    position: relative;
-    z-index: 1;
-    overflow: hidden;
-}
-
-.appointment:hover {
-    transform: scale(1.02);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
 .reading {
     background: linear-gradient(135deg, #87ceeb, #6bb6ff) !important;
-}
-
-.procedure {
-    background: linear-gradient(135deg, #f7e99c, #f0d985) !important;
-    color: #444 !important;
-}
-
-.emergency {
-    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
-}
-
-.conference {
-    background: linear-gradient(135deg, #bbc9f7, #9bb5f5) !important;
-}
-
-.appointment:not(.reading):not(.procedure):not(.emergency):not(.conference) {
-    background: linear-gradient(135deg, #c3e1ad, #a8d690) !important;
-    color: #444 !important;
 }
 
 .appointmentPatient {
@@ -927,7 +924,7 @@
 }
 
 .modalTitle {
-    font-size: 1.5rem;
+    font-size: 1.6rem; /* Increased from 1.5rem */
     font-weight: 600;
     color: #1e293b;
     margin: 0;
@@ -968,7 +965,7 @@
 }
 
 .label {
-    font-size: 0.9rem;
+    font-size: 1rem; /* Increased from 0.9rem */
     font-weight: 500;
     color: #374151;
 }
@@ -977,7 +974,7 @@
     padding: 0.75rem;
     border: 1px solid #d1d5db;
     border-radius: 8px;
-    font-size: 0.9rem;
+    font-size: 1rem; /* Increased from 0.9rem */
     transition: all 0.2s ease;
     font-family: inherit;
 }
@@ -991,6 +988,7 @@
 .textarea {
     min-height: 100px;
     resize: vertical;
+    font-size: 1rem; /* Increased from 0.9rem */
 }
 
 .select {

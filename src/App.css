@@ -51,3 +51,53 @@
 /* extra guards for first/last child margins inside each section */
 #scroll-root > .section > :first-child { margin-top: 0; }
 #scroll-root > .section > :last-child  { margin-bottom: 0; }
+
+/* 기존 App.css에 아래 내용을 추가하세요 */
+
+/* Body scroll lock during preloader */
+body.is-lock {
+  overflow: hidden;
+  height: 100vh;
+}
+
+body.is-loaded {
+  overflow: auto;
+}
+
+/* Scroll root - 메인 컨텐츠 컨테이너 */
+#scroll-root {
+  position: relative;
+  width: 100%;
+}
+
+/* Section 기본 스타일 */
+.section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Header color change when scrolling through Home2-5 */
+body.header-red header {
+  /* 예시: 헤더 배경색 변경 */
+  background-color: rgba(220, 38, 38, 0.95);
+  transition: background-color 0.3s ease;
+}
+
+/* Pretendard font import (이미 있다면 생략) */
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+
+* {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+/* 부드러운 스크롤 */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

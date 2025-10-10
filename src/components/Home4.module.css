@@ -32,7 +32,7 @@
   font-size: 2.5rem;
   font-weight: 300;
   line-height: 1.4;
-  color: #1e293b;
+  color: #1F2937;
   margin-bottom: 2rem;
   text-align: left;
   letter-spacing: -0.02em;
@@ -46,7 +46,7 @@
   left: 0;
   top: -1rem;
   font-size: 6rem;
-  color: #ABCAFF;
+  color: #82ADE7;
   opacity: 0.3;
   font-family: Georgia, serif;
   line-height: 1;
@@ -54,10 +54,16 @@
 
 /* 하이라이트 텍스트 */
 .highlight {
-  color: #85AFFC;
+  color: #A5D5F6;
   font-weight: 600;
   position: relative;
-  background: linear-gradient(120deg, transparent 0%, rgba(171, 202, 255, 0.15) 0%, rgba(148, 189, 242, 0.15) 100%, transparent 100%);
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(153, 197, 248, 0.15) 0%,
+    rgba(143, 181, 247, 0.15) 100%,
+    transparent 100%
+  );
   padding: 0.1em 0.3em;
   border-radius: 0.3em;
 }
@@ -66,7 +72,7 @@
 .author {
   font-size: 1.3rem;
   font-weight: 500;
-  color: #64748b;
+  color: #8FB5F7;
   text-align: right;
   font-style: italic;
   position: relative;

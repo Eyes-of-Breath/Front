@@ -41,7 +41,7 @@ function HeaderInner(){
             </li>
             <li className={styles.navItem}>
               <button onClick={() => scrollToSection('home5')} className={styles.navLink}>
-                Credit
+                Contact
               </button>
             </li>
           </ul>

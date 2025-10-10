@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './Patient.module.css';
-import { Search, FileText } from 'lucide-react';
+import { Search, FileText, Cpu, BarChart3, CircleDot, Pen, Trash2 } from 'lucide-react';
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
@@ -130,7 +130,7 @@ const Patient = () => {
     <div className={styles.patientContainer}>
       <main className={styles.mainContent}>
         <div style={{ fontSize: '1.5rem', fontWeight: '300', color: '#1a1a1a', paddingTop: '2rem', lineHeight: '1.6', textShadow: '0 1px 3px rgba(0, 0, 0, 0.2)', paddingLeft: '0.5rem', textAlign: 'left', marginBottom: '1rem', flex: 1 }}>
-          여기서 환자 정보를 관리하세요.
+          빠른 검색으로 필요한 정보를 바로 찾아보세요 🔍
         </div>
 
         <div className={styles.mainLayout}>
@@ -230,34 +230,49 @@ const Patient = () => {
                             <div className={styles.recordLayout}>
                               <div className={styles.recordInfo}>
                                 <div className={styles.recordHeader}>
-                                  <p className={styles.recordDate}>촬영일: {xray.uploadedAt.split('T')[0]}</p>
-                                  <p className={styles.resultId}>resultId: {diagnosis.resultId}</p>
-                                  {Number(selectedPatient.memberId) === memberId && (
-                                  <span className={styles.deleteText} onClick={() => {
-                                    const confirmed = window.confirm("정말 삭제하시겠습니까?");
-                                    if (confirmed) handleDeleteReport(diagnosis.resultId);
-                                  }}>
-                                    보고서 삭제
-                                  </span>
-                                )}
+                                  <div className={styles.recordDateBadge}>
+                                    {xray.uploadedAt.split('T')[0]}
+                                  </div>
+                                  <span className={styles.resultIdText}>Result ID: {diagnosis.resultId}</span>
+                                  <div style={{ marginLeft: 'auto' }}>
+                                    {Number(selectedPatient.memberId) === memberId && (
+                                      <Trash2 
+                                        size={18} 
+                                        style={{ color: '#dc2626', cursor: 'pointer' }} 
+                                        onClick={() => {
+                                          const confirmed = window.confirm("정말 삭제하시겠습니까?");
+                                          if (confirmed) handleDeleteReport(diagnosis.resultId);
+                                        }}
+                                      />
+                                    )}
+                                  </div>
                                 </div>
-                                <div className={styles.diagnosisSection}>
-                                  <h5 className={styles.sectionSubtitle}>AI Top-3 예측 결과</h5>
+                                <div className={diagnosis.comments && diagnosis.comments.length > 0 ? styles.diagnosisSection : styles.diagnosisSectionNoBorder}>
+                                  <h5 className={styles.sectionSubtitle}>
+                                    <Cpu size={16} style={{ marginRight: '8px' }} />
+                                    AI Top-3 예측 결과
+                                  </h5>
                                   <ul className={styles.diagnosisList}>
-                                    <li>1️⃣ {diagnosis.top1Disease} — {(diagnosis.top1Probability * 100).toFixed(1)}%</li>
-                                    <li>2️⃣ {diagnosis.top2Disease} — {(diagnosis.top2Probability * 100).toFixed(1)}%</li>
-                                    <li>3️⃣ {diagnosis.top3Disease} — {(diagnosis.top3Probability * 100).toFixed(1)}%</li>
+                                    <li>{diagnosis.top1Disease} — {(diagnosis.top1Probability * 100).toFixed(1)}%</li>
+                                    <li>{diagnosis.top2Disease} — {(diagnosis.top2Probability * 100).toFixed(1)}%</li>
+                                    <li>{diagnosis.top3Disease} — {(diagnosis.top3Probability * 100).toFixed(1)}%</li>
                                   </ul>
                                 </div>
                                 {diagnosis.comments && diagnosis.comments.length > 0 && (
                                   <div className={styles.commentSection}>
-                                    <h5 className={styles.sectionSubtitle}>의료진 소견</h5>
+                                    <h5 className={styles.sectionSubtitle}>
+                                      <BarChart3 size={16} style={{ marginRight: '8px' }} />
+                                      의료진 소견
+                                    </h5>
                                     <ul className={styles.commentList}>
                                       {diagnosis.comments.map((comment) => (
                                         <li key={comment.commentId} className={styles.commentItem}>
-                                          🩺 {comment.content}
-                                          <span className={styles.commentMeta}>
-                                            ({new Date(comment.createdAt).toLocaleDateString('ko-KR')})
+                                          <Pen size={14} style={{ marginRight: '6px', color: '#4a90e2', flexShrink: 0 }} />
+                                          <span>
+                                            {comment.content}
+                                            <span className={styles.commentMeta}>
+                                              ({new Date(comment.createdAt).toLocaleDateString('ko-KR')})
+                                            </span>
                                           </span>
                                         </li>
                                       ))}

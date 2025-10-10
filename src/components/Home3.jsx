@@ -209,7 +209,7 @@ function MedicalCarousel() {
                 <p style={{
                     fontSize: '14px',
                     fontWeight: '600',
-                    color: '#85AFFC',
+                    color: '#82ADE7',
                     letterSpacing: '2px',
                     textTransform: 'uppercase',
                     marginBottom: '12px'

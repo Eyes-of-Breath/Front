@@ -110,8 +110,18 @@
         0 0 0 1px rgba(255, 255, 255, 0.2),
         inset 0 1px 0 rgba(255, 255, 255, 0.3);
     background: 
-        linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 100%),
-        linear-gradient(135deg, #ABCAFF 0%, #85AFFC 50%, #94BDF2 100%);
+        /* 반투명 화이트 오버레이 */
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.25) 0%,
+            rgba(255, 255, 255, 0.1) 100%
+        ),
+        /* 요청한 색상들의 분사형 원형 그라데이션 */
+        radial-gradient(circle at 20% 30%, #92B9FB 0%, transparent 60%),
+        radial-gradient(circle at 80% 20%, #82ADE7 0%, transparent 60%),
+        radial-gradient(circle at 50% 70%, #A5D5F6 0%, transparent 60%),
+        radial-gradient(circle at 30% 80%, #99C5F8 0%, transparent 60%),
+        radial-gradient(circle at 70% 60%, #8FB5F7 0%, transparent 60%);
 }
 
 /* 비활성 슬라이드 */
@@ -291,7 +301,7 @@
     height: 52px;
     border-radius: 50%;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
-    border: 2px solid #85AFFC;
+    border: 2px solid #82ADE7;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -307,7 +317,7 @@
 
 .playButton:hover {
     background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.9) 100%);
-    border-color: #85AFFC;
+    border-color: #82ADE7;
     transform: translateX(-50%) scale(1.15);
     box-shadow: 
         0 12px 35px rgba(133, 175, 252, 0.35),

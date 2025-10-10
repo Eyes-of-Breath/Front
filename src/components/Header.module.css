@@ -67,8 +67,9 @@
 
 .loginBtn:hover,
 .loginBtn:focus {
-  background: #ffffff;
-  color: transparent;
+  background: #ffffff; /* 배경색 */
+  color: #8FB5F7 !important; /* 글씨 색상을 명확히 지정 */
+  -webkit-text-fill-color: #8FB5F7; /* WebKit 기반 브라우저 지원 */
 }
 
 .nav {
@@ -120,7 +121,8 @@
 
 .divider{ display: none; }
 
-.logoIcon{
+.logoIcon {
+  content: url('../assets/logo_white.png');
   width: 35px;
   height: 35px;
   object-fit: contain;
@@ -141,10 +143,9 @@
 :global(body.header-red) .navLink,
 :global(body.header-red) .loginBtn {
   background: linear-gradient(90deg,
-    #94BDF2,
-    #B4D2FF,
-    #ABCAFF,
-    #85AFFC
+    #A5D5F6,
+    #99C5F8,
+    #8FB5F7
   );
   -webkit-background-clip: text;
   background-clip: text;
@@ -154,19 +155,19 @@
 
 :global(body.header-red) .row::after {
   background: linear-gradient(90deg,
-    #94BDF2,
-    #B4D2FF,
-    #ABCAFF,
-    #85AFFC
+    #A5D5F6,
+    #99C5F8,
+    #8FB5F7
   );
 }
 
 :global(body.header-red) .navLink::after {
   background: linear-gradient(90deg,
-    #94BDF2,
-    #B4D2FF,
-    #ABCAFF,
-    #85AFFC
+    #92B9FB,
+    #82ADE7,
+    #A5D5F6,
+    #99C5F8,
+    #8FB5F7
   );
 }
 
@@ -175,10 +176,9 @@
   background:
     linear-gradient(#0000, #0000) padding-box,
     linear-gradient(90deg,
-      #94BDF2,
-      #B4D2FF,
-      #ABCAFF,
-      #85AFFC
+      #A5D5F6,
+      #99C5F8,
+      #8FB5F7
     ) border-box;
   -webkit-text-fill-color: #ffffff;
   color: #ffffff;
@@ -193,13 +193,13 @@
 :global(body.header-red) .loginBtn:hover,
 :global(body.header-red) .loginBtn:focus {
   background: #ffffff;
-  -webkit-text-fill-color: #111;
-  color: #111;
-  border-color: #111;
+  -webkit-text-fill-color: #82ADE7;
+  color: #82ADE7;
+  border-color: #82ADE7;
   -webkit-background-clip: border-box;
   background-clip: border-box;
 }
 
 :global(body.header-red) .logoIcon {
-  filter: hue-rotate(0deg) saturate(800%) brightness(95%);
+  content: url('../assets/logo_color.png');
 }
